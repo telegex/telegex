@@ -85,4 +85,53 @@ defmodule Telex.Model do
     {:passport_data, PassportData, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional}
   ]
+
+  model MessageEntity, [
+    {:type, String},
+    {:offset, :integer},
+    {:length, :integer},
+    {:url, String, :optional},
+    {:user, User, :optional},
+    {:language, String, :optional}
+  ]
+
+  model PhotoSize, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:width, :integer},
+    {:height, :integer},
+    {:file_size, :integer, :optional}
+  ]
+
+  model Animation, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:width, :integer},
+    {:height, :integer},
+    {:duration, :integer},
+    {:thumb, PhotoSize, :optional},
+    {:file_name, String, :optional},
+    {:mime_type, String, :optional},
+    {:file_size, :integer, :optional}
+  ]
+
+  model Audio, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:duration, :integer},
+    {:performer, String, :optional},
+    {:title, String, :optional},
+    {:mime_type, String, :optional},
+    {:file_size, :integer, :optional},
+    {:thumb, PhotoSize, :optional}
+  ]
+
+  model Document, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:thumb, PhotoSize, :optional},
+    {:file_name, String, :optional},
+    {:mime_type, String, :optional},
+    {:file_size, :integer, :optional}
+  ]
 end
