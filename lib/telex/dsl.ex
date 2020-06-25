@@ -24,21 +24,40 @@ defmodule Telex.DSL do
     end
   end
 
-  @type genopts :: [{:optional, boolean()}, {:array, boolean()}]
+  @type arraytypes :: true | :array_of_array | nil
+  @type genopts :: [{:optional, boolean()}, {:array, arraytypes()}]
 
-  @spec gen_field_ast(atom(), [atom()], genopts()) :: tuple()
-  defp gen_field_ast(key, type, options) do
+  @spec gen_struct_field_ast(atom(), [atom()], genopts()) :: tuple()
+  defp gen_struct_field_ast(key, type, options \\ []) do
     optional? = options |> Keyword.get(:optional, false)
-    array? = options |> Keyword.get(:array, false)
+    array = options |> Keyword.get(:array)
 
     aliases = completion_type(type)
     aliases_ast = {{:., [], [{:__aliases__, [alias: false], aliases}, :t]}, [], []}
 
     args =
-      if array? do
-        [key, [aliases_ast]]
-      else
-        [key, aliases_ast]
+      case array do
+        nil -> [key, aliases_ast]
+        true -> [key, [aliases_ast]]
+        :array_of_array -> [key, [[aliases_ast]]]
+      end
+
+    args = if optional?, do: args, else: args ++ [[enforce: true]]
+
+    {:field, [], args}
+  end
+
+  defp gen_normal_field_ast(key, type, options \\ []) do
+    optional? = options |> Keyword.get(:optional, false)
+    array = options |> Keyword.get(:array)
+
+    types_ast = {type, [], []}
+
+    args =
+      case array do
+        nil -> [key, types_ast]
+        true -> [key, [types_ast]]
+        :array_of_array -> [key, [[types_ast]]]
       end
 
     args = if optional?, do: args, else: args ++ [[enforce: true]]
@@ -48,31 +67,62 @@ defmodule Telex.DSL do
 
   # 结构类型可选
   defp gen_field_ast({:{}, [_], [key, {:__aliases__, [_], type}, :optional]} = _ast),
-    do: gen_field_ast(key, type, optional: true)
+    do: gen_struct_field_ast(key, type, optional: true)
 
   # 结构类型不可选
   defp gen_field_ast({key, {:__aliases__, [_], type}} = _ast),
-    do: gen_field_ast(key, type, optional: false)
+    do: gen_struct_field_ast(key, type)
 
   # 数组结构类型可选
   defp gen_field_ast({:{}, [_], [key, [{:__aliases__, [_], type}], :optional]} = _ast),
-    do: gen_field_ast(key, type, optional: true, array: true)
+    do: gen_struct_field_ast(key, type, optional: true, array: true)
+
+  # 数组结构类型不可选
+  defp gen_field_ast({key, [{:__aliases__, [_], type}]} = _ast),
+    do: gen_struct_field_ast(key, type, array: true)
+
+  # 二维数组结构类型不可选
+  defp gen_field_ast({key, [[{:__aliases__, [_], type}]]} = _ast),
+    do: gen_struct_field_ast(key, type, array: :array_of_array)
+
+  # 带有或关系的多种类型可选
+  # TODO: 此处表明 AST 的构造操作还需要独立细分以达到最大程度的复用
+  defp gen_field_ast({:{}, [_], [key, {:|, [_], types_ast}, :optional]} = _ast) do
+    typespecs_ast =
+      types_ast
+      |> Enum.map(fn type_ast ->
+        case type_ast do
+          {:__aliases__, _, type} ->
+            {{:., [], [{:__aliases__, [alias: false], completion_type(type)}, :t]}, [], []}
+
+          type ->
+            {{:., [], [{:__aliases__, [alias: false], [:Telex, :Model]}, type]}, [], []}
+        end
+      end)
+
+    {:field, [], [key, {:|, [], typespecs_ast}]}
+  end
 
   # 普通类型可选
-  defp gen_field_ast({:{}, [_], [key, type, :optional]} = _ast) do
-    {:field, [], [key, {type, [], []}]}
-  end
+  defp gen_field_ast({:{}, [_], [key, type, :optional]} = _ast),
+    do: gen_normal_field_ast(key, type, optional: true)
+
+  # 数组普通类型不可选
+  defp gen_field_ast({key, [type]}),
+    do: gen_normal_field_ast(key, type, array: true)
 
   # 普通类型不可选
-  defp gen_field_ast({key, type} = _ast) do
-    {:field, [], [key, {type, [], []}, [enforce: true]]}
-  end
+  defp gen_field_ast({key, type} = _ast),
+    do: gen_normal_field_ast(key, type)
 
   @spec completion_type([atom()]) :: [atom(), ...]
   defp completion_type(type) do
     case type do
-      [:String] -> [:String]
-      [name] -> [:Telex, :Model, name]
+      [:String] ->
+        [:String]
+
+      [name] ->
+        [:Telex, :Model, name]
     end
   end
 end

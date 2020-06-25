@@ -5,6 +5,8 @@ defmodule Telex.Model do
 
   use Telex.DSL
 
+  @type inputfile :: String.t()
+
   model User, [
     {:id, :integer},
     {:is_bot, :boolean},
@@ -133,5 +135,257 @@ defmodule Telex.Model do
     {:file_name, String, :optional},
     {:mime_type, String, :optional},
     {:file_size, :integer, :optional}
+  ]
+
+  model Video, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:width, :integer},
+    {:height, :integer},
+    {:duration, :integer},
+    {:thumb, PhotoSize, :optional},
+    {:mime_type, String, :optional},
+    {:file_size, :integer, :optional}
+  ]
+
+  model VideoNote, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:length, :integer},
+    {:duration, :integer},
+    {:thumb, PhotoSize, :optional},
+    {:file_size, :integer, :optional}
+  ]
+
+  model Voice, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:duration, :integer},
+    {:mime_type, String, :optional},
+    {:file_size, :integer, :optional}
+  ]
+
+  model Contact, [
+    {:phone_number, String},
+    {:first_name, String},
+    {:last_name, String},
+    {:user_id, :integer},
+    {:vcard, String}
+  ]
+
+  model Dice, [
+    {:emoji, String},
+    {:value, :integer}
+  ]
+
+  model PollOption, [
+    {:text, String},
+    {:voter_count, :integer}
+  ]
+
+  model PollAnswer, [
+    {:poll_id, String},
+    {:user, User},
+    {:option_ids, [:integer]}
+  ]
+
+  model Poll, [
+    {:id, String},
+    {:question, String},
+    {:options, [PollOption]},
+    {:total_voter_count, :integer},
+    {:is_closed, :boolean},
+    {:is_anonymous, :boolean},
+    {:type, String},
+    {:allows_multiple_answers, :boolean},
+    {:correct_option_id, :integer, :optional},
+    {:explanation, String, :optional},
+    {:explanation_entities, [MessageEntity], :optional},
+    {:open_period, :integer, :optional},
+    {:close_date, :integer, :optional}
+  ]
+
+  model Location, [
+    {:longitude, :float},
+    {:latitude, :float}
+  ]
+
+  model Venue, [
+    {:location, Location},
+    {:title, String},
+    {:address, String},
+    {:foursquare_id, String, :optional},
+    {:foursquare_type, String, :optional}
+  ]
+
+  model UserProfilePhotos, [
+    {:total_count, :integer},
+    {:photos, [PhotoSize]}
+  ]
+
+  model File, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:file_size, :integer, :optional},
+    {:file_path, String, :optional}
+  ]
+
+  model ReplyKeyboardMarkup, [
+    {:keyboard, [[KeyboardButton]]},
+    {:resize_keyboard, :boolean, :optional},
+    {:one_time_keyboard, :boolean, :optional},
+    {:selective, :boolean, :optional}
+  ]
+
+  model KeyboardButton, [
+    {:file_id, String},
+    {:request_contact, :boolean, :optional},
+    {:request_location, :boolean, :optional},
+    {:request_poll, KeyboardButtonPollType, :optional}
+  ]
+
+  model KeyboardButtonPollType, [
+    {:type, String, :optional}
+  ]
+
+  model ReplyKeyboardRemove, [
+    {:remove_keyboard, :boolean},
+    {:selective, :boolean, :optional}
+  ]
+
+  model InlineKeyboardMarkup, [
+    {:inline_keyboard, [[InlineKeyboardButton]]}
+  ]
+
+  model InlineKeyboardButton, [
+    {:text, String},
+    {:url, String, :optional},
+    {:login_url, LoginUrl, :optional},
+    {:callback_data, String, :optional},
+    {:switch_inline_query, String, :optional},
+    {:switch_inline_query_current_chat, String, :optional},
+    {:callback_game, CallbackGame, :optional},
+    {:pay, :boolean, :optional}
+  ]
+
+  model LoginUrl, [
+    {:url, String},
+    {:forward_text, String, :optional},
+    {:bot_username, String, :optional},
+    {:request_write_access, :boolean, :optional}
+  ]
+
+  model CallbackQuery, [
+    {:id, String},
+    {:from, User},
+    {:message, Message, :optional},
+    {:inline_message_id, String, :optional},
+    {:chat_instance, String},
+    {:data, String, :optional},
+    {:game_short_name, String, :optional}
+  ]
+
+  model ForceReply, [
+    {:force_reply, :boolean},
+    {:selective, :boolean, :optional}
+  ]
+
+  model ChatPhoto, [
+    {:small_file_id, String},
+    {:small_file_unique_id, String},
+    {:big_file_id, String},
+    {:big_file_unique_id, String}
+  ]
+
+  model ChatMember, [
+    {:user, User},
+    {:status, String},
+    {:custom_title, String, :optional},
+    {:until_date, :integer, :optional},
+    {:can_be_edited, :boolean, :optional},
+    {:can_post_messages, :boolean, :optional},
+    {:can_edit_messages, :boolean, :optional},
+    {:can_delete_messages, :boolean, :optional},
+    {:can_restrict_members, :boolean, :optional},
+    {:can_promote_members, :boolean, :optional},
+    {:can_change_info, :boolean, :optional},
+    {:can_invite_users, :boolean, :optional},
+    {:can_pin_messages, :boolean, :optional},
+    {:is_member, :boolean, :optional},
+    {:can_send_messages, :boolean, :optional},
+    {:can_send_media_messages, :boolean, :optional},
+    {:can_send_polls, :boolean, :optional},
+    {:can_send_other_messages, :boolean, :optional},
+    {:can_add_web_page_previews, :boolean, :optional}
+  ]
+
+  model ChatPermissions, [
+    {:can_send_messages, :boolean, :optional},
+    {:can_send_media_messages, :boolean, :optional},
+    {:can_send_polls, :boolean, :optional},
+    {:can_send_other_messages, :boolean, :optional},
+    {:can_add_web_page_previews, :boolean, :optional},
+    {:can_change_info, :boolean, :optional},
+    {:can_invite_users, :boolean, :optional},
+    {:can_pin_messages, :boolean, :optional}
+  ]
+
+  model BotCommand, [
+    {:command, String},
+    {:description, String}
+  ]
+
+  model ResponseParameters, [
+    {:migrate_to_chat_id, :integer, :optional},
+    {:retry_after, :integer, :optional}
+  ]
+
+  model InputMediaPhoto, [
+    {:type, String},
+    {:media, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional}
+  ]
+
+  model InputMediaVideo, [
+    {:type, String},
+    {:media, String},
+    {:thumb, :inputfile | String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:width, :integer, :optional},
+    {:height, :integer, :optional},
+    {:duration, :integer, :optional},
+    {:supports_streaming, :boolean, :optional}
+  ]
+
+  model InputMediaAnimation, [
+    {:type, String},
+    {:media, String},
+    {:thumb, :inputfile | String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:width, :integer, :optional},
+    {:height, :integer, :optional},
+    {:duration, :integer, :optional}
+  ]
+
+  model InputMediaAudio, [
+    {:type, String},
+    {:media, String},
+    {:thumb, :inputfile | String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:duration, :integer, :optional},
+    {:performer, String, :optional},
+    {:title, String, :optional}
+  ]
+
+  model InputMediaDocument, [
+    {:type, String},
+    {:media, String},
+    {:thumb, :inputfile | String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional}
   ]
 end
