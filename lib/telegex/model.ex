@@ -479,4 +479,35 @@ defmodule Telegex.Model do
     {:y_shift, :float},
     {:scale, :float}
   ]
+
+  model PassportData, [
+    {:data, [EncryptedPassportElement]},
+    {:credentials, EncryptedCredentials}
+  ]
+
+  model PassportFile, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:file_size, :integer},
+    {:file_date, :integer}
+  ]
+
+  model EncryptedPassportElement, [
+    {:type, String},
+    {:data, String, :optional},
+    {:phone_number, String, :optional},
+    {:email, String, :optional},
+    {:files, [PassportFile], :optional},
+    {:front_side, PassportFile, :optional},
+    {:reverse_side, PassportFile, :optional},
+    {:selfie, PassportFile, :optional},
+    {:translation, [PassportFile], :optional},
+    {:hash, String}
+  ]
+
+  model EncryptedCredentials, [
+    {:data, String},
+    {:hash, String},
+    {:secret, String}
+  ]
 end
