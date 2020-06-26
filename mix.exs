@@ -1,14 +1,17 @@
 defmodule Telegex.MixProject do
   use Mix.Project
 
+  @version "0.0.2"
+  @description "Telegram bot library for Elixir"
+
   def project do
     [
       app: :telegex,
-      version: "0.0.1",
+      version: @version,
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      description: description(),
+      description: @description,
       package: package(),
       name: "Telegex",
       source_url: "https://github.com/Hentioe/telegex",
@@ -18,10 +21,6 @@ defmodule Telegex.MixProject do
         extras: ["README.md"]
       ]
     ]
-  end
-
-  defp description do
-    "Telegram bot library for Elixir"
   end
 
   defp package do
