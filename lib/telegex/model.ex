@@ -36,6 +36,23 @@ defmodule Telegex.Model do
             | Telegex.Model.InputContactMessageContent.t()
   end
 
+  defmodule PassportElementError do
+    @moduledoc """
+    This object represents an error in the Telegram Passport element which was submitted
+    that should be resolved by the user.
+    """
+    @type t ::
+            Telegex.Model.PassportElementErrorDataField.t()
+            | Telegex.Model.PassportElementErrorFrontSide.t()
+            | Telegex.Model.PassportElementErrorReverseSide.t()
+            | Telegex.Model.PassportElementErrorSelfie.t()
+            | Telegex.Model.PassportElementErrorFile.t()
+            | Telegex.Model.PassportElementErrorFiles.t()
+            | Telegex.Model.PassportElementErrorTranslationFile.t()
+            | Telegex.Model.PassportElementErrorTranslationFiles.t()
+            | Telegex.Model.PassportElementErrorUnspecified.t()
+  end
+
   model User, [
     {:id, :integer},
     {:is_bot, :boolean},
@@ -538,6 +555,70 @@ defmodule Telegex.Model do
     {:data, String},
     {:hash, String},
     {:secret, String}
+  ]
+
+  model PassportElementErrorDataField, [
+    {:source, String},
+    {:type, String},
+    {:field_name, String},
+    {:data_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorFrontSide, [
+    {:source, String},
+    {:type, String},
+    {:file_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorReverseSide, [
+    {:source, String},
+    {:type, String},
+    {:file_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorSelfie, [
+    {:source, String},
+    {:type, String},
+    {:file_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorFile, [
+    {:source, String},
+    {:type, String},
+    {:file_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorFiles, [
+    {:source, String},
+    {:type, String},
+    {:file_hashes, [String]},
+    {:message, String}
+  ]
+
+  model PassportElementErrorTranslationFile, [
+    {:source, String},
+    {:type, String},
+    {:file_hash, String},
+    {:message, String}
+  ]
+
+  model PassportElementErrorTranslationFiles, [
+    {:source, String},
+    {:type, String},
+    {:file_hashes, [String]},
+    {:message, String}
+  ]
+
+  model PassportElementErrorUnspecified, [
+    {:source, String},
+    {:type, String},
+    {:element_hash, String},
+    {:message, String}
   ]
 
   model Game, [
