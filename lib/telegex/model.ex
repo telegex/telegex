@@ -953,4 +953,20 @@ defmodule Telegex.Model do
     {:poll, Poll, :optional},
     {:poll_answer, PollAnswer, :optional}
   ]
+
+  model Response, [
+    {:ok, :boolean},
+    {:result, :any, :optional},
+    {:error_code, :integer, :optional},
+    {:description, String, :optional}
+  ]
+
+  model Error, [
+    {:error_code, :integer},
+    {:description, String}
+  ]
+
+  model RequestError, [
+    {:reason, :atom}
+  ]
 end
