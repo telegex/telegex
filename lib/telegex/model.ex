@@ -5,7 +5,36 @@ defmodule Telegex.Model do
 
   use Telegex.DSL
 
-  @type inputfile :: String.t()
+  defmodule InputMedia do
+    @moduledoc """
+    This object represents the content of a media message to be sent.
+    """
+    @type t ::
+            Telegex.Model.InputMediaAnimation.t()
+            | Telegex.Model.InputMediaDocument.t()
+            | Telegex.Model.InputMediaAudio.t()
+            | Telegex.Model.InputMediaPhoto.t()
+            | Telegex.Model.InputMediaVideo.t()
+  end
+
+  defmodule InputFile do
+    @moduledoc """
+    This object represents the contents of a file to be uploaded.
+    Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.
+    """
+    @type t :: String.t()
+  end
+
+  defmodule InputMessageContent do
+    @moduledoc """
+    This object represents the content of a message to be sent as a result of an inline query.
+    """
+    @type t ::
+            Telegex.Model.InputTextMessageContent.t()
+            | Telegex.Model.InputLocationMessageContent.t()
+            | Telegex.Model.InputVenueMessageContent.t()
+            | Telegex.Model.InputContactMessageContent.t()
+  end
 
   model User, [
     {:id, :integer},
@@ -350,7 +379,7 @@ defmodule Telegex.Model do
   model InputMediaVideo, [
     {:type, String},
     {:media, String},
-    {:thumb, :inputfile | String, :optional},
+    {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
     {:width, :integer, :optional},
@@ -362,7 +391,7 @@ defmodule Telegex.Model do
   model InputMediaAnimation, [
     {:type, String},
     {:media, String},
-    {:thumb, :inputfile | String, :optional},
+    {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
     {:width, :integer, :optional},
@@ -373,7 +402,7 @@ defmodule Telegex.Model do
   model InputMediaAudio, [
     {:type, String},
     {:media, String},
-    {:thumb, :inputfile | String, :optional},
+    {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
     {:duration, :integer, :optional},
@@ -384,7 +413,7 @@ defmodule Telegex.Model do
   model InputMediaDocument, [
     {:type, String},
     {:media, String},
-    {:thumb, :inputfile | String, :optional},
+    {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional}
   ]
@@ -526,5 +555,306 @@ defmodule Telegex.Model do
     {:position, :integer},
     {:user, User},
     {:score, :integer}
+  ]
+
+  model InlineQuery, [
+    {:id, String},
+    {:from, User},
+    {:location, Location, :optional},
+    {:query, String},
+    {:offset, String}
+  ]
+
+  model InlineQueryResultArticle, [
+    {:type, String},
+    {:id, String},
+    {:title, String},
+    {:input_message_content, InputMessageContent},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:url, String, :optional},
+    {:hide_url, :boolean, :optional},
+    {:description, String, :optional},
+    {:thumb_url, String, :optional},
+    {:thumb_width, :integer, :optional},
+    {:thumb_height, :integer, :optional}
+  ]
+
+  model InlineQueryResultPhoto, [
+    {:type, String},
+    {:id, String},
+    {:photo_url, String},
+    {:thumb_url, String},
+    {:photo_width, :integer, :optional},
+    {:photo_height, :integer, :optional},
+    {:title, String, :optional},
+    {:description, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultGif, [
+    {:type, String},
+    {:id, String},
+    {:gif_url, String},
+    {:gif_width, :integer, :optional},
+    {:gif_height, :integer, :optional},
+    {:gif_duration, :integer, :optional},
+    {:thumb_url, String},
+    {:thumb_mime_type, String, :optional},
+    {:title, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultMpeg4Gif, [
+    {:type, String},
+    {:id, String},
+    {:mpeg4_url, String},
+    {:mpeg4_width, :integer, :optional},
+    {:mpeg4_height, :integer, :optional},
+    {:mpeg4_duration, :integer, :optional},
+    {:thumb_url, String},
+    {:thumb_mime_type, String, :optional},
+    {:title, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultVideo, [
+    {:type, String},
+    {:id, String},
+    {:video_url, String},
+    {:mime_type, String},
+    {:thumb_url, String},
+    {:title, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:video_width, :integer, :optional},
+    {:video_height, :integer, :optional},
+    {:video_duration, :integer, :optional},
+    {:description, :integer, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultAudio, [
+    {:type, String},
+    {:id, String},
+    {:audio_url, String},
+    {:title, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:performer, String, :optional},
+    {:audio_duration, :integer, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultVoice, [
+    {:type, String},
+    {:id, String},
+    {:voice_url, String},
+    {:title, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:voice_duration, :integer, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultDocument, [
+    {:type, String},
+    {:id, String},
+    {:title, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:document_url, String},
+    {:mime_type, String},
+    {:description, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional},
+    {:thumb_url, String, :optional},
+    {:thumb_width, :integer, :optional},
+    {:thumb_height, :integer, :optional}
+  ]
+
+  model InlineQueryResultLocation, [
+    {:type, String},
+    {:id, String},
+    {:latitude, :float},
+    {:longitude, :float},
+    {:title, String},
+    {:live_period, :integer, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional},
+    {:thumb_url, String, :optional},
+    {:thumb_width, :integer, :optional},
+    {:thumb_height, :integer, :optional}
+  ]
+
+  model InlineQueryResultVenue, [
+    {:type, String},
+    {:id, String},
+    {:latitude, :float},
+    {:longitude, :float},
+    {:title, String},
+    {:address, String},
+    {:foursquare_id, String, :optional},
+    {:foursquare_type, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional},
+    {:thumb_url, String, :optional},
+    {:thumb_width, :integer, :optional},
+    {:thumb_height, :integer, :optional}
+  ]
+
+  model InlineQueryResultContact, [
+    {:type, String},
+    {:id, String},
+    {:phone_number, String},
+    {:first_name, String},
+    {:last_name, String, :optional},
+    {:vcard, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional},
+    {:thumb_url, String, :optional},
+    {:thumb_width, :integer, :optional},
+    {:thumb_height, :integer, :optional}
+  ]
+
+  model InlineQueryResultGame, [
+    {:type, String},
+    {:id, String},
+    {:game_short_name, String},
+    {:reply_markup, InlineKeyboardMarkup, :optional}
+  ]
+
+  model InlineQueryResultCachedPhoto, [
+    {:type, String},
+    {:id, String},
+    {:photo_file_id, String},
+    {:title, String, :optional},
+    {:description, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedGif, [
+    {:type, String},
+    {:id, String},
+    {:gif_file_id, String},
+    {:title, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedMpeg4Gif, [
+    {:type, String},
+    {:id, String},
+    {:mpeg4_file_id, String},
+    {:title, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedSticker, [
+    {:type, String},
+    {:id, String},
+    {:sticker_file_id, String},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedDocument, [
+    {:type, String},
+    {:id, String},
+    {:title, String},
+    {:document_file_id, String},
+    {:description, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedVideo, [
+    {:type, String},
+    {:id, String},
+    {:video_file_id, String},
+    {:title, String},
+    {:description, String, :optional},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedVoice, [
+    {:type, String},
+    {:id, String},
+    {:voice_file_id, String},
+    {:title, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InlineQueryResultCachedAudio, [
+    {:type, String},
+    {:id, String},
+    {:audio_file_id, String},
+    {:caption, String, :optional},
+    {:parse_mode, String, :optional},
+    {:reply_markup, InlineKeyboardMarkup, :optional},
+    {:input_message_content, InputMessageContent, :optional}
+  ]
+
+  model InputTextMessageContent, [
+    {:message_text, String},
+    {:parse_mode, String, :optional},
+    {:disable_web_page_preview, :boolean, :optional}
+  ]
+
+  model InputLocationMessageContent, [
+    {:latitude, :float},
+    {:longitude, :float},
+    {:live_period, :integer, :optional}
+  ]
+
+  model InputVenueMessageContent, [
+    {:latitude, :float},
+    {:longitude, :float},
+    {:title, String},
+    {:address, String},
+    {:foursquare_id, String, :optional},
+    {:foursquare_type, String, :optional}
+  ]
+
+  model InputContactMessageContent, [
+    {:phone_number, String},
+    {:first_name, String},
+    {:last_name, String, :optional},
+    {:vcard, String, :optional}
+  ]
+
+  model ChosenInlineResult, [
+    {:result_id, String},
+    {:from, User},
+    {:location, Location, :optional},
+    {:inline_message_id, String, :optional},
+    {:query, String}
   ]
 end
