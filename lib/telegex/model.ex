@@ -388,4 +388,66 @@ defmodule Telegex.Model do
     {:caption, String, :optional},
     {:parse_mode, String, :optional}
   ]
+
+  model LabeledPrice, [
+    {:label, String},
+    {:amount, :integer}
+  ]
+
+  model Invoice, [
+    {:title, String},
+    {:description, String},
+    {:start_parameter, String},
+    {:currency, String},
+    {:total_amount, :integer}
+  ]
+
+  model ShippingAddress, [
+    {:country_code, String},
+    {:state, String},
+    {:city, String},
+    {:street_line1, String},
+    {:street_line2, String},
+    {:post_code, String}
+  ]
+
+  model OrderInfo, [
+    {:name, String, :optional},
+    {:phone_number, String, :optional},
+    {:email, String, :optional},
+    {:shipping_address, ShippingAddress, :optional}
+  ]
+
+  model ShippingOption, [
+    {:id, String},
+    {:title, String},
+    {:prices, [LabeledPrice]}
+  ]
+
+  model SuccessfulPayment, [
+    {:currency, String},
+    {:total_amount, :integer},
+    {:invoice_payload, String},
+    {:shipping_option_id, String, :optional},
+    {:order_info, OrderInfo, :optional},
+    {:telegram_payment_charge_id, String},
+    {:provider_payment_charge_id, String}
+  ]
+
+  model ShippingQuery, [
+    {:id, String},
+    {:from, User},
+    {:invoice_payload, String},
+    {:shipping_address, ShippingAddress}
+  ]
+
+  model PreCheckoutQuery, [
+    {:id, String},
+    {:from, User},
+    {:currency, String},
+    {:total_amount, :integer},
+    {:invoice_payload, String},
+    {:shipping_option_id, String, :optional},
+    {:order_info, String, :optional}
+  ]
 end
