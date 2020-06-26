@@ -1,6 +1,6 @@
-defmodule Telex do
+defmodule Telegex do
   @moduledoc """
-  Documentation for `Telex`.
+  Documentation for `Telegex`.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Telex do
 
   ## Examples
 
-      iex> Telex.hello()
+      iex> Telegex.hello()
       :world
 
   """

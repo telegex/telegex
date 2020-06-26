@@ -1,9 +1,9 @@
-defmodule Telex.DSL do
+defmodule Telegex.DSL do
   @moduledoc false
   defmacro __using__(_) do
     quote do
-      require Telex.DSL
-      import Telex.DSL
+      require Telegex.DSL
+      import Telegex.DSL
     end
   end
 
@@ -96,7 +96,7 @@ defmodule Telex.DSL do
             {{:., [], [{:__aliases__, [alias: false], completion_type(type)}, :t]}, [], []}
 
           type ->
-            {{:., [], [{:__aliases__, [alias: false], [:Telex, :Model]}, type]}, [], []}
+            {{:., [], [{:__aliases__, [alias: false], [:Telegex, :Model]}, type]}, [], []}
         end
       end)
 
@@ -122,7 +122,7 @@ defmodule Telex.DSL do
         [:String]
 
       [name] ->
-        [:Telex, :Model, name]
+        [:Telegex, :Model, name]
     end
   end
 end

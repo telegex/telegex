@@ -1,4 +1,4 @@
-# Telex
+# Telegex
 
 This library is a client implementation of the official bot API, without any encapsulation. Original flavor!
 

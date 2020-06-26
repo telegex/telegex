@@ -1,9 +1,9 @@
-defmodule Telex.Model do
+defmodule Telegex.Model do
   @moduledoc """
   All types used in Bot API response.
   """
 
-  use Telex.DSL
+  use Telegex.DSL
 
   @type inputfile :: String.t()
 

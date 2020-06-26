@@ -1,20 +1,20 @@
-defmodule Telex.MixProject do
+defmodule Telegex.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :telex,
+      app: :telegex,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # Docs
-      name: "Telex",
-      source_url: "https://github.com/Hentioe/telex",
-      homepage_url: "https://github.com/Hentioe/telex",
+      name: "Telegex",
+      source_url: "https://github.com/Hentioe/telegex",
+      homepage_url: "https://github.com/Hentioe/telegex",
       docs: [
         # The main page in the docs
-        main: "Telex",
+        main: "Telegex",
         extras: ["README.md"]
       ]
     ]
