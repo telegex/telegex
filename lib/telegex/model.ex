@@ -3,7 +3,7 @@ defmodule Telegex.Model do
   All types used in Bot API response.
   """
 
-  use Telegex.DSL
+  import Telegex.DSL, only: [model: 2]
 
   defmodule InputMedia do
     @moduledoc """
@@ -937,5 +937,20 @@ defmodule Telegex.Model do
     {:location, Location, :optional},
     {:inline_message_id, String, :optional},
     {:query, String}
+  ]
+
+  model Update, [
+    {:update_id, :integer},
+    {:message, Message, :optional},
+    {:edited_message, Message, :optional},
+    {:channel_post, Message, :optional},
+    {:edited_channel_post, Message, :optional},
+    {:inline_query, InlineQuery, :optional},
+    {:chosen_inline_result, ChosenInlineResult, :optional},
+    {:callback_query, CallbackQuery, :optional},
+    {:shipping_query, ShippingQuery, :optional},
+    {:pre_checkout_query, PreCheckoutQuery, :optional},
+    {:poll, Poll, :optional},
+    {:poll_answer, PollAnswer, :optional}
   ]
 end

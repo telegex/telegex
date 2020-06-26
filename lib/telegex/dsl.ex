@@ -1,11 +1,5 @@
 defmodule Telegex.DSL do
   @moduledoc false
-  defmacro __using__(_) do
-    quote do
-      require Telegex.DSL
-      import Telegex.DSL
-    end
-  end
 
   @doc """
   Use this macro to simply construct a model.
