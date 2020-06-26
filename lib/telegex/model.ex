@@ -450,4 +450,33 @@ defmodule Telegex.Model do
     {:shipping_option_id, String, :optional},
     {:order_info, String, :optional}
   ]
+
+  model Sticker, [
+    {:file_id, String},
+    {:file_unique_id, String},
+    {:width, :integer},
+    {:height, :integer},
+    {:is_animated, :boolean},
+    {:thumb, PhotoSize, :optional},
+    {:emoji, String, :optional},
+    {:set_name, String, :optional},
+    {:mask_position, MaskPosition, :optional},
+    {:file_size, :integer, :optional}
+  ]
+
+  model StickerSet, [
+    {:name, String},
+    {:title, String},
+    {:is_animated, :boolean},
+    {:contains_masks, :boolean},
+    {:stickers, [Sticker]},
+    {:thumb, PhotoSize, :optional}
+  ]
+
+  model MaskPosition, [
+    {:point, String},
+    {:x_shift, :float},
+    {:y_shift, :float},
+    {:scale, :float}
+  ]
 end
