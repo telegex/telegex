@@ -510,4 +510,21 @@ defmodule Telegex.Model do
     {:hash, String},
     {:secret, String}
   ]
+
+  model Game, [
+    {:title, String},
+    {:description, String},
+    {:photo, [PhotoSize]},
+    {:text, String, :optional},
+    {:text_entities, [MessageEntity], :optional},
+    {:animation, Animation, :optional}
+  ]
+
+  model CallbackGame, []
+
+  model GameHighScore, [
+    {:position, :integer},
+    {:user, User},
+    {:score, :integer}
+  ]
 end
