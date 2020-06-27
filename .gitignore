@@ -26,3 +26,5 @@ telegex-*.tar
 /.elixir_ls/
 
 /config/*.secret.exs
+
+/_assets/

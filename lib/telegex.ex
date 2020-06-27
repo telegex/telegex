@@ -61,6 +61,24 @@ defmodule Telegex do
   )
 
   @doc """
+  Use this method to send photos. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendPhoto",
+    [
+      {:chat_id, :integer | String},
+      {:photo, InputFile | String},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
   Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages.
   On success, if edited message is sent by the bot,
   the edited Message is returned, otherwise True is returned.
