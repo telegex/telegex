@@ -23,6 +23,8 @@ defmodule Telegex.DSL do
           unquote(refereces)
         end
 
+        def struct(data) when is_map(data), do: Telegex.Model.struct_model(unquote(name), data)
+
         # 自定义编码过程，去掉所有的 nil 字段
         defimpl Jason.Encoder, for: unquote(name) do
           def encode(struct, opts) do
@@ -38,9 +40,13 @@ defmodule Telegex.DSL do
   end
 
   defp reference?(type) when is_atom(type) do
-    case type do
-      :String -> false
-      _ -> true
+    if Atom.to_string(type) =~ ~r(^[A-Z]) do
+      case type do
+        :String -> false
+        _ -> true
+      end
+    else
+      false
     end
   end
 
@@ -67,6 +73,9 @@ defmodule Telegex.DSL do
 
   defp reference?(_ast), do: false
 
+  # 读取字段中的类型构建引用关系
+  # 当前此函数会忽略存在或关系的多种类型字段
+  # 正因为如此，动态返回类型将不会尝试结构化为指定模型
   @type build_reference_opts :: [array: arraytypes()]
   @spec build_reference(atom(), atom(), build_reference_opts()) ::
           {atom(), atom() | [atom()] | [[atom()]]}
@@ -263,19 +272,57 @@ defmodule Telegex.DSL do
     # 6. 构造返回模型的 ast
     return_typespecs_ast = build_arg_typespec_ast({:_placeholder, returns})
 
+    # 7. 尝试获取返回类型的模型模块（普通类型会返回 :any）
+    model_module = try_get_returns_model(returns)
+
     quote do
       @spec unquote(typespecs_ast) ::
               {:ok, unquote(return_typespecs_ast)}
               | {:error, Telegex.Model.errors()}
-      def unquote(fun_sign_ast), do: unquote(call_ast)
+      def unquote(fun_sign_ast),
+        do: unquote(call_ast) |> struct_response(unquote(model_module))
     end
   end
+
+  defp returns_array_reference?([{:__aliases__, _, [_]} = children_ast]),
+    do: returns_reference?(children_ast)
+
+  defp returns_array_reference?(_), do: false
+  defp returns_reference?({:__aliases__, _, [_]} = ast), do: reference?({:_placeholder, ast})
+  defp returns_reference?(_), do: false
 
   # 检测参数是否为可选
   defp optional?({:{}, _, [_, _, :optional]}), do: true
   defp optional?(_), do: false
   # 检测参数是否必要
   defp require?(ast), do: !optional?(ast)
+
+  defp try_get_returns_model(returns_ast) do
+    gen_model_module = fn array? ->
+      ast =
+        if array? do
+          [children_ast] = returns_ast
+          children_ast
+        else
+          returns_ast
+        end
+
+      {:__aliases__, _, [type]} = ast
+
+      :"Elixir.Telegex.Model.#{type}"
+    end
+
+    cond do
+      returns_array_reference?(returns_ast) ->
+        [gen_model_module.(true)]
+
+      returns_reference?(returns_ast) ->
+        gen_model_module.(false)
+
+      true ->
+        :any
+    end
+  end
 
   # 构建单个参数的 ast
   defp build_arg_ast({name, _type}), do: {name, [], Elixir}

@@ -5,7 +5,7 @@ defmodule Telegex.Request do
   alias Telegex.Config
 
   @type errors :: Error.t() | RequestError.t()
-  @type result :: [map()] | map()
+  @type result :: any()
 
   @spec call(String.t(), keyword()) :: {:ok, result()} | {:error, errors()}
   def call(method, params \\ []) when is_binary(method) and is_list(params) do
@@ -16,7 +16,7 @@ defmodule Telegex.Request do
     post(endpoint, json_body) |> handle_response()
   end
 
-  @spec handle_response({:ok, HTTPoison.Response.t()}) :: any() | {:error, Error.t()}
+  @spec handle_response({:ok, HTTPoison.Response.t()}) :: {:ok, result()} | {:error, Error.t()}
   defp handle_response({:ok, %HTTPoison.Response{body: body} = _response}) do
     %Response{ok: ok, result: result, error_code: error_code, description: description} =
       structed_response(body)
@@ -26,7 +26,7 @@ defmodule Telegex.Request do
       else: {:error, %Error{error_code: error_code, description: description}}
   end
 
-  @spec handle_response({:error, HTTPoison.Error.t()}) :: any() | {:error, RequestError.t()}
+  @spec handle_response({:error, HTTPoison.Error.t()}) :: {:error, RequestError.t()}
   defp handle_response({:error, %HTTPoison.Error{reason: reason} = _response}) do
     {:error, %RequestError{reason: reason}}
   end

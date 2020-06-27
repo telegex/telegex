@@ -5,6 +5,46 @@ defmodule Telegex.Model do
 
   import Telegex.DSL, only: [model: 2]
 
+  @spec struct_model(atom(), map()) :: map()
+  @doc """
+  Convert `map` data to the built-in model struct.
+  """
+  # 当前此函数至多支持两层数组的子引用，且忽略存在引用可能是多种类型的字段
+  def struct_model(module, data) when is_atom(module) and is_map(data) do
+    references = module.__references__()
+
+    struct_child = fn model_name, v -> :"Elixir.Telegex.Model.#{model_name}".struct(v) end
+
+    structed_children =
+      references
+      |> Enum.filter(fn {field, _} -> data[field] != nil && data[field] != [] end)
+      |> Enum.map(fn {field, type} ->
+        value = data[field]
+
+        case type do
+          [[model_name]] ->
+            {field,
+             value
+             |> Enum.map(fn sub_array ->
+               sub_array |> Enum.map(fn v -> struct_child.(model_name, v) end)
+             end)}
+
+          [model_name] ->
+            {field, value |> Enum.map(fn v -> struct_child.(model_name, v) end)}
+
+          model_name ->
+            {field, struct_child.(model_name, value)}
+        end
+      end)
+
+    structed = struct(module, data)
+
+    structed_children
+    |> Enum.reduce(structed, fn {field, data}, updated_struct ->
+      updated_struct |> Map.put(field, data)
+    end)
+  end
+
   defmodule InputMedia do
     @moduledoc """
     This object represents the content of a media message to be sent.
