@@ -7,12 +7,20 @@ defmodule Telegex.DSL do
   defmacro model(name, fields) do
     fields_ast = fields |> Enum.map(&gen_field_ast/1)
 
+    # 读取所有的引用
+    refereces = fields |> Enum.filter(&reference?/1) |> Enum.map(&build_reference/1)
+
     quote do
       defmodule unquote(name) do
         use TypedStruct
 
         typedstruct do
           unquote({:__block__, [], fields_ast})
+        end
+
+        # 存储引用列表
+        def __references__ do
+          unquote(refereces)
         end
 
         # 自定义编码过程，去掉所有的 nil 字段
@@ -28,6 +36,74 @@ defmodule Telegex.DSL do
       end
     end
   end
+
+  defp reference?(type) when is_atom(type) do
+    case type do
+      :String -> false
+      _ -> true
+    end
+  end
+
+  # 不可选别名
+  defp reference?({_name, {:__aliases__, _, [type]}} = _ast), do: reference?(type)
+
+  # 不可选数组别名
+  defp reference?({_name, [{:__aliases__, _, [type]}]} = _ast), do: reference?(type)
+
+  # 不可选我二维数组别名
+  defp reference?({_name, [[{:__aliases__, _, [type]}]]} = _ast), do: reference?(type)
+
+  # 可选别名
+  defp reference?({:{}, _, [_name, {:__aliases__, _, [type]}, :optional]}),
+    do: reference?(type)
+
+  # 可选数组别名
+  defp reference?({:{}, _, [_name, [{:__aliases__, _, [type]}], :optional]}),
+    do: reference?(type)
+
+  # 可选二维数组别名
+  defp reference?({:{}, _, [_name, [[{:__aliases__, _, [type]}]], :optional]}),
+    do: reference?(type)
+
+  defp reference?(_ast), do: false
+
+  @type build_reference_opts :: [array: arraytypes()]
+  @spec build_reference(atom(), atom(), build_reference_opts()) ::
+          {atom(), atom() | [atom()] | [[atom()]]}
+  defp build_reference(name, model_name, options \\ []) do
+    array = options |> Keyword.get(:array, false)
+
+    module = model_name
+
+    case array do
+      true -> {name, [module]}
+      :array_of_array -> {name, [[module]]}
+      _ -> {name, module}
+    end
+  end
+
+  # 匹配不可选引用
+  defp build_reference({name, {:__aliases__, _, [type]}}), do: build_reference(name, type)
+
+  # 匹配可选引用
+  defp build_reference({:{}, _, [name, {:__aliases__, _, [type]}, :optional]}),
+    do: build_reference(name, type)
+
+  # 匹配可选数组引用
+  defp build_reference({:{}, _, [name, [{:__aliases__, _, [type]}], :optional]}),
+    do: build_reference(name, type, array: true)
+
+  # 匹配不可选数组引用
+  defp build_reference({name, [{:__aliases__, _, [type]}]}),
+    do: build_reference(name, type, array: true)
+
+  # 匹配可选二维数组引用
+  defp build_reference({:{}, _, [name, [[{:__aliases__, _, [type]}]], :optional]}),
+    do: build_reference(name, type, array: :array_of_array)
+
+  # 匹配不可选二维数组引用
+  defp build_reference({name, [[{:__aliases__, _, [type]}]]}),
+    do: build_reference(name, type, array: :array_of_array)
 
   @type arraytypes :: true | :array_of_array | nil
   @type genopts :: [{:optional, boolean()}, {:array, arraytypes()}]
