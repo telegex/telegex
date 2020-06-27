@@ -35,8 +35,6 @@ config :telegex,
 
 Here are some examples of common API calls.
 
-For more details, please refer to the [documentation](https://hexdocs.pm/telegex/Telegex.html) and the [official page](https://core.telegram.org/bots/api) of the Telegram bot API.
-
 ### getMe
 
 ```elixir
@@ -98,3 +96,5 @@ iex> Telegex.send_message -1001486769003, "Hello Telegex!"
    ...
  }}
 ```
+
+For more details, please refer to the [documentation](https://hexdocs.pm/telegex/Telegex.html) and the [official page](https://core.telegram.org/bots/api) of the Telegram bot API.
