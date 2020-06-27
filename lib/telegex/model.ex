@@ -53,6 +53,8 @@ defmodule Telegex.Model do
             | Telegex.Model.PassportElementErrorUnspecified.t()
   end
 
+  @type errors :: Telegex.Model.Error.t() | Telegex.Model.RequestError.t()
+
   model User, [
     {:id, :integer},
     {:is_bot, :boolean},

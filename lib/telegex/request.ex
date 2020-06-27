@@ -7,7 +7,7 @@ defmodule Telegex.Request do
   @type errors :: Error.t() | RequestError.t()
   @type result :: [map()] | map()
 
-  @spec call(String.t(), keyword()) :: result() | {:error, errors()}
+  @spec call(String.t(), keyword()) :: {:ok, result()} | {:error, errors()}
   def call(method, params \\ []) when is_binary(method) and is_list(params) do
     endpoint = "https://api.telegram.org/bot#{Config.token()}/#{method}"
 
@@ -21,7 +21,9 @@ defmodule Telegex.Request do
     %Response{ok: ok, result: result, error_code: error_code, description: description} =
       structed_response(body)
 
-    if ok, do: result, else: {:error, %Error{error_code: error_code, description: description}}
+    if ok,
+      do: {:ok, result},
+      else: {:error, %Error{error_code: error_code, description: description}}
   end
 
   @spec handle_response({:error, HTTPoison.Error.t()}) :: any() | {:error, RequestError.t()}
@@ -40,17 +42,7 @@ defmodule Telegex.Request do
 
   @spec structed_response(String.t()) :: Response.t()
   defp structed_response(json) do
-    data =
-      json
-      |> Jason.decode!()
-      |> Map.new(fn {key, value} ->
-        try do
-          {String.to_existing_atom(key), value}
-        rescue
-          _ -> {:ignore, :ignore}
-        end
-      end)
-      |> Map.drop([:ignore])
+    data = json |> Jason.decode!(keys: :atoms)
 
     struct(Response, data)
   end
