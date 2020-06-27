@@ -61,6 +61,20 @@ defmodule Telegex do
   )
 
   @doc """
+  Use this method to forward messages of any kind. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "forwardMessage",
+    [
+      {:chat_id, :integer | String},
+      {:from_chat_id, :integer | String},
+      {:disable_notification, :boolean, :optional},
+      {:message_id, :integer}
+    ],
+    Message
+  )
+
+  @doc """
   Use this method to send photos. On success, the sent `Telegex.Model.Message` is returned.
   """
   method(
@@ -70,6 +84,32 @@ defmodule Telegex do
       {:photo, InputFile | String},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send audio files, if you want Telegram clients to display them in the music player.
+  Your audio must be in the .MP3 or .M4A format.
+  On success, the sent `Telegex.Model.Message` is returned. Bots can currently send audio files of up to 50 MB in size,
+  this limit may be changed in the future.
+
+  For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice) method instead.
+  """
+  method(
+    "sendAudio",
+    [
+      {:chat_id, :integer | String},
+      {:audio, InputFile | String},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:performer, String, :optional},
+      {:title, String, :optional},
+      {:thumb, InputFile | String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
       {:reply_markup,

@@ -69,7 +69,7 @@ defmodule Telegex.Request do
 
     local_attachs = no_empty_attachs |> Enum.filter(fn {_, attach} -> File.exists?(attach) end)
 
-    if length(local_attachs) == 0 do
+    if Enum.empty?(local_attachs) do
       # 如果没有本地文件，则使用传统的方式请求
       post(endpoint, params)
     else
