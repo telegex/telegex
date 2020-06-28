@@ -283,41 +283,40 @@ defmodule Telegex do
     Message | :boolean
   )
 
-  @doc """
-  Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages.
-  On success, if edited message is sent by the bot,
-  the edited Message is returned, otherwise True is returned.
-  """
-  method(
-    "editMessageText",
-    [
-      {:chat_id, :integer | String, :optional},
-      {:message_id, :integer, :optional},
-      {:inline_message_id, String, :optional},
-      {:text, String},
-      {:parse_mode, String, :optional},
-      {:disable_web_page_preview, :boolean, :optional},
-      {:reply_markup, InlineKeyboardMarkup, :optional}
-    ],
-    Message | :boolean
-  )
+  method("sendVenue", [], Message)
+  method("sendContact", [], Message)
+  method("sendPoll", [], Message)
+  method("sendDice", [], Message)
+  method("sendChatAction", [], :boolean)
+  method("getUserProfilePhotos", [], UserProfilePhotos)
+  method("getFile", [], File)
 
   @doc """
-  Use this method to delete a message, including service messages, with the following limitations:
-  - A message can only be deleted if it was sent less than 48 hours ago.
-  - A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
-  - Bots can delete outgoing messages in private chats, groups, and supergroups.
-  - Bots can delete incoming messages in private chats.
-  - Bots granted can_post_messages permissions can delete outgoing messages in channels.
-  - If the bot is an administrator of a group, it can delete any message there.
-  - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
+  Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels,
+  the user will not be able to return to the group on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
   Returns True on success.
   """
   method(
-    "deleteMessage",
+    "kickChatMember",
     [
       {:chat_id, :integer | String},
-      {:message_id, :integer}
+      {:user_id, :integer},
+      {:until_date, :integer, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to unban a previously kicked user in a supergroup or channel.
+  The user will not return to the group or channel automatically,
+  but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
+  """
+  method(
+    "unbanChatMember",
+    [
+      {:chat_id, :integer | String},
+      {:user_id, :integer}
     ],
     :boolean
   )
@@ -338,18 +337,16 @@ defmodule Telegex do
     :boolean
   )
 
-  @doc """
-  Use this method to get information about a member of a chat.
-  Returns a `Telegex.Model.ChatMember` object on success.
-  """
-  method(
-    "getChatMember",
-    [
-      {:chat_id, :integer | String},
-      {:user_id, :integer}
-    ],
-    ChatMember
-  )
+  method("promoteChatMember", [], :boolean)
+  method("setChatAdministratorCustomTitle", [], :boolean)
+  method("setChatPermissions", [], :boolean)
+  method("exportChatInviteLink", [], :boolean)
+  method("setChatPhoto", [], :boolean)
+  method("deleteChatPhoto", [], :boolean)
+  method("setChatTitle", [], :boolean)
+  method("setChatDescription", [], :boolean)
+  method("pinChatMessage", [], :boolean)
+  method("unpinChatMessage", [], :boolean)
 
   @doc """
   Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
@@ -387,35 +384,23 @@ defmodule Telegex do
     [ChatMember]
   )
 
+  method("getChatMembersCount", [], :integer)
+
   @doc """
-  Use this method to unban a previously kicked user in a supergroup or channel.
-  The user will not return to the group or channel automatically,
-  but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success.
+  Use this method to get information about a member of a chat.
+  Returns a `Telegex.Model.ChatMember` object on success.
   """
   method(
-    "unbanChatMember",
+    "getChatMember",
     [
       {:chat_id, :integer | String},
       {:user_id, :integer}
     ],
-    :boolean
+    ChatMember
   )
 
-  @doc """
-  Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels,
-  the user will not be able to return to the group on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first.
-  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
-  Returns True on success.
-  """
-  method(
-    "kickChatMember",
-    [
-      {:chat_id, :integer | String},
-      {:user_id, :integer},
-      {:until_date, :integer, :optional}
-    ],
-    :boolean
-  )
+  method("setChatStickerSet", [], :boolean)
+  method("deleteChatStickerSet", [], :boolean)
 
   @doc """
   Use this method to send answers to callback queries sent from [inline keyboards](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating).
@@ -430,6 +415,48 @@ defmodule Telegex do
       {:show_alert, :boolean, :optional},
       {:url, String, :optional},
       {:cache_time, :integer, :optional}
+    ],
+    :boolean
+  )
+
+  method("setMyCommands", [], :boolean)
+  method("getMyCommands", [], [BotCommand])
+
+  @doc """
+  Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages.
+  On success, if edited message is sent by the bot,
+  the edited Message is returned, otherwise True is returned.
+  """
+  method(
+    "editMessageText",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:text, String},
+      {:parse_mode, String, :optional},
+      {:disable_web_page_preview, :boolean, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message | :boolean
+  )
+
+  @doc """
+  Use this method to delete a message, including service messages, with the following limitations:
+  - A message can only be deleted if it was sent less than 48 hours ago.
+  - A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
+  - Bots can delete outgoing messages in private chats, groups, and supergroups.
+  - Bots can delete incoming messages in private chats.
+  - Bots granted can_post_messages permissions can delete outgoing messages in channels.
+  - If the bot is an administrator of a group, it can delete any message there.
+  - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
+  Returns True on success.
+  """
+  method(
+    "deleteMessage",
+    [
+      {:chat_id, :integer | String},
+      {:message_id, :integer}
     ],
     :boolean
   )
