@@ -3,22 +3,6 @@ defmodule Telegex do
   All methods in the Bot API.
   """
 
-  alias Telegex.Model
-
-  defp struct_response(result, :any), do: result
-
-  defp struct_response({:ok, data}, [model_module]) when is_list(data) do
-    {:ok, data |> Enum.map(fn child_data -> Model.struct_model(model_module, child_data) end)}
-  end
-
-  defp struct_response({:ok, data}, model_module) when is_map(data) do
-    {:ok, Model.struct_model(model_module, data)}
-  end
-
-  defp struct_response({:ok, _data} = result, _), do: result
-
-  defp struct_response({:error, _error} = result, _), do: result
-
   import Telegex.DSL, only: [method: 3]
 
   @doc """

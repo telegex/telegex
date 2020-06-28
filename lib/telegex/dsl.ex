@@ -23,7 +23,13 @@ defmodule Telegex.DSL do
           unquote(refereces)
         end
 
-        def struct(data) when is_map(data), do: Telegex.Model.struct_model(unquote(name), data)
+        struct_doc = """
+        Convert `map` data to `#{unquote(name)}`.
+        Unlike `struct/2`, this function will convert nested struct fields together.
+        """
+
+        @doc struct_doc
+        def struct(data) when is_map(data), do: Telegex.Helper.struct_model(unquote(name), data)
 
         # 自定义编码过程，去掉所有的 nil 字段
         defimpl Jason.Encoder, for: unquote(name) do
@@ -280,7 +286,7 @@ defmodule Telegex.DSL do
               {:ok, unquote(return_typespecs_ast)}
               | {:error, Telegex.Model.errors()}
       def unquote(fun_sign_ast),
-        do: unquote(call_ast) |> struct_response(unquote(model_module))
+        do: unquote(call_ast) |> Telegex.Helper.struct_response(unquote(model_module))
     end
   end
 
