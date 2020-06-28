@@ -281,7 +281,19 @@ defmodule Telegex.DSL do
     # 7. 尝试获取返回类型的模型模块（普通类型会返回 :any）
     model_module = try_get_returns_model(returns)
 
+    # 8. 找出可能存在附件的字段列表
+    attach_fields = params |> Enum.filter(&attachment?/1) |> Enum.map(&get_param_name/1)
+
     quote do
+      unless Enum.empty?(unquote(attach_fields)) do
+        # 8. 注册包含附件的方法和字段
+        Module.put_attribute(
+          Telegex,
+          :include_attachment_methods_meta,
+          {unquote(name), unquote(attach_fields)}
+        )
+      end
+
       @spec unquote(typespecs_ast) ::
               {:ok, unquote(return_typespecs_ast)}
               | {:error, Telegex.Model.errors()}
@@ -360,4 +372,51 @@ defmodule Telegex.DSL do
 
   defp build_named_arg_typespec_ast({:{}, _, [name, type_ast, :optional]} = _ast),
     do: {name, build_arg_typespec_ast({:_placeholder, type_ast})}
+
+  # 是否包含附件类型
+  # 可选 + 多类型
+  defp attachment?({:{}, _, [_name, {:|, _, _types} = multiple_types_ast, :optional]}) do
+    # multiple_types_ast |> IO.inspect()
+
+    attachment?({:_placeholder, multiple_types_ast})
+  end
+
+  # 不可选 + 多类型
+  defp attachment?({_name, {:|, _, _types} = multiple_types_ast}) do
+    no_attachment? =
+      multiple_types_ast
+      |> flatten_multiple_ast()
+      |> Enum.filter(&attachment?/1)
+      |> Enum.empty?()
+
+    !no_attachment?
+  end
+
+  # 文件类型别名
+  defp attachment?({:__aliases__, _, [:InputFile]}), do: true
+  # 文件类型可选
+  defp attachment?({:{}, _, [_name, {:__aliases__, _, [:InputFile]}, :optional]}), do: true
+  # 文件类型不可选
+  defp attachment?({_name, {:__aliases__, _, [:InputFile]}}), do: true
+
+  defp attachment?(_ast), do: false
+
+  def flatten_multiple_ast({:|, _, types}, flattened \\ []) do
+    case types do
+      [head, {:|, _, _} = next | _] -> flatten_multiple_ast(next, flattened ++ [head])
+      [head, last] -> flattened ++ [head] ++ [last]
+    end
+  end
+
+  # 获取参数名称
+  # 可选 + 多类型
+  defp get_param_name({:{}, _, [name, {:|, _, _types}, :optional]}), do: name
+
+  # 不可选 + 多类型
+  defp get_param_name({name, {:|, _, _types}}), do: name
+
+  # 单类型可选
+  defp get_param_name({:{}, _, [name, {:__aliases__, _, [_type]}, :optional]}), do: name
+  # 单类型不可选
+  defp get_param_name({name, {:__aliases__, _, [_type]}}), do: name
 end

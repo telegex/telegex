@@ -1,22 +1,6 @@
 defmodule Telegex.Request do
   @moduledoc false
 
-  @include_attachment_methods %{
-    "sendPhoto" => [:photo],
-    "sendAudio" => [:audio, :thumb],
-    "sendDocument" => [:document, :thumb],
-    "sendVideo" => [:video, :thumb],
-    "sendAnimation" => [:animation, :thumb],
-    "sendVoice" => [:voice],
-    "sendVideoNote" => [:video_note, :thumb],
-    "setChatPhoto" => [:photo],
-    "sendSticker" => [:sticker],
-    "uploadStickerFile" => [:png_sticker],
-    "createNewStickerSet" => [:png_sticker, :tgs_sticker],
-    "addStickerToSet" => [:png_sticker, :tgs_sticker],
-    "setStickerSetThumb" => [:thumb]
-  }
-
   alias Telegex.Model.{Response, Error, RequestError}
   alias Telegex.Config
 
@@ -25,7 +9,7 @@ defmodule Telegex.Request do
   def call(method, params \\ []) when is_binary(method) and is_list(params) do
     endpoint = "https://api.telegram.org/bot#{Config.token()}/#{method}"
 
-    if attach_fields = @include_attachment_methods[method] do
+    if attach_fields = Telegex.__attachments__(method) do
       post(endpoint, params, attach_fields, :multipart) |> handle_response()
     else
       post(endpoint, params) |> handle_response()
@@ -35,7 +19,7 @@ defmodule Telegex.Request do
   @spec handle_response({:ok, HTTPoison.Response.t()}) :: {:ok, result()} | {:error, Error.t()}
   defp handle_response({:ok, %HTTPoison.Response{body: body} = _response}) do
     %Response{ok: ok, result: result, error_code: error_code, description: description} =
-      structed_response(body)
+      struct_response(body)
 
     if ok,
       do: {:ok, result},
@@ -98,8 +82,8 @@ defmodule Telegex.Request do
     end
   end
 
-  @spec structed_response(String.t()) :: Response.t()
-  defp structed_response(json) do
+  @spec struct_response(String.t()) :: Response.t()
+  defp struct_response(json) do
     data = json |> Jason.decode!(keys: :atoms)
 
     struct(Response, data)

@@ -5,6 +5,10 @@ defmodule Telegex do
 
   import Telegex.DSL, only: [method: 3]
 
+  # Store methods containing attachments and all attachment fields.
+  # This attribute is accumulated in the `Telegex.DSL.method/3` macro.
+  Module.register_attribute(__MODULE__, :include_attachment_methods_meta, accumulate: true)
+
   @doc """
   Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.org/wiki/Push_technology#Long_polling)).
   An Array of `Telegex.Model.Update` objects is returned.
@@ -94,6 +98,26 @@ defmodule Telegex do
       {:performer, String, :optional},
       {:title, String, :optional},
       {:thumb, InputFile | String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send general files. On success, the sent `Telegex.Model.Message` is returned.
+  Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+  """
+  method(
+    "sendDocument",
+    [
+      {:chat_id, :integer | String},
+      {:document, InputFile | String},
+      {:thumb, InputFile | String, :optional},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
       {:reply_markup,
@@ -252,4 +276,20 @@ defmodule Telegex do
     ],
     :boolean
   )
+
+  # Convert the accumulated attribute value to `map`.
+  # Note: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
+  @include_attachment_methods_mapping @include_attachment_methods_meta |> Enum.into(%{})
+
+  # Access attachment fields by method name.
+  # Note: This function needs to be defined after all `Telex.DSL.method/3` calls.
+  @doc false
+  def __attachments__(method) when is_binary(method) do
+    @include_attachment_methods_mapping[method]
+  end
+
+  # Get all methods and fields containing attachments.
+  # Note: This function needs to be defined after all `Telex.DSL.method/3` calls.
+  @doc false
+  def __attachments__, do: @include_attachment_methods_mapping
 end
