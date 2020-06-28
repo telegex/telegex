@@ -127,6 +127,163 @@ defmodule Telegex do
   )
 
   @doc """
+  Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as `Telegex.ModelDocument`).
+  On success, the sent `Telegex.Model.Message` is returned.
+  Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+  """
+  method(
+    "sendVideo",
+    [
+      {:chat_id, :integer | String},
+      {:video, InputFile | String},
+      {:duration, :integer, :optional},
+      {:width, :integer, :optional},
+      {:height, :integer, :optional},
+      {:thumb, InputFile | String},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:supports_streaming, :boolean, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound).
+  On success, the sent `Telegex.Model.Message` is returned.
+  Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
+  """
+  method(
+    "sendAnimation",
+    [
+      {:chat_id, :integer | String},
+      {:animation, InputFile | String},
+      {:duration, :integer, :optional},
+      {:width, :integer, :optional},
+      {:height, :integer, :optional},
+      {:thumb, InputFile | String},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message.
+  For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as `Telegex.Model.Audio` or `Telegex.Model.Document`).
+  On success, the sent `Telegex.Model.Message` is returned.
+  Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
+  """
+  method(
+    "sendVoice",
+    [
+      {:chat_id, :integer | String},
+      {:voice, InputFile | String},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:duration, :integer, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope),
+  Telegram clients support rounded square mp4 videos of up to 1 minute long.
+  Use this method to send video messages. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendVideoNote",
+    [
+      {:chat_id, :integer | String},
+      {:video_note, InputFile | String},
+      {:duration, :integer, :optional},
+      {:length, :integer, :optional},
+      {:thumb, InputFile | String},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send a group of photos or videos as an album. On success, an array of the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendMediaGroup",
+    [
+      {:chat_id, :integer | String},
+      {:media, [InputMediaPhoto | InputMediaVideo]},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send point on the map. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendLocation",
+    [
+      {:chat_id, :integer | String},
+      {:latitude, :float},
+      {:longitude, :float},
+      {:live_period, :integer, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to edit live location messages.
+  A location can be edited until its live_period expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api#stopmessagelivelocation).
+  On success, if the edited message was sent by the bot, the edited `Telegex.Model.Message` is returned, otherwise True is returned.
+  """
+  method(
+    "editMessageLiveLocation",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:latitude, :float},
+      {:longitude, :float},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message | :boolean
+  )
+
+  @doc """
+  Use this method to stop updating a live location message before live_period expires.
+  On success, if the message was sent by the bot, the sent `Telegex.Model.Message` is returned, otherwise True is returned.
+  """
+  method(
+    "stopMessageLiveLocation",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message | :boolean
+  )
+
+  @doc """
   Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages.
   On success, if edited message is sent by the bot,
   the edited Message is returned, otherwise True is returned.
