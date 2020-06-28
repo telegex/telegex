@@ -87,6 +87,7 @@ iex> Telegex.send_message -1001486769003, "Hello Telegex!"
      id: -1001486769003,
      title: "Dev test",
      type: "supergroup",
+     ...
    },
    date: 1593272573,
    message_id: 4146,
