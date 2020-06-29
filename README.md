@@ -8,7 +8,7 @@ The models and APIs of this library are all constructed by DSL (well-designed ma
 
 ## Do not use 😝
 
-It currently lacks testing and is not complete. Please wait for the release of version `0.1.0`!
+It currently lacks testing and is not complete. Please wait for the release of version **0.1.0**!
 
 ## Installation
 
