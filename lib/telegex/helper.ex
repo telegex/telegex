@@ -43,6 +43,7 @@ defmodule Telegex.Helper do
 
   @doc """
   以下 `struct_response/2` 函数子句负责处理 `Telegex.Request.call/2` 函数调用的返回值。
+  目的在于将模型结构的返回值结构化。注意：动态返回类型会忽略，以原始的 `map` 数据返回。
   """
   def struct_response(result, :any), do: result
 

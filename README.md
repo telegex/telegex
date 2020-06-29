@@ -28,7 +28,9 @@ Add your bot token to `config/config.exs`, like this:
 
 ```elixir
 config :telegex,
-  token: "<TOKEN_HERE>"
+  token: "<TOKEN_HERE>",
+  timeout: 1000 * 15, # This is the default and optional, will be passed as options to `HTTPoison.post/4`.
+  recv_timeout: 1000 * 10 # This is the default and optional, will be passed as options to `HTTPoison.post/4`.
 ```
 
 ## Usage

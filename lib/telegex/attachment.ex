@@ -1,4 +1,6 @@
 defmodule Telegex.Attachment do
+  @moduledoc false
+
   use TypedStruct
 
   typedstruct do
@@ -15,6 +17,9 @@ defmodule Telegex.Attachment do
     "sendVideoNote" => [:thumb]
   }
 
+  @spec supplement_attach_syntax_support(%{String.t() => [Telegex.Attachment.t()]}) :: %{
+          String.t() => [Telegex.Attachment.t()]
+        }
   # 根据 `@support_attach_syntax_mapping` 属性的值，修正所有的 `supports_attach_syntax` 字段。
   # 此方法被 `Telegex` 模块调用，为 `@include_attachment_methods_mapping` 属性的值补充 attach 语法支持情况。
   @doc false
