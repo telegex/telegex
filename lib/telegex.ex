@@ -5,6 +5,8 @@ defmodule Telegex do
 
   import Telegex.DSL, only: [method: 3]
 
+  alias Telegex.Attachment
+
   # Store methods containing attachments and all attachment fields.
   # This attribute is accumulated in the `Telegex.DSL.method/3` macro.
   Module.register_attribute(__MODULE__, :include_attachment_methods_meta, accumulate: true)
@@ -139,7 +141,7 @@ defmodule Telegex do
       {:duration, :integer, :optional},
       {:width, :integer, :optional},
       {:height, :integer, :optional},
-      {:thumb, InputFile | String},
+      {:thumb, InputFile | String, :optional},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
       {:supports_streaming, :boolean, :optional},
@@ -209,7 +211,7 @@ defmodule Telegex do
       {:video_note, InputFile | String},
       {:duration, :integer, :optional},
       {:length, :integer, :optional},
-      {:thumb, InputFile | String},
+      {:thumb, InputFile | String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
       {:reply_markup,
@@ -219,7 +221,7 @@ defmodule Telegex do
   )
 
   @doc """
-  Use this method to send a group of photos or videos as an album. On success, an array of the sent `Telegex.Model.Message` is returned.
+  Use this method to send a group of photos or videos as an album. On success, an array of the sent `[Telegex.Model.Message]` is returned.
   """
   method(
     "sendMediaGroup",
@@ -229,7 +231,7 @@ defmodule Telegex do
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional}
     ],
-    Message
+    [Message]
   )
 
   @doc """
@@ -463,7 +465,9 @@ defmodule Telegex do
 
   # Convert the accumulated attribute value to `map`.
   # Note: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
-  @include_attachment_methods_mapping @include_attachment_methods_meta |> Enum.into(%{})
+  @include_attachment_methods_mapping @include_attachment_methods_meta
+                                      |> Enum.into(%{})
+                                      |> Attachment.supplement_attach_syntax_support()
 
   # Access attachment fields by method name.
   # Note: This function needs to be defined after all `Telex.DSL.method/3` calls.

@@ -1,6 +1,8 @@
 defmodule Telegex.DSL do
   @moduledoc false
 
+  alias Telegex.Attachment
+
   @doc """
   Use this macro to simply construct a model.
   """
@@ -286,7 +288,7 @@ defmodule Telegex.DSL do
 
     quote do
       unless Enum.empty?(unquote(attach_fields)) do
-        # 8. 注册包含附件的方法和字段
+        # 注册包含附件的方法和字段
         Module.put_attribute(
           Telegex,
           :include_attachment_methods_meta,
@@ -376,8 +378,6 @@ defmodule Telegex.DSL do
   # 是否包含附件类型
   # 可选 + 多类型
   defp attachment?({:{}, _, [_name, {:|, _, _types} = multiple_types_ast, :optional]}) do
-    # multiple_types_ast |> IO.inspect()
-
     attachment?({:_placeholder, multiple_types_ast})
   end
 
@@ -410,13 +410,30 @@ defmodule Telegex.DSL do
 
   # 获取参数名称
   # 可选 + 多类型
-  defp get_param_name({:{}, _, [name, {:|, _, _types}, :optional]}), do: name
+  defp get_param_name({:{}, _, [name, {:|, _, _types}, :optional]}) do
+    quote do
+      %Attachment{field: unquote(name)}
+    end
+  end
 
   # 不可选 + 多类型
-  defp get_param_name({name, {:|, _, _types}}), do: name
+  defp get_param_name({name, {:|, _, _types}}) do
+    quote do
+      %Attachment{field: unquote(name)}
+    end
+  end
 
   # 单类型可选
-  defp get_param_name({:{}, _, [name, {:__aliases__, _, [_type]}, :optional]}), do: name
+  defp get_param_name({:{}, _, [name, {:__aliases__, _, [_type]}, :optional]}) do
+    quote do
+      %Attachment{field: unquote(name)}
+    end
+  end
+
   # 单类型不可选
-  defp get_param_name({name, {:__aliases__, _, [_type]}}), do: name
+  defp get_param_name({name, {:__aliases__, _, [_type]}}) do
+    quote do
+      %Attachment{field: unquote(name)}
+    end
+  end
 end

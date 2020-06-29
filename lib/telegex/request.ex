@@ -2,6 +2,7 @@ defmodule Telegex.Request do
   @moduledoc false
 
   alias Telegex.Model.{Response, Error, RequestError}
+  alias Telegex.Attachment
   alias Telegex.Config
 
   @type result :: any()
@@ -31,6 +32,7 @@ defmodule Telegex.Request do
     {:error, %RequestError{reason: reason}}
   end
 
+  @httpopts [timeout: 1000 * 45, recv_timeout: 1000 * 30]
   @json_header {"Content-Type", "application/json"}
 
   @spec post(String.t(), keyword()) ::
@@ -39,16 +41,16 @@ defmodule Telegex.Request do
        when is_binary(endpoint) and is_list(params) do
     json_body = params |> Enum.into(%{}) |> Jason.encode!()
 
-    HTTPoison.post(endpoint, json_body, [@json_header])
+    HTTPoison.post(endpoint, json_body, [@json_header], @httpopts)
   end
 
-  @spec post(String.t(), keyword(), [atom()], :multipart) ::
+  @spec post(String.t(), keyword(), [Attachment.t()], :multipart) ::
           {:ok, HTTPoison.Response.t()} | {:error, HTTPoison.Error.t()}
   defp post(endpoint, params, attach_fields, :multipart)
        when is_binary(endpoint) and is_list(params) and is_list(attach_fields) do
     no_empty_attachs =
       attach_fields
-      |> Enum.map(fn field -> {field, params[field]} end)
+      |> Enum.map(fn %{field: field} -> {field, params[field]} end)
       |> Enum.filter(fn {_, attach} -> attach != nil end)
 
     local_attachs = no_empty_attachs |> Enum.filter(fn {_, attach} -> File.exists?(attach) end)
@@ -60,10 +62,20 @@ defmodule Telegex.Request do
       # 1. 构建表单中的数据字段列表
       data_fields =
         params
-        |> Enum.filter(fn {field, _} -> local_attachs[field] == nil end)
+        # 过滤掉不支持 attach 语法的是附件
+        |> Enum.filter(fn {field, _} ->
+          local_attachs[field] == nil ||
+            Enum.member?(attach_fields, %Attachment{field: field, supports_attach_syntax: true})
+        end)
         |> Enum.map(fn {field, value} ->
+          attach_file = local_attachs[field]
+
           value =
-            if is_list(value) || is_map(value), do: Jason.encode!(value), else: to_string(value)
+            cond do
+              attach_file != nil -> "attach://#{Path.basename(attach_file)}"
+              is_list(value) || is_map(value) -> Jason.encode!(value)
+              true -> to_string(value)
+            end
 
           {to_string(field), value}
         end)
@@ -78,7 +90,7 @@ defmodule Telegex.Request do
 
       multipart_form = {:multipart, data_fields ++ file_fields}
 
-      HTTPoison.post(endpoint, multipart_form)
+      HTTPoison.post(endpoint, multipart_form, [], @httpopts)
     end
   end
 
