@@ -221,7 +221,7 @@ defmodule Telegex do
   )
 
   @doc """
-  Use this method to send a group of photos or videos as an album. On success, an array of the sent `[Telegex.Model.Message]` is returned.
+  Use this method to send a group of photos or videos as an album. On success, an array of the sent `Telegex.Model.Message` is returned.
   """
   method(
     "sendMediaGroup",
@@ -455,16 +455,151 @@ defmodule Telegex do
     :boolean
   )
 
-  method("promoteChatMember", [], :boolean)
-  method("setChatAdministratorCustomTitle", [], :boolean)
-  method("setChatPermissions", [], :boolean)
-  method("exportChatInviteLink", [], :boolean)
-  method("setChatPhoto", [], :boolean)
-  method("deleteChatPhoto", [], :boolean)
-  method("setChatTitle", [], :boolean)
-  method("setChatDescription", [], :boolean)
-  method("pinChatMessage", [], :boolean)
-  method("unpinChatMessage", [], :boolean)
+  @doc """
+  Use this method to promote or demote a user in a supergroup or a channel.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Pass False for all boolean parameters to demote a user. Returns True on success.
+  """
+  method(
+    "promoteChatMember",
+    [
+      {:chat_id, :integer | String},
+      {:user_id, :integer},
+      {:can_change_info, :boolean, :optional},
+      {:can_post_messages, :boolean, :optional},
+      {:can_edit_messages, :boolean, :optional},
+      {:can_delete_messages, :boolean, :optional},
+      {:can_invite_users, :boolean, :optional},
+      {:can_restrict_members, :boolean, :optional},
+      {:can_pin_messages, :boolean, :optional},
+      {:can_promote_members, :boolean, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
+  Returns True on success.
+  """
+  method(
+    "setChatAdministratorCustomTitle",
+    [
+      {:chat_id, :integer | String},
+      {:user_id, :integer},
+      {:custom_title, String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to set default chat permissions for all members.
+  The bot must be an administrator in the group or a supergroup for this to work
+  and must have the can_restrict_members admin rights. Returns True on success.
+  """
+  method(
+    "setChatPermissions",
+    [
+      {:chat_id, :integer | String},
+      {:permissions, ChatPermissions}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to generate a new invite link for a chat; any previously generated link is revoked.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns the new invite link as `String` on success.
+  """
+  method(
+    "exportChatInviteLink",
+    [
+      {:chat_id, :integer | String}
+    ],
+    String
+  )
+
+  @doc """
+  Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
+  The bot must be an administratorin the chat for this to work and must have the appropriate admin rights.
+  Returns True on success.
+  """
+  method(
+    "setChatPhoto",
+    [
+      {:chat_id, :integer | String},
+      {:photo, InputFile}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to delete a chat photo. Photos can't be changed for private chats.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns True on success.
+  """
+  method(
+    "deleteChatPhoto",
+    [
+      {:chat_id, :integer | String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to change the title of a chat. Titles can't be changed for private chats.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns True on success.
+  """
+  method(
+    "setChatTitle",
+    [
+      {:chat_id, :integer | String},
+      {:title, String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to change the description of a group, a supergroup or a channel.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns True on success.
+  """
+  method(
+    "setChatDescription",
+    [
+      {:chat_id, :integer | String},
+      {:description, String, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to pin a message in a group, a supergroup, or a channel. The bot must be an administrator
+  in the chat for this to work and must have the 'can_pin_messages' admin right in the supergroup
+  or 'can_edit_messages' admin right in the channel. Returns True on success.
+  """
+  method(
+    "pinChatMessage",
+    [
+      {:chat_id, :integer | String},
+      {:message_id, :integer},
+      {:disable_notification, :boolean, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to unpin a message in a group, a supergroup, or a channel. The bot must be an administrator
+  in the chat for this to work and must have the 'can_pin_messages' admin right in the supergroup
+  or 'can_edit_messages' admin right in the channel. Returns True on success.
+  """
+  method(
+    "unpinChatMessage",
+    [
+      {:chat_id, :integer | String}
+    ],
+    :boolean
+  )
 
   @doc """
   Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
@@ -502,7 +637,16 @@ defmodule Telegex do
     [ChatMember]
   )
 
-  method("getChatMembersCount", [], :integer)
+  @doc """
+  Use this method to get the number of members in a chat. Returns Int on success.
+  """
+  method(
+    "getChatMembersCount",
+    [
+      {:chat_id, :integer | String}
+    ],
+    :integer
+  )
 
   @doc """
   Use this method to get information about a member of a chat.
@@ -517,8 +661,34 @@ defmodule Telegex do
     ChatMember
   )
 
-  method("setChatStickerSet", [], :boolean)
-  method("deleteChatStickerSet", [], :boolean)
+  @doc """
+  Use this method to set a new group sticker set for a supergroup. The bot must be an administrator
+  in the chat for this to work and must have the appropriate admin rights.
+  Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method.
+  Returns True on success.
+  """
+  method(
+    "setChatStickerSet",
+    [
+      {:chat_id, :integer | String},
+      {:sticker_set_name, String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to delete a group sticker set from a supergroup. The bot must be an administrator
+  in the chat for this to work and must have the appropriate admin rights.
+  Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method.
+  Returns True on success.
+  """
+  method(
+    "deleteChatStickerSet",
+    [
+      {:chat_id, :integer | String}
+    ],
+    :boolean
+  )
 
   @doc """
   Use this method to send answers to callback queries sent from [inline keyboards](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating).
@@ -537,7 +707,21 @@ defmodule Telegex do
     :boolean
   )
 
-  method("setMyCommands", [], :boolean)
+  @doc """
+  Use this method to change the list of the bot's commands. Returns True on success.
+  """
+  method(
+    "setMyCommands",
+    [
+      {:commands, [BotCommand]}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to get the current list of the bot's commands.
+  Requires no parameters. Returns Array of `Telegex.Model.BotCommand` on success.
+  """
   method("getMyCommands", [], [BotCommand])
 
   @doc """
