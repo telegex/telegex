@@ -32,6 +32,7 @@ defmodule Telegex.Request do
     {:error, %RequestError{reason: reason}}
   end
 
+  # TODO: 此处的超时需要向外提供设置
   @httpopts [timeout: 1000 * 45, recv_timeout: 1000 * 30]
   @json_header {"Content-Type", "application/json"}
 
