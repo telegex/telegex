@@ -129,7 +129,7 @@ defmodule Telegex do
   )
 
   @doc """
-  Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as `Telegex.ModelDocument`).
+  Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as `Telegex.Model.Document`).
   On success, the sent `Telegex.Model.Message` is returned.
   Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
   """
@@ -285,13 +285,129 @@ defmodule Telegex do
     Message | :boolean
   )
 
-  method("sendVenue", [], Message)
-  method("sendContact", [], Message)
-  method("sendPoll", [], Message)
-  method("sendDice", [], Message)
-  method("sendChatAction", [], :boolean)
-  method("getUserProfilePhotos", [], UserProfilePhotos)
-  method("getFile", [], File)
+  @doc """
+  Use this method to send information about a venue. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendVenue",
+    [
+      {:chat_id, :integer | String},
+      {:latitude, :float},
+      {:longitude, :float},
+      {:title, String},
+      {:address, String},
+      {:foursquare_id, String, :optional},
+      {:foursquare_type, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send phone contacts. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendContact",
+    [
+      {:chat_id, :integer | String},
+      {:phone_number, String},
+      {:first_name, String},
+      {:last_name, String, :optional},
+      {:vcard, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send a native poll. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendPoll",
+    [
+      {:chat_id, :integer | String},
+      {:question, String},
+      {:options, [String]},
+      {:is_anonymous, :boolean, :optional},
+      {:type, String, :optional},
+      {:allows_multiple_answers, :boolean, :optional},
+      {:correct_option_id, :integer, :optional},
+      {:explanation, String, :optional},
+      {:explanation_parse_mode, String, :optional},
+      {:open_period, :integer, :optional},
+      {:close_date, :integer, :optional},
+      {:is_closed, :boolean, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to send an animated emoji that will display a random value.On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendDice",
+    [
+      {:chat_id, :integer | String},
+      {:emoji, String, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method when you need to tell the user that something is happening on the bot's side.
+  The status is set for 5 seconds or less (when a message arrives from your bot,
+  Telegram clients clear its typing status). Returns True on success.
+  """
+  method(
+    "sendChatAction",
+    [
+      {:chat_id, :integer | String},
+      {:action, String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to get a list of profile pictures for a user. Returns a `Telegex.Model.UserProfilePhotos` object.
+  """
+  method(
+    "getUserProfilePhotos",
+    [
+      {:user_id, :integer},
+      {:offset, :integer, :optional},
+      {:limit, :integer, :optional}
+    ],
+    UserProfilePhotos
+  )
+
+  @doc """
+  Use this method to get basic info about a file and prepare it for downloading.
+  For the moment, bots can download files of up to 20MB in size. On success, a `Telegex.Model.File` object is returned.
+  The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>,
+  where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour.
+  When the link expires, a new one can be requested by calling getFile again.
+  """
+  method(
+    "getFile",
+    [
+      {:file_id, String}
+    ],
+    File
+  )
 
   @doc """
   Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels,
