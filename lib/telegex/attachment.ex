@@ -24,22 +24,23 @@ defmodule Telegex.Attachment do
   # 此方法被 `Telegex` 模块调用，为 `@include_attachment_methods_mapping` 属性的值补充 attach 语法支持情况。
   @doc false
   def supplement_attach_syntax_support(attachment_mapping) do
-    @support_attach_syntax_mapping
-    |> Enum.reduce(attachment_mapping, fn {method, supports_fields}, mapping ->
+    supplement_fun = fn {method, supports_fields}, mapping ->
       if attachments = attachment_mapping[method] do
-        attachments =
-          attachments
-          |> Enum.map(fn %{field: field} = attachment ->
-            if Enum.member?(supports_fields, field),
-              do: Map.put(attachment, :supports_attach_syntax, true),
-              else: attachment
-          end)
+        fix_supports_attach_syntax_fun = fn %{field: field} = attachment ->
+          if Enum.member?(supports_fields, field),
+            do: Map.put(attachment, :supports_attach_syntax, true),
+            else: attachment
+        end
 
+        attachments = attachments |> Enum.map(fix_supports_attach_syntax_fun)
         mapping |> Map.put(method, attachments)
       else
         mapping
       end
-    end)
+    end
+
+    @support_attach_syntax_mapping
+    |> Enum.reduce(attachment_mapping, supplement_fun)
   end
 
   @doc false

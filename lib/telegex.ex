@@ -727,7 +727,7 @@ defmodule Telegex do
   @doc """
   Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages.
   On success, if edited message is sent by the bot,
-  the edited Message is returned, otherwise True is returned.
+  the edited `Telegex.Model.Message` is returned, otherwise True is returned.
   """
   method(
     "editMessageText",
@@ -741,6 +741,71 @@ defmodule Telegex do
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message | :boolean
+  )
+
+  @doc """
+  Use this method to edit captions of messages. On success,
+  if edited message is sent by the bot, the edited `Telegex.Model.Message` is returned, otherwise True is returned.
+  """
+  method(
+    "editMessageCaption",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to edit animation, audio, document, photo, or video messages.
+  If a message is a part of a message album, then it can be edited only to a photo or a video.
+  Otherwise, message type can be changed arbitrarily. When inline message is edited, new file can't be uploaded.
+  Use previously uploaded file via its file_id or specify a URL.
+  On success, if the edited message was sent by the bot, the edited `Telegex.Model.Message` is returned, otherwise True is returned.
+  """
+  method(
+    "editMessageMedia",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:media, InputMedia},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to edit only the reply markup of messages. On success, if edited message is sent by the bot,
+  the edited `Telegex.Model.Message` is returned, otherwise True is returned.
+  """
+  method(
+    "editMessageReplyMarkup",
+    [
+      {:chat_id, :integer | String, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to stop a poll which was sent by the bot.
+  On success, the stopped `Telegex.Model.Poll` with the final results is returned.
+  """
+  method(
+    "stopPoll",
+    [
+      {:chat_id, :integer | String},
+      {:message_id, :integer},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Poll
   )
 
   @doc """
