@@ -1028,6 +1028,58 @@ defmodule Telegex do
     :boolean
   )
 
+  @doc """
+  Use this method to send a game. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendGame",
+    [
+      {:chat_id, :integer},
+      {:game_short_name, String},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to set the score of the specified user in a game. On success,
+  if the message was sent by the bot, returns the edited `Telegex.Model.Message`, otherwise returns True.
+  Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
+  """
+  method(
+    "setGameScore",
+    [
+      {:user_id, :integer},
+      {:score, :integer},
+      {:force, :boolean, :optional},
+      {:disable_edit_message, :boolean, :optional},
+      {:chat_id, :integer, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional}
+    ],
+    Message | :boolean
+  )
+
+  @doc """
+  Use this method to get data for high score tables. Will return the score of the specified user and several of
+  their neighbors in a game. On success, returns an Array of `Telegex.Model.GameHighScore` objects.
+  > This method will currently return scores for the target user, plus two of their closest neighbors on each side.
+  Will also return the top three users if the user and his neighbors are not among them.
+  Please note that this behavior is subject to change.
+  """
+  method(
+    "getGameHighScores",
+    [
+      {:user_id, :integer},
+      {:chat_id, :integer, :optional},
+      {:message_id, :integer, :optional},
+      {:inline_message_id, String, :optional}
+    ],
+    [GameHighScore]
+  )
+
   # Convert the accumulated attribute value to `map`.
   # **Note**: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
   @include_attachment_methods_mapping @include_attachment_methods_meta
