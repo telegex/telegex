@@ -17,8 +17,8 @@ defmodule Telegex.Attachment do
     "sendVideoNote" => [:thumb]
   }
 
-  @spec supplement_attach_syntax_support(%{String.t() => [Telegex.Attachment.t()]}) :: %{
-          String.t() => [Telegex.Attachment.t()]
+  @spec supplement_attach_syntax_support(%{String.t() => [__MODULE__.t()]}) :: %{
+          String.t() => [__MODULE__.t()]
         }
   # 根据 `@support_attach_syntax_mapping` 属性的值，修正所有的 `supports_attach_syntax` 字段。
   # 此方法被 `Telegex` 模块调用，为 `@include_attachment_methods_mapping` 属性的值补充 attach 语法支持情况。
@@ -38,7 +38,7 @@ defmodule Telegex.Attachment do
     |> Enum.reduce(attachment_mapping, supplement_fun)
   end
 
-  @spec fix_supports_attach_syntax([atom()]) :: (Attachment.t() -> Attachment.t())
+  @spec fix_supports_attach_syntax([atom()]) :: (__MODULE__.t() -> __MODULE__.t())
   @doc """
   生成一个修正 `Attachment` 中的 `supports_attach_syntax` 字段的函数。
   需要提供支持 attach 语法的字段列表。

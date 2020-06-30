@@ -944,21 +944,86 @@ defmodule Telegex do
     :boolean
   )
 
+  @doc """
+  Use this method to send invoices. On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendInvoice",
+    [
+      {:chat_id, :integer},
+      {:title, String},
+      {:description, String},
+      {:payload, String},
+      {:provider_token, String},
+      {:start_parameter, String},
+      {:currency, String},
+      {:prices, [LabeledPrice]},
+      {:provider_data, String, :optional},
+      {:photo_url, String, :optional},
+      {:photo_size, :integer, :optional},
+      {:photo_width, :integer, :optional},
+      {:photo_height, :integer, :optional},
+      {:need_name, :boolean, :optional},
+      {:need_phone_number, :boolean, :optional},
+      {:need_email, :boolean, :optional},
+      {:need_shipping_address, :boolean, :optional},
+      {:send_phone_number_to_provider, :boolean, :optional},
+      {:send_email_to_provider, :boolean, :optional},
+      {:is_flexible, :boolean, :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup, InlineKeyboardMarkup, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  f you sent an invoice requesting a shipping address and the parameter is_flexible was specified,
+  the Bot API will send an `Telegex.Model.Update` with a `shipping_query` field to the bot.
+  Use this method to reply to shipping queries. On success, True is returned.
+  """
+  method(
+    "answerShippingQuery",
+    [
+      {:shipping_query_id, String},
+      {:ok, :boolean},
+      {:shipping_options, [ShippingOption], :optional},
+      {:error_message, String, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation
+  in the form of an `Telegex.Model.Update` with the field pre_checkout_query.
+  Use this method to respond to such pre-checkout queries. On success, True is returned.
+  **Note**: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+  """
+  method(
+    "answerPreCheckoutQuery",
+    [
+      {:pre_checkout_query_id, String},
+      {:ok, :boolean},
+      {:error_message, String, :optional}
+    ],
+    :boolean
+  )
+
   # Convert the accumulated attribute value to `map`.
-  # Note: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
+  # **Note**: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
   @include_attachment_methods_mapping @include_attachment_methods_meta
                                       |> Enum.into(%{})
                                       |> Attachment.supplement_attach_syntax_support()
 
   # Access attachment fields by method name.
-  # Note: This function needs to be defined after all `Telex.DSL.method/3` calls.
+  # **Note**: This function needs to be defined after all `Telex.DSL.method/3` calls.
   @doc false
   def __attachments__(method) when is_binary(method) do
     @include_attachment_methods_mapping[method]
   end
 
   # Get all methods and fields containing attachments.
-  # Note: This function needs to be defined after all `Telex.DSL.method/3` calls.
+  # **Note**: This function needs to be defined after all `Telex.DSL.method/3` calls.
   @doc false
   def __attachments__, do: @include_attachment_methods_mapping
 end
