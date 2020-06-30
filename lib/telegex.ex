@@ -27,6 +27,38 @@ defmodule Telegex do
   )
 
   @doc """
+  Use this method to specify a url and receive incoming updates via an outgoing webhook.
+  Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url,
+  containing a JSON-serialized `Telegex.Model.Update`. In case of an unsuccessful request,
+  we will give up after a reasonable amount of attempts. Returns True on success.
+
+  If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL,
+  e.g. `https://www.example.com/<token>`. Since nobody else knows your bot's token, you can be pretty sure it's us.
+  """
+  method(
+    "setWebhook",
+    [
+      {:url, String},
+      {:certificate, InputFile, :optional},
+      {:max_connections, :integer, :optional},
+      {:allowed_updates, [String], :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api#getupdates).
+  Returns True on success. Requires no parameters.
+  """
+  method("deleteWebhook", [], :boolean)
+
+  @doc """
+  Use this method to get current webhook status. Requires no parameters. On success, returns a `Telegex.Model.WebhookInfo` object.
+  If the bot is using [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the url field empty.
+  """
+  method("getWebhookInfo", [], WebhookInfo)
+
+  @doc """
   A simple method for testing your bot's auth token. Requires no parameters.
   Returns basic information about the bot in form of a `Telegex.Model.User` object.
   """

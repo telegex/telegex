@@ -55,6 +55,16 @@ defmodule Telegex.Model do
 
   @type errors :: Telegex.Model.Error.t() | Telegex.Model.RequestError.t()
 
+  model WebhookInfo, [
+    {:url, String},
+    {:has_custom_certificate, :boolean},
+    {:pending_update_count, :integer},
+    {:last_error_date, :integer, :optional},
+    {:last_error_message, String, :optional},
+    {:max_connections, :integer, :optional},
+    {:allowed_updates, [String], :optional}
+  ]
+
   model User, [
     {:id, :integer},
     {:is_bot, :boolean},
