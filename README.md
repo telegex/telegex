@@ -6,9 +6,9 @@ This library is a client implementation of the official bot API, without any enc
 
 The models and APIs of this library are all constructed by DSL (well-designed macros) and contain complete typespecs.
 
-## Do not use 😝
+## A little more cautious 😝
 
-It currently lacks testing and is not complete. Please wait for the release of version **0.1.0**!
+This library fully supports Bot API version 4.9, but some of these methods still lack testing. Soon, the first official version (**0.1.0**) will be released.
 
 ## Installation
 
