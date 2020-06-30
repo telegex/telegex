@@ -828,6 +828,122 @@ defmodule Telegex do
     :boolean
   )
 
+  @doc """
+  Use this method to send static .WEBP or [animated](https://telegram.org/blog/animated-stickers) .TGS stickers.
+  On success, the sent `Telegex.Model.Message` is returned.
+  """
+  method(
+    "sendSticker",
+    [
+      {:chat_id, :integer | String},
+      {:sticker, InputFile | String},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    Message
+  )
+
+  @doc """
+  Use this method to get a sticker set. On success, a `Telegex.Model.StickerSet` object is returned.
+  """
+  method(
+    "getStickerSet",
+    [
+      {:name, String}
+    ],
+    StickerSet
+  )
+
+  @doc """
+  Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet
+  and addStickerToSet methods (can be used multiple times). Returns the uploaded `Telegex.Model.File` on success.
+  """
+  method(
+    "uploadStickerFile",
+    [
+      {:user_id, :integer},
+      {:png_sticker, InputFile}
+    ],
+    File
+  )
+
+  @doc """
+  Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created.
+  You must use exactly one of the fields png_sticker or tgs_sticker. Returns True on success.
+  """
+  method(
+    "createNewStickerSet",
+    [
+      {:user_id, :integer},
+      {:name, String},
+      {:title, String},
+      {:png_sticker, InputFile | String, :optional},
+      {:tgs_sticker, InputFile, :optional},
+      {:emojis, String},
+      {:contains_masks, :boolean, :optional},
+      {:mask_position, MaskPosition, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker
+  or tgs_sticker. Animated stickers can be added to animated sticker sets and only to them.
+  Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.
+  Returns True on success.
+  """
+  method(
+    "addStickerToSet",
+    [
+      {:user_id, :integer},
+      {:name, String},
+      {:png_sticker, InputFile | String, :optional},
+      {:tgs_sticker, InputFile, :optional},
+      {:emojis, String},
+      {:mask_position, MaskPosition, :optional}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
+  """
+  method(
+    "setStickerPositionInSet",
+    [
+      {:sticker, String},
+      {:position, :integer}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to delete a sticker from a set created by the bot. Returns True on success.
+  """
+  method(
+    "deleteStickerFromSet",
+    [
+      {:sticker, String}
+    ],
+    :boolean
+  )
+
+  @doc """
+  Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only.
+  Returns True on success.
+  """
+  method(
+    "setStickerSetThumb",
+    [
+      {:sticker, String},
+      {:user_id, :integer},
+      {:thumb, InputFile | String, :optional}
+    ],
+    :boolean
+  )
+
   # Convert the accumulated attribute value to `map`.
   # Note: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
   @include_attachment_methods_mapping @include_attachment_methods_meta

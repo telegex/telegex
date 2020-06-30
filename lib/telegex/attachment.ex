@@ -26,13 +26,8 @@ defmodule Telegex.Attachment do
   def supplement_attach_syntax_support(attachment_mapping) do
     supplement_fun = fn {method, supports_fields}, mapping ->
       if attachments = attachment_mapping[method] do
-        fix_supports_attach_syntax_fun = fn %{field: field} = attachment ->
-          if Enum.member?(supports_fields, field),
-            do: Map.put(attachment, :supports_attach_syntax, true),
-            else: attachment
-        end
+        attachments = attachments |> Enum.map(fix_supports_attach_syntax(supports_fields))
 
-        attachments = attachments |> Enum.map(fix_supports_attach_syntax_fun)
         mapping |> Map.put(method, attachments)
       else
         mapping
@@ -41,6 +36,19 @@ defmodule Telegex.Attachment do
 
     @support_attach_syntax_mapping
     |> Enum.reduce(attachment_mapping, supplement_fun)
+  end
+
+  @spec fix_supports_attach_syntax([atom()]) :: (Attachment.t() -> Attachment.t())
+  @doc """
+  生成一个修正 `Attachment` 中的 `supports_attach_syntax` 字段的函数。
+  需要提供支持 attach 语法的字段列表。
+  """
+  def fix_supports_attach_syntax(supports_fields) do
+    fn %{field: field} = attachment ->
+      if Enum.member?(supports_fields, field),
+        do: Map.put(attachment, :supports_attach_syntax, true),
+        else: attachment
+    end
   end
 
   @doc false
