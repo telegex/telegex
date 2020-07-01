@@ -8,7 +8,11 @@ The models and APIs of this library are all constructed by DSL (well-designed ma
 
 ## A little more cautious 😝
 
-This library fully supports Bot API version 4.9, but some of these methods still lack testing. Soon, the first official version (**0.1.0**) will be released.
+This library **fully supports** Bot API version **4.9**, but some of these methods still lack testing.
+
+# Webhook support?
+
+If you need webhook mode, please look forward to the **0.2.0** version.
 
 ## Installation
 
