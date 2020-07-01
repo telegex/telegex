@@ -1112,10 +1112,15 @@ defmodule Telegex do
     [GameHighScore]
   )
 
+  @model_type_attachment_mapping %{
+    "sendMediaGroup" => [],
+    "editMessageMedia" => []
+  }
+
   # Convert the accumulated attribute value to `map`.
   # **Note**: This attribute needs to be defined after all `Telex.DSL.method/3` calls.
   @include_attachment_methods_mapping @include_attachment_methods_meta
-                                      |> Enum.into(%{})
+                                      |> Enum.into(@model_type_attachment_mapping)
                                       |> Attachment.supplement_attach_syntax_support()
 
   # Access attachment fields by method name.
