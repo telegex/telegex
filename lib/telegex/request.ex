@@ -1,7 +1,7 @@
 defmodule Telegex.Request do
   @moduledoc false
 
-  alias Telegex.Model.{Response, Error, RequestError}
+  alias Telegex.Model.{Response, Error, RequestError, InputMedia}
   alias Telegex.Attachment
   alias Telegex.Config
 
