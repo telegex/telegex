@@ -4,11 +4,13 @@
 
 This library is a client implementation of the official bot API, without any encapsulation. Original flavor!
 
-The models and APIs of this library are all constructed by DSL (well-designed macros) and contain complete typespecs.
-
 ## A little more cautious 😝
 
-This library **fully supports** Bot API version **4.9**, but some of these methods still lack testing.
+The models and APIs of this library are all constructed by DSL (well-designed macros) and contain complete typespecs.
+
+It **fully supports** bot API version 4.9 and will continue to support the latest version.
+
+However, there are still some methods that lack testing, so I must remind everyone to be careful. If you encounter a bug, please report it in time.
 
 ## Webhook support?
 
@@ -32,12 +34,18 @@ Add your bot token to `config/config.exs`, like this:
 
 ```elixir
 config :telegex,
-  token: "<TOKEN_HERE>",
+  token: "<BOT_TOKEN>",
   # This is the default and optional, will be passed as options to `HTTPoison.post/4`.
   timeout: 1000 * 15,
   # This is the default and optional, will be passed as options to `HTTPoison.post/4`.
   recv_timeout: 1000 * 10
 ```
+
+## Examples & Help
+
+There are some complete example projects in the [examples](https://github.com/Hentioe/telegex/tree/master/examples/) directory. Their code contains relatively complete comments to teach you how to get updates (receive messages) correctly and add related services to the supervision tree.
+
+Welcome to communicate here: [@elixir_telegex][https://t.me/elixir_telegex]
 
 ## Usage
 
