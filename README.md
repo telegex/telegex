@@ -16,6 +16,10 @@ However, there are still some methods that lack testing, so I must remind everyo
 
 If you need webhook mode, please look forward to the **0.2.0** version.
 
+## Related libraries
+
+- [telegex_marked](https://github.com/Hentioe/telegex_marked) (Safely use Markdown supported by Telegram)
+
 ## Installation
 
 Add Telegex to your `mix.exs` dependencies:
