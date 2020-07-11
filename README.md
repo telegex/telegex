@@ -16,6 +16,12 @@ However, there are still some methods that lack testing, so I must remind everyo
 
 If you need webhook mode, please look forward to the **0.2.0** version.
 
+## Examples & Help
+
+There are some complete example projects in the [examples](https://github.com/Hentioe/telegex/tree/master/examples/) directory. Their code contains relatively complete comments to teach you how to get updates (receive messages) correctly and add related services to the supervision tree.
+
+Welcome to communicate here: [@elixir_telegex](https://t.me/elixir_telegex)
+
 ## Related libraries
 
 - [telegex_marked](https://github.com/Hentioe/telegex_marked) (Safely use Markdown supported by Telegram)
@@ -44,12 +50,6 @@ config :telegex,
   # This is the default and optional, will be passed as options to `HTTPoison.post/4`.
   recv_timeout: 1000 * 10
 ```
-
-## Examples & Help
-
-There are some complete example projects in the [examples](https://github.com/Hentioe/telegex/tree/master/examples/) directory. Their code contains relatively complete comments to teach you how to get updates (receive messages) correctly and add related services to the supervision tree.
-
-Welcome to communicate here: [@elixir_telegex][https://t.me/elixir_telegex]
 
 ## Usage
 
