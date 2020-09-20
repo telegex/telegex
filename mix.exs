@@ -14,7 +14,7 @@ defmodule Telegex.MixProject do
       description: @description,
       package: package(),
       name: "Telegex",
-      source_url: "https://github.com/Hentioe/telegex",
+      source_url: "https://github.com/telegex/telegex",
       docs: [
         # The main page in the docs
         main: "readme",
@@ -26,7 +26,7 @@ defmodule Telegex.MixProject do
   defp package do
     [
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/Hentioe/telegex"}
+      links: %{"GitHub" => "https://github.com/telegex/telegex"}
     ]
   end
 
