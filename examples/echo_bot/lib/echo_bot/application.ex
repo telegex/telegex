@@ -6,6 +6,6 @@ defmodule EchoBot.Application do
   def start(_tuple, _args) do
     opts = [strategy: :one_for_one, name: EchoBot.Supervisor]
 
-    Supervisor.start_link([EchoBot], opts)
+    Supervisor.start_link([EchoBot.UpdatesPoller], opts)
   end
 end
