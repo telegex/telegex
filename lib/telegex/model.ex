@@ -296,7 +296,7 @@ defmodule Telegex.Model do
   ]
 
   model KeyboardButton, [
-    {:file_id, String},
+    {:text, String},
     {:request_contact, :boolean, :optional},
     {:request_location, :boolean, :optional},
     {:request_poll, KeyboardButtonPollType, :optional}
