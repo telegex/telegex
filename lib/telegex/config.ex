@@ -7,11 +7,13 @@ defmodule Telegex.Config do
   @spec token :: String.t() | nil
   def token, do: get(:token)
 
-  @spec timeouts :: [timeout: integer(), recv_timeout: integer()]
-  def timeouts,
+  @spec httposion_options :: [timeout: integer(), recv_timeout: integer()]
+  def httposion_options,
     do: [
       timeout: get(:timeout, @default_timeout),
-      recv_timeout: get(:recv_timeout, @default_recv_timeout)
+      recv_timeout: get(:recv_timeout, @default_recv_timeout),
+      proxy: get(:proxy),
+      proxy_auth: get(:proxy_auth)
     ]
 
   @spec get(atom(), any()) :: any()
