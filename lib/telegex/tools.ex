@@ -4,7 +4,7 @@ defmodule Telegex.Tools do
   @spec safe_html(binary) :: binary
   def safe_html(html) do
     html
-    |> String.replace("<", "&lt")
+    |> String.replace("<", "&lt;")
     |> String.replace(">", "&gt;")
     |> String.replace("&", "&amp;")
     |> String.replace("\"", "&quot;")
