@@ -26,8 +26,8 @@ defmodule Telegex.DSL do
         end
 
         struct_doc = """
-        Convert `map` data to `#{unquote(name)}`.
-        Unlike `struct/2`, this function will convert nested struct fields together.
+        Convert map data to `#{unquote(name)}`.
+        Unlike `Kernel.struct/2`, this function will convert nested struct fields together.
         """
 
         @doc struct_doc
