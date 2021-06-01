@@ -97,9 +97,11 @@ defmodule Telegex do
       {:chat_id, :integer | String},
       {:text, String},
       {:parse_mode, String, :optional},
+      {:entities, [MessageEntity], :optional},
       {:disable_web_page_preview, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -121,6 +123,29 @@ defmodule Telegex do
   )
 
   @doc """
+  Use this method to copy messages of any kind. Service messages and invoice messages can't be copied.
+  The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message.
+  Returns the MessageId of the sent message on success.
+  """
+  method(
+    "copyMessage",
+    [
+      {:chat_id, :integer | String},
+      {:from_chat_id, :integer | String},
+      {:message_id, :integer},
+      {:caption, String, :optional},
+      {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
+      {:disable_notification, :boolean, :optional},
+      {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
+      {:reply_markup,
+       InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
+    ],
+    MessageId
+  )
+
+  @doc """
   Use this method to send photos. On success, the sent `Telegex.Model.Message` is returned.
   """
   method(
@@ -130,8 +155,10 @@ defmodule Telegex do
       {:photo, InputFile | String},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -153,11 +180,13 @@ defmodule Telegex do
       {:audio, InputFile | String},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:performer, String, :optional},
       {:title, String, :optional},
       {:thumb, InputFile | String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -176,9 +205,11 @@ defmodule Telegex do
       {:thumb, InputFile | String, :optional},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:disable_content_type_detection, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -201,9 +232,11 @@ defmodule Telegex do
       {:thumb, InputFile | String, :optional},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:supports_streaming, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -226,8 +259,10 @@ defmodule Telegex do
       {:thumb, InputFile | String},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -247,9 +282,11 @@ defmodule Telegex do
       {:voice, InputFile | String},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:duration, :integer, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -271,6 +308,7 @@ defmodule Telegex do
       {:thumb, InputFile | String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -286,7 +324,8 @@ defmodule Telegex do
       {:chat_id, :integer | String},
       {:media, [InputMediaAudio | InputMediaDocument | InputMediaPhoto | InputMediaVideo]},
       {:disable_notification, :boolean, :optional},
-      {:reply_to_message_id, :integer, :optional}
+      {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional}
     ],
     [Message]
   )
@@ -300,10 +339,13 @@ defmodule Telegex do
       {:chat_id, :integer | String},
       {:latitude, :float},
       {:longitude, :float},
+      {:horizontal_accuracy, :float, :optional},
       {:live_period, :integer, :optional},
       {:heading, :integer, :optional},
+      {:proximity_alert_radius, :integer, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -323,7 +365,9 @@ defmodule Telegex do
       {:inline_message_id, String, :optional},
       {:latitude, :float},
       {:longitude, :float},
+      {:horizontal_accuracy, :float, :optional},
       {:heading, :integer, :optional},
+      {:proximity_alert_radius, :integer, :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message | :boolean
@@ -357,8 +401,11 @@ defmodule Telegex do
       {:address, String},
       {:foursquare_id, String, :optional},
       {:foursquare_type, String, :optional},
+      {:google_place_id, String, :optional},
+      {:google_place_type, String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -378,6 +425,7 @@ defmodule Telegex do
       {:vcard, String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -399,11 +447,13 @@ defmodule Telegex do
       {:correct_option_id, :integer, :optional},
       {:explanation, String, :optional},
       {:explanation_parse_mode, String, :optional},
+      {:explanation_entities, [MessageEntity], :optional},
       {:open_period, :integer, :optional},
       {:close_date, :integer, :optional},
       {:is_closed, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -420,6 +470,7 @@ defmodule Telegex do
       {:emoji, String, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -525,6 +576,7 @@ defmodule Telegex do
     [
       {:chat_id, :integer | String},
       {:user_id, :integer},
+      {:is_anonymous, :boolean, :optional},
       {:can_change_info, :boolean, :optional},
       {:can_post_messages, :boolean, :optional},
       {:can_edit_messages, :boolean, :optional},
@@ -806,6 +858,7 @@ defmodule Telegex do
       {:inline_message_id, String, :optional},
       {:text, String},
       {:parse_mode, String, :optional},
+      {:entities, [MessageEntity], :optional},
       {:disable_web_page_preview, :boolean, :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
@@ -824,6 +877,7 @@ defmodule Telegex do
       {:inline_message_id, String, :optional},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:caption_entities, [MessageEntity], :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message
@@ -908,6 +962,7 @@ defmodule Telegex do
       {:sticker, InputFile | String},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup,
        InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply, :optional}
     ],
@@ -1041,6 +1096,7 @@ defmodule Telegex do
       {:is_flexible, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message
@@ -1107,6 +1163,7 @@ defmodule Telegex do
       {:game_short_name, String},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
+      {:allow_sending_without_reply, :boolean, :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message

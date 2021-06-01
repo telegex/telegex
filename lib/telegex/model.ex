@@ -92,12 +92,14 @@ defmodule Telegex.Model do
     {:permissions, ChatPermissions, :optional},
     {:slow_mode_delay, :integer, :optional},
     {:sticker_set_name, String, :optional},
-    {:can_set_sticker_set, :boolean, :optional}
+    {:can_set_sticker_set, :boolean, :optional},
+    {:location, ChatLocation, :optional}
   ]
 
   model Message, [
     {:message_id, :integer},
     {:from, User},
+    {:sender_chat, Chat, :optional},
     {:date, :integer},
     {:chat, Chat},
     {:forward_from, User, :optional},
@@ -144,7 +146,12 @@ defmodule Telegex.Model do
     {:successful_payment, SuccessfulPayment, :optional},
     {:connected_website, String, :optional},
     {:passport_data, PassportData, :optional},
+    {:proximity_alert_triggered, ProximityAlertTriggered, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional}
+  ]
+
+  model MessageId, [
+    {:message_id, :integer}
   ]
 
   model MessageEntity, [
@@ -269,8 +276,10 @@ defmodule Telegex.Model do
   model Location, [
     {:longitude, :float},
     {:latitude, :float},
+    {:horizontal_accuracy, :float, :optional},
     {:live_period, :integer, :optional},
-    {:heading, :integer, :optional}
+    {:heading, :integer, :optional},
+    {:proximity_alert_radius, :integer, :optional}
   ]
 
   model Venue, [
@@ -278,7 +287,15 @@ defmodule Telegex.Model do
     {:title, String},
     {:address, String},
     {:foursquare_id, String, :optional},
-    {:foursquare_type, String, :optional}
+    {:foursquare_type, String, :optional},
+    {:google_place_id, String, :optional},
+    {:google_place_type, String, :optional}
+  ]
+
+  model ProximityAlertTriggered, [
+    {:traveler, User},
+    {:watcher, User},
+    {:distance, :integer}
   ]
 
   model UserProfilePhotos, [
@@ -364,6 +381,7 @@ defmodule Telegex.Model do
     {:user, User},
     {:status, String},
     {:custom_title, String, :optional},
+    {:is_anonymous, :boolean, :optional},
     {:until_date, :integer, :optional},
     {:can_be_edited, :boolean, :optional},
     {:can_post_messages, :boolean, :optional},
@@ -393,6 +411,11 @@ defmodule Telegex.Model do
     {:can_pin_messages, :boolean, :optional}
   ]
 
+  model ChatLocation, [
+    {:location, Location},
+    {:address, String}
+  ]
+
   model BotCommand, [
     {:command, String},
     {:description, String}
@@ -407,7 +430,8 @@ defmodule Telegex.Model do
     {:type, String},
     {:media, String},
     {:caption, String, :optional},
-    {:parse_mode, String, :optional}
+    {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional}
   ]
 
   model InputMediaVideo, [
@@ -416,6 +440,7 @@ defmodule Telegex.Model do
     {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:width, :integer, :optional},
     {:height, :integer, :optional},
     {:duration, :integer, :optional},
@@ -428,6 +453,7 @@ defmodule Telegex.Model do
     {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:width, :integer, :optional},
     {:height, :integer, :optional},
     {:duration, :integer, :optional}
@@ -439,6 +465,7 @@ defmodule Telegex.Model do
     {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:duration, :integer, :optional},
     {:performer, String, :optional},
     {:title, String, :optional}
@@ -450,6 +477,7 @@ defmodule Telegex.Model do
     {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:disable_content_type_detection, :boolean, :optional}
   ]
 
@@ -689,6 +717,7 @@ defmodule Telegex.Model do
     {:description, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -704,6 +733,7 @@ defmodule Telegex.Model do
     {:thumb_mime_type, String, :optional},
     {:title, String, :optional},
     {:caption, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:parse_mode, String, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
@@ -720,6 +750,7 @@ defmodule Telegex.Model do
     {:thumb_mime_type, String, :optional},
     {:title, String, :optional},
     {:caption, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:parse_mode, String, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
@@ -734,6 +765,7 @@ defmodule Telegex.Model do
     {:title, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:video_width, :integer, :optional},
     {:video_height, :integer, :optional},
     {:video_duration, :integer, :optional},
@@ -749,6 +781,7 @@ defmodule Telegex.Model do
     {:title, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:performer, String, :optional},
     {:audio_duration, :integer, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
@@ -762,6 +795,7 @@ defmodule Telegex.Model do
     {:title, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:voice_duration, :integer, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
@@ -773,6 +807,7 @@ defmodule Telegex.Model do
     {:title, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:document_url, String},
     {:mime_type, String},
     {:description, String, :optional},
@@ -789,8 +824,10 @@ defmodule Telegex.Model do
     {:latitude, :float},
     {:longitude, :float},
     {:title, String},
+    {:horizontal_accuracy, :float, :optional},
     {:live_period, :integer, :optional},
     {:heading, :integer, :optional},
+    {:proximity_alert_radius, :integer, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional},
     {:thumb_url, String, :optional},
@@ -807,6 +844,8 @@ defmodule Telegex.Model do
     {:address, String},
     {:foursquare_id, String, :optional},
     {:foursquare_type, String, :optional},
+    {:google_place_id, String, :optional},
+    {:google_place_type, String, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional},
     {:thumb_url, String, :optional},
@@ -843,6 +882,7 @@ defmodule Telegex.Model do
     {:description, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -854,6 +894,7 @@ defmodule Telegex.Model do
     {:title, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -865,6 +906,7 @@ defmodule Telegex.Model do
     {:title, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -885,6 +927,7 @@ defmodule Telegex.Model do
     {:description, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -897,6 +940,7 @@ defmodule Telegex.Model do
     {:description, String, :optional},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -908,6 +952,7 @@ defmodule Telegex.Model do
     {:title, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -918,6 +963,7 @@ defmodule Telegex.Model do
     {:audio_file_id, String},
     {:caption, String, :optional},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional}
   ]
@@ -925,14 +971,17 @@ defmodule Telegex.Model do
   model InputTextMessageContent, [
     {:message_text, String},
     {:parse_mode, String, :optional},
+    {:caption_entities, [MessageEntity], :optional},
     {:disable_web_page_preview, :boolean, :optional}
   ]
 
   model InputLocationMessageContent, [
     {:latitude, :float},
     {:longitude, :float},
+    {:horizontal_accuracy, :float, :optional},
     {:live_period, :integer, :optional},
-    {:heading, :integer, :optional}
+    {:heading, :integer, :optional},
+    {:proximity_alert_radius, :integer, :optional}
   ]
 
   model InputVenueMessageContent, [
@@ -941,7 +990,9 @@ defmodule Telegex.Model do
     {:title, String},
     {:address, String},
     {:foursquare_id, String, :optional},
-    {:foursquare_type, String, :optional}
+    {:foursquare_type, String, :optional},
+    {:google_place_id, String, :optional},
+    {:google_place_type, String, :optional}
   ]
 
   model InputContactMessageContent, [
