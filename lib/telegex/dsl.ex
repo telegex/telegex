@@ -201,6 +201,10 @@ defmodule Telegex.DSL do
     {:field, [], [key, {:|, [], typespecs_ast}]}
   end
 
+  # 数组普通类型可选
+  defp gen_field_ast({:{}, [_], [key, [type], :optional]} = _ast),
+    do: gen_normal_field_ast(key, type, optional: true, array: true)
+
   # 普通类型可选
   defp gen_field_ast({:{}, [_], [key, type, :optional]} = _ast),
     do: gen_normal_field_ast(key, type, optional: true)

@@ -148,6 +148,7 @@ defmodule Telegex.Model do
     {:connected_website, String, :optional},
     {:passport_data, PassportData, :optional},
     {:proximity_alert_triggered, ProximityAlertTriggered, :optional},
+    {:voice_chat_scheduled, VoiceChatScheduled, :optional},
     {:voice_chat_started, VoiceChatStarted, :optional},
     {:voice_chat_ended, VoiceChatEnded, :optional},
     {:voice_chat_participants_invited, VoiceChatParticipantsInvited, :optional},
@@ -304,6 +305,10 @@ defmodule Telegex.Model do
 
   model MessageAutoDeleteTimerChanged, [
     {:message_auto_delete_time, :integer}
+  ]
+
+  model VoiceChatScheduled, [
+    {:start_date, :integer}
   ]
 
   model VoiceChatStarted, []
@@ -725,9 +730,10 @@ defmodule Telegex.Model do
   model InlineQuery, [
     {:id, String},
     {:from, User},
-    {:location, Location, :optional},
     {:query, String},
-    {:offset, String}
+    {:offset, String},
+    {:chat_type, String, :optional},
+    {:location, Location, :optional}
   ]
 
   model InlineQueryResultArticle, [
@@ -1038,6 +1044,29 @@ defmodule Telegex.Model do
     {:first_name, String},
     {:last_name, String, :optional},
     {:vcard, String, :optional}
+  ]
+
+  model InputInvoiceMessageContent, [
+    {:title, String},
+    {:description, String},
+    {:payload, String},
+    {:provider_token, String},
+    {:currency, String},
+    {:prices, [LabeledPrice]},
+    {:max_tip_amount, :integer, :optional},
+    {:suggested_tip_amounts, [:integer], :optional},
+    {:provider_data, String, :optional},
+    {:photo_url, String, :optional},
+    {:photo_size, :integer, :optional},
+    {:photo_width, :integer, :optional},
+    {:photo_height, :integer, :optional},
+    {:need_name, :boolean, :optional},
+    {:need_phone_number, :boolean, :optional},
+    {:need_email, :boolean, :optional},
+    {:need_shipping_address, :boolean, :optional},
+    {:send_phone_number_to_provider, :boolean, :optional},
+    {:send_email_to_provider, :boolean, :optional},
+    {:is_flexible, :boolean, :optional}
   ]
 
   model ChosenInlineResult, [
