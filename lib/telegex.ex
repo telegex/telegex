@@ -530,7 +530,8 @@ defmodule Telegex do
     [
       {:chat_id, :integer | String},
       {:user_id, :integer},
-      {:until_date, :integer, :optional}
+      {:until_date, :integer, :optional},
+      {:revoke_messages, :boolean, :optional}
     ],
     :boolean
   )
@@ -577,10 +578,12 @@ defmodule Telegex do
       {:chat_id, :integer | String},
       {:user_id, :integer},
       {:is_anonymous, :boolean, :optional},
+      {:can_manage_chat, :boolean, :optional},
       {:can_change_info, :boolean, :optional},
       {:can_post_messages, :boolean, :optional},
       {:can_edit_messages, :boolean, :optional},
       {:can_delete_messages, :boolean, :optional},
+      {:can_manage_voice_chats, :boolean, :optional},
       {:can_invite_users, :boolean, :optional},
       {:can_restrict_members, :boolean, :optional},
       {:can_pin_messages, :boolean, :optional},
@@ -628,6 +631,52 @@ defmodule Telegex do
       {:chat_id, :integer | String}
     ],
     String
+  )
+
+  @doc """
+  Use this method to create an additional invite link for a chat.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  The link can be revoked using the method revokeChatInviteLink. Returns the new invite link as ChatInviteLink object.
+  """
+  method(
+    "createChatInviteLink",
+    [
+      {:chat_id, :integer | String},
+      {:expire_date, :integer, :optional},
+      {:member_limit, :integer, :optional}
+    ],
+    ChatInviteLink
+  )
+
+  @doc """
+  Use this method to edit a non-primary invite link created by the bot.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns the edited invite link as a ChatInviteLink object.
+  """
+  method(
+    "editChatInviteLink",
+    [
+      {:chat_id, :integer | String},
+      {:invite_link, String},
+      {:expire_date, :integer, :optional},
+      {:member_limit, :integer, :optional}
+    ],
+    ChatInviteLink
+  )
+
+  @doc """
+  Use this method to revoke an invite link created by the bot.
+  If the primary link is revoked, a new link is automatically generated.
+  The bot must be an administrator in the chat for this to work and must have the appropriate admin rights.
+  Returns the revoked invite link as ChatInviteLink object.
+  """
+  method(
+    "revokeChatInviteLink",
+    [
+      {:chat_id, :integer | String},
+      {:invite_link, String}
+    ],
+    ChatInviteLink
   )
 
   @doc """

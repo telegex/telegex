@@ -139,6 +139,7 @@ defmodule Telegex.Model do
     {:group_chat_created, :boolean, :optional},
     {:supergroup_chat_created, :boolean, :optional},
     {:channel_chat_created, :boolean, :optional},
+    {:message_auto_delete_timer_changed, MessageAutoDeleteTimerChanged, :optional},
     {:migrate_to_chat_id, :integer, :optional},
     {:migrate_from_chat_id, :integer, :optional},
     {:pinned_message, Message, :optional},
@@ -147,6 +148,9 @@ defmodule Telegex.Model do
     {:connected_website, String, :optional},
     {:passport_data, PassportData, :optional},
     {:proximity_alert_triggered, ProximityAlertTriggered, :optional},
+    {:voice_chat_started, VoiceChatStarted, :optional},
+    {:voice_chat_ended, VoiceChatEnded, :optional},
+    {:voice_chat_participants_invited, VoiceChatParticipantsInvited, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional}
   ]
 
@@ -298,6 +302,20 @@ defmodule Telegex.Model do
     {:distance, :integer}
   ]
 
+  model MessageAutoDeleteTimerChanged, [
+    {:message_auto_delete_time, :integer}
+  ]
+
+  model VoiceChatStarted, []
+
+  model VoiceChatEnded, [
+    {:duration, :integer}
+  ]
+
+  model VoiceChatParticipantsInvited, [
+    {:users, [User], :optional}
+  ]
+
   model UserProfilePhotos, [
     {:total_count, :integer},
     {:photos, [PhotoSize]}
@@ -377,6 +395,15 @@ defmodule Telegex.Model do
     {:big_file_unique_id, String}
   ]
 
+  model ChatInviteLink, [
+    {:invite_link, String},
+    {:creator, User},
+    {:is_primary, :boolean},
+    {:is_revoked, :boolean},
+    {:expire_date, :integer, :optional},
+    {:member_limit, :integer, :optional}
+  ]
+
   model ChatMember, [
     {:user, User},
     {:status, String},
@@ -384,9 +411,11 @@ defmodule Telegex.Model do
     {:is_anonymous, :boolean, :optional},
     {:until_date, :integer, :optional},
     {:can_be_edited, :boolean, :optional},
+    {:can_manage_chat, :boolean, :optional},
     {:can_post_messages, :boolean, :optional},
     {:can_edit_messages, :boolean, :optional},
     {:can_delete_messages, :boolean, :optional},
+    {:can_manage_voice_chats, :boolean, :optional},
     {:can_restrict_members, :boolean, :optional},
     {:can_promote_members, :boolean, :optional},
     {:can_change_info, :boolean, :optional},
@@ -398,6 +427,15 @@ defmodule Telegex.Model do
     {:can_send_polls, :boolean, :optional},
     {:can_send_other_messages, :boolean, :optional},
     {:can_add_web_page_previews, :boolean, :optional}
+  ]
+
+  model ChatMemberUpdated, [
+    {:chat, Chat},
+    {:from, User},
+    {:data, :integer},
+    {:old_chat_member, ChatMember},
+    {:new_chat_member, ChatMember},
+    {:invite_link, ChatInviteLink}
   ]
 
   model ChatPermissions, [
@@ -1022,7 +1060,9 @@ defmodule Telegex.Model do
     {:shipping_query, ShippingQuery, :optional},
     {:pre_checkout_query, PreCheckoutQuery, :optional},
     {:poll, Poll, :optional},
-    {:poll_answer, PollAnswer, :optional}
+    {:poll_answer, PollAnswer, :optional},
+    {:my_chat_member, ChatMemberUpdated, :optional},
+    {:chat_member, ChatMemberUpdated, :optional}
   ]
 
   model Response, [
