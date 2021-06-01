@@ -42,7 +42,6 @@ defmodule Telegex.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
-      {:exvcr, "~> 0.11", only: :test},
       {:typed_struct, "~> 0.2.0"},
       {:httpoison, "~> 1.7"},
       {:jason, "~> 1.2"}
