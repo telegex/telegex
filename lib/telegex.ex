@@ -40,8 +40,10 @@ defmodule Telegex do
     [
       {:url, String},
       {:certificate, InputFile, :optional},
+      {:ip_address, String, :optional},
       {:max_connections, :integer, :optional},
-      {:allowed_updates, [String], :optional}
+      {:allowed_updates, [String], :optional},
+      {:drop_pending_updates, :boolean, :optional}
     ],
     :boolean
   )
@@ -50,7 +52,13 @@ defmodule Telegex do
   Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api#getupdates).
   Returns True on success. Requires no parameters.
   """
-  method("deleteWebhook", [], :boolean)
+  method(
+    "deleteWebhook",
+    [
+      {:drop_pending_updates, :boolean, :optional}
+    ],
+    :boolean
+  )
 
   @doc """
   Use this method to get current webhook status. Requires no parameters. On success, returns a `Telegex.Model.WebhookInfo` object.
@@ -63,6 +71,22 @@ defmodule Telegex do
   Returns basic information about the bot in form of a `Telegex.Model.User` object.
   """
   method("getMe", [], User)
+
+  @doc """
+  Use this method to log out from the cloud Bot API server before launching the bot locally.
+  You _must_ log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates.
+  After a successful call, you can immediately log in on a local server,
+  but will not be able to log in back to the cloud Bot API server for 10 minutes.
+  Returns *True* on success. Requires no parameters.
+  """
+  method("logOut", [], :boolean)
+
+  @doc """
+  Use this method to close the bot instance before moving it from one local server to another.
+  You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart.
+  he method will return error 429 in the first 10 minutes after the bot is launched. Returns *True* on success. Requires no parameters.
+  """
+  method("close", [], :boolean)
 
   @doc """
   Use this method to send text messages. On success, the sent `Telegex.Model.Message` is returned.
@@ -152,6 +176,7 @@ defmodule Telegex do
       {:thumb, InputFile | String, :optional},
       {:caption, String, :optional},
       {:parse_mode, String, :optional},
+      {:disable_content_type_detection, :boolean, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
       {:reply_markup,
@@ -259,7 +284,7 @@ defmodule Telegex do
     "sendMediaGroup",
     [
       {:chat_id, :integer | String},
-      {:media, [InputMediaPhoto | InputMediaVideo]},
+      {:media, [InputMediaAudio | InputMediaDocument | InputMediaPhoto | InputMediaVideo]},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional}
     ],
@@ -276,6 +301,7 @@ defmodule Telegex do
       {:latitude, :float},
       {:longitude, :float},
       {:live_period, :integer, :optional},
+      {:heading, :integer, :optional},
       {:disable_notification, :boolean, :optional},
       {:reply_to_message_id, :integer, :optional},
       {:reply_markup,
@@ -297,6 +323,7 @@ defmodule Telegex do
       {:inline_message_id, String, :optional},
       {:latitude, :float},
       {:longitude, :float},
+      {:heading, :integer, :optional},
       {:reply_markup, InlineKeyboardMarkup, :optional}
     ],
     Message | :boolean
@@ -466,7 +493,8 @@ defmodule Telegex do
     "unbanChatMember",
     [
       {:chat_id, :integer | String},
-      {:user_id, :integer}
+      {:user_id, :integer},
+      {:only_if_banned, :boolean, :optional}
     ],
     :boolean
   )
@@ -628,10 +656,19 @@ defmodule Telegex do
   method(
     "unpinChatMessage",
     [
-      {:chat_id, :integer | String}
+      {:chat_id, :integer | String},
+      {:message_id, :integer, :optional}
     ],
     :boolean
   )
+
+  @doc """
+  Use this method to clear the list of pinned messages in a chat.If the chat is not a private chat,
+  the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in
+  a supergroup or 'can_edit_messages' admin right in a channel.
+  Returns *True* on success.
+  """
+  method("unpinAllChatMessages", [], :boolean)
 
   @doc """
   Use this method for your bot to leave a group, supergroup or channel. Returns True on success.

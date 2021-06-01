@@ -59,6 +59,7 @@ defmodule Telegex.Model do
     {:url, String},
     {:has_custom_certificate, :boolean},
     {:pending_update_count, :integer},
+    {:ip_address, String, :optional},
     {:last_error_date, :integer, :optional},
     {:last_error_message, String, :optional},
     {:max_connections, :integer, :optional},
@@ -181,6 +182,7 @@ defmodule Telegex.Model do
     {:duration, :integer},
     {:performer, String, :optional},
     {:title, String, :optional},
+    {:file_name, String, :optional},
     {:mime_type, String, :optional},
     {:file_size, :integer, :optional},
     {:thumb, PhotoSize, :optional}
@@ -202,6 +204,7 @@ defmodule Telegex.Model do
     {:height, :integer},
     {:duration, :integer},
     {:thumb, PhotoSize, :optional},
+    {:file_name, String, :optional},
     {:mime_type, String, :optional},
     {:file_size, :integer, :optional}
   ]
@@ -265,7 +268,9 @@ defmodule Telegex.Model do
 
   model Location, [
     {:longitude, :float},
-    {:latitude, :float}
+    {:latitude, :float},
+    {:live_period, :integer, :optional},
+    {:heading, :integer, :optional}
   ]
 
   model Venue, [
@@ -444,7 +449,8 @@ defmodule Telegex.Model do
     {:media, String},
     {:thumb, InputFile | String, :optional},
     {:caption, String, :optional},
-    {:parse_mode, String, :optional}
+    {:parse_mode, String, :optional},
+    {:disable_content_type_detection, :boolean, :optional}
   ]
 
   model LabeledPrice, [
@@ -784,6 +790,7 @@ defmodule Telegex.Model do
     {:longitude, :float},
     {:title, String},
     {:live_period, :integer, :optional},
+    {:heading, :integer, :optional},
     {:reply_markup, InlineKeyboardMarkup, :optional},
     {:input_message_content, InputMessageContent, :optional},
     {:thumb_url, String, :optional},
@@ -924,7 +931,8 @@ defmodule Telegex.Model do
   model InputLocationMessageContent, [
     {:latitude, :float},
     {:longitude, :float},
-    {:live_period, :integer, :optional}
+    {:live_period, :integer, :optional},
+    {:heading, :integer, :optional}
   ]
 
   model InputVenueMessageContent, [
