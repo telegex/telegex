@@ -1,6 +1,5 @@
 # Telegex
 
-[![Hex.pm](https://img.shields.io/hexpm/v/telegex.svg)](http://hex.pm/packages/telegex)
 
 This library is a client implementation of the official bot API, without any encapsulation. Original flavor!
 
@@ -24,7 +23,7 @@ Welcome to communicate here: [@elixir_telegex](https://t.me/elixir_telegex)
 
 ## Related libraries
 
-- [telegex_marked](https://github.com/Hentioe/telegex_marked) (Safely use Markdown supported by Telegram)
+- [telegex_plug](https://github.com/telegex/telegex_plug) (Pipeline processing message abstraction)
 
 ## Installation
 
