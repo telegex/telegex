@@ -414,7 +414,6 @@ defmodule Telegex.Model do
     {:status, String},
     {:custom_title, String, :optional},
     {:is_anonymous, :boolean, :optional},
-    {:until_date, :integer, :optional},
     {:can_be_edited, :boolean, :optional},
     {:can_manage_chat, :boolean, :optional},
     {:can_post_messages, :boolean, :optional},
@@ -431,13 +430,14 @@ defmodule Telegex.Model do
     {:can_send_media_messages, :boolean, :optional},
     {:can_send_polls, :boolean, :optional},
     {:can_send_other_messages, :boolean, :optional},
-    {:can_add_web_page_previews, :boolean, :optional}
+    {:can_add_web_page_previews, :boolean, :optional},
+    {:until_date, :integer, :optional}
   ]
 
   model ChatMemberUpdated, [
     {:chat, Chat},
     {:from, User},
-    {:data, :integer},
+    {:date, :integer},
     {:old_chat_member, ChatMember},
     {:new_chat_member, ChatMember},
     {:invite_link, ChatInviteLink}
