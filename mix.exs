@@ -2,7 +2,7 @@ defmodule Telegex.MixProject do
   use Mix.Project
   @description "Telegram bot library for Elixir"
 
-  @version "0.1.9-dev"
+  @version "0.1.9"
 
   def project do
     [
