@@ -121,8 +121,8 @@ defmodule Telegex.Request do
 
   defp build_multipart_form("sendMediaGroup", params, _attach_fields) do
     # 1. 检查附件列表
-    media_param = params |> Keyword.get(:media, [])
-    local_medias = media_param |> Enum.filter(fn %{media: media} -> File.exists?(media) end)
+    media_param = Keyword.get(params, :media, [])
+    local_medias = Enum.filter(media_param, fn %{media: media} -> File.exists?(media) end)
     # 2. 构建附件 form
     local_media_forms =
       local_medias
@@ -132,7 +132,7 @@ defmodule Telegex.Request do
     local_thumbs =
       media_param
       |> Enum.filter(fn input_media ->
-        if input_media |> Map.has_key?(:thumb), do: File.exists?(input_media.thumb), else: false
+        Map.has_key?(input_media, :thumb) && input_media.thumb && File.exists?(input_media.thumb)
       end)
 
     local_thumb_forms =
@@ -145,11 +145,11 @@ defmodule Telegex.Request do
     media_param =
       media_param
       |> Enum.map(fn media ->
-        if local_medias |> Enum.member?(media) do
-          media = media |> Map.put(:media, "attach://#{Path.basename(media.media)}")
+        if Enum.member?(local_medias, media) do
+          media = Map.put(media, :media, "attach://#{Path.basename(media.media)}")
 
-          if media.type == "video" && File.exists?(media.thumb) do
-            media |> Map.put(:thumb, "attach://#{Path.basename(media.thumb)}")
+          if media.type == "video" && media.thumb && File.exists?(media.thumb) do
+            Map.put(media, :thumb, "attach://#{Path.basename(media.thumb)}")
           else
             media
           end
@@ -158,11 +158,9 @@ defmodule Telegex.Request do
         end
       end)
 
-    params = params |> Keyword.put(:media, media_param)
+    params = Keyword.put(params, :media, media_param) |> IO.inspect()
 
-    data_forms =
-      params
-      |> Enum.map(&data_normalize(&1, []))
+    data_forms = Enum.map(params, &data_normalize(&1, []))
 
     {:multipart, data_forms ++ attach_forms}
   end
