@@ -158,7 +158,7 @@ defmodule Telegex.Request do
         end
       end)
 
-    params = Keyword.put(params, :media, media_param) |> IO.inspect()
+    params = Keyword.put(params, :media, media_param)
 
     data_forms = Enum.map(params, &data_normalize(&1, []))
 
