@@ -30,7 +30,7 @@ Add Telegex to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
-  [{:telegex, "~> 0.1.0"}]
+  [{:telegex, "~> 0.1"}]
 end
 ```
 
