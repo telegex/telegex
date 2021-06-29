@@ -323,7 +323,7 @@ defmodule Telegex.Model do
 
   model UserProfilePhotos, [
     {:total_count, :integer},
-    {:photos, [PhotoSize]}
+    {:photos, [[PhotoSize]]}
   ]
 
   model File, [
