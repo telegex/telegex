@@ -403,10 +403,13 @@ defmodule Telegex.Model do
   model ChatInviteLink, [
     {:invite_link, String},
     {:creator, User},
+    {:creates_join_request, :boolean},
     {:is_primary, :boolean},
     {:is_revoked, :boolean},
+    {:name, String, :optional},
     {:expire_date, :integer, :optional},
-    {:member_limit, :integer, :optional}
+    {:member_limit, :integer, :optional},
+    {:pending_join_request_count, :integer, :optional}
   ]
 
   model ChatMember, [
@@ -441,6 +444,15 @@ defmodule Telegex.Model do
     {:old_chat_member, ChatMember},
     {:new_chat_member, ChatMember},
     {:invite_link, ChatInviteLink}
+  ]
+
+  # Added by bot API 5.4
+  model ChatJoinRequest, [
+    {:chat, Chat},
+    {:from, User},
+    {:date, :integer},
+    {:bio, String, :optional},
+    {:invite_link, ChatInviteLink, :optional}
   ]
 
   model ChatPermissions, [
@@ -1091,7 +1103,9 @@ defmodule Telegex.Model do
     {:poll, Poll, :optional},
     {:poll_answer, PollAnswer, :optional},
     {:my_chat_member, ChatMemberUpdated, :optional},
-    {:chat_member, ChatMemberUpdated, :optional}
+    {:chat_member, ChatMemberUpdated, :optional},
+    # Added by bot API 5.4
+    {:chat_join_request, ChatJoinRequest, :optional}
   ]
 
   model Response, [

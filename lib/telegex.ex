@@ -526,7 +526,7 @@ defmodule Telegex do
   Returns True on success.
   """
   method(
-    "kickChatMember",
+    "banChatMember",
     [
       {:chat_id, :integer | String},
       {:user_id, :integer},
@@ -642,8 +642,10 @@ defmodule Telegex do
     "createChatInviteLink",
     [
       {:chat_id, :integer | String},
+      {:name, String, :optional},
       {:expire_date, :integer, :optional},
-      {:member_limit, :integer, :optional}
+      {:member_limit, :integer, :optional},
+      {:creates_join_request, :boolean, :optional}
     ],
     ChatInviteLink
   )
@@ -677,6 +679,36 @@ defmodule Telegex do
       {:invite_link, String}
     ],
     ChatInviteLink
+  )
+
+  # Added by bot API 5.4
+  @doc """
+  Use this method to approve a chat join request.
+  The bot must be an administrator in the chat for this to work and must have the `can_invite_users` administrator right.
+  Returns True on success.
+  """
+  method(
+    "approveChatJoinRequest",
+    [
+      {:chat_id, :integer | String},
+      {:user_id, :integer}
+    ],
+    :boolean
+  )
+
+  # Added by bot API 5.4
+  @doc """
+  Use this method to decline a chat join request.
+  The bot must be an administrator in the chat for this to work and must have the `can_invite_users` administrator right.
+  Returns True on success.
+  """
+  method(
+    "declineChatJoinRequest",
+    [
+      {:chat_id, :integer | String},
+      {:user_id, :integer}
+    ],
+    :boolean
   )
 
   @doc """
