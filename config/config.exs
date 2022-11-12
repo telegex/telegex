@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :telegex,
   timeout: 1000 * 45,
