@@ -163,29 +163,32 @@ defmodule Telegex.DSL do
     {:field, [], args}
   end
 
+  # ElixirLS 编译错误中的参数：
+  # {:{}, [closing: [line: 62, column: 36], line: 62, column: 5], [:ip_address, {:__aliases__, [last: [line: 62, column: 19], line: 62, column: 19], [:String]}, :optional]}
+
   # 结构类型可选
-  defp gen_field_ast({:{}, [_], [key, {:__aliases__, [_], type}, :optional]} = _ast),
+  defp gen_field_ast({:{}, _, [key, {:__aliases__, _, type}, :optional]} = _ast),
     do: gen_struct_field_ast(key, type, optional: true)
 
   # 结构类型不可选
-  defp gen_field_ast({key, {:__aliases__, [_], type}} = _ast),
+  defp gen_field_ast({key, {:__aliases__, _, type}} = _ast),
     do: gen_struct_field_ast(key, type)
 
   # 数组结构类型可选
-  defp gen_field_ast({:{}, [_], [key, [{:__aliases__, [_], type}], :optional]} = _ast),
+  defp gen_field_ast({:{}, _, [key, [{:__aliases__, _, type}], :optional]} = _ast),
     do: gen_struct_field_ast(key, type, optional: true, array: true)
 
   # 数组结构类型不可选
-  defp gen_field_ast({key, [{:__aliases__, [_], type}]} = _ast),
+  defp gen_field_ast({key, [{:__aliases__, _, type}]} = _ast),
     do: gen_struct_field_ast(key, type, array: true)
 
   # 二维数组结构类型不可选
-  defp gen_field_ast({key, [[{:__aliases__, [_], type}]]} = _ast),
+  defp gen_field_ast({key, [[{:__aliases__, _, type}]]} = _ast),
     do: gen_struct_field_ast(key, type, array: :array_of_array)
 
   # 带有或关系的多种类型可选
   # TODO: 此处表明 AST 的构造操作还需要独立细分以达到最大程度的复用
-  defp gen_field_ast({:{}, [_], [key, {:|, [_], types_ast}, :optional]} = _ast) do
+  defp gen_field_ast({:{}, _, [key, {:|, _, types_ast}, :optional]} = _ast) do
     typespecs_ast =
       types_ast
       |> Enum.map(fn type_ast ->
@@ -202,11 +205,11 @@ defmodule Telegex.DSL do
   end
 
   # 数组普通类型可选
-  defp gen_field_ast({:{}, [_], [key, [type], :optional]} = _ast),
+  defp gen_field_ast({:{}, _, [key, [type], :optional]} = _ast),
     do: gen_normal_field_ast(key, type, optional: true, array: true)
 
   # 普通类型可选
-  defp gen_field_ast({:{}, [_], [key, type, :optional]} = _ast),
+  defp gen_field_ast({:{}, _, [key, type, :optional]} = _ast),
     do: gen_normal_field_ast(key, type, optional: true)
 
   # 数组普通类型不可选
