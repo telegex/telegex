@@ -18,12 +18,6 @@ If you need webhook mode, please look forward to the 0.2.0 version.
 
 There are some complete example projects in the [examples](https://github.com/Hentioe/telegex/tree/master/examples/) directory. Their code contains relatively complete comments to teach you how to get updates (receive messages) correctly and add related services to the supervision tree.
 
-Welcome to communicate here: [@elixir_telegex](https://t.me/elixir_telegex)
-
-## Related libraries
-
-- [telegex_plug](https://github.com/telegex/telegex_plug) (Pipeline processing message abstraction)
-
 ## Installation
 
 Add Telegex to your `mix.exs` dependencies:
