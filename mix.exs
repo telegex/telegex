@@ -2,7 +2,7 @@ defmodule Telegex.MixProject do
   use Mix.Project
   @description "Telegram bot library for Elixir"
 
-  @version "0.1.11-dev"
+  @version "0.2.0-dev"
 
   def project do
     [
@@ -43,7 +43,7 @@ defmodule Telegex.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:typed_struct, "~> 0.3"},
-      {:httpoison, "~> 1.8"},
+      {:httpoison, "~> 2.1", only: [:dev, :test]},
       {:jason, "~> 1.4"}
     ]
   end
