@@ -43,7 +43,7 @@ defmodule Telegex.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:typed_struct, "~> 0.3"},
-      {:httpoison, "~> 2.1", only: [:dev, :test]},
+      {:httpoison, "~> 2.1", only: [:dev, :test, :prod]},
       {:jason, "~> 1.4"}
     ]
   end
