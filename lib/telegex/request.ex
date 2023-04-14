@@ -1,6 +1,7 @@
 defmodule Telegex.Request do
   @moduledoc false
 
+  alias Telegex.HTTPClient
   alias Telegex.Model.{Response, Error, RequestError, InputMedia}
   alias Telegex.Attachment
   alias Telegex.Config
@@ -41,7 +42,7 @@ defmodule Telegex.Request do
        when is_binary(method) and is_list(params) do
     json_body = params |> Enum.into(%{}) |> Jason.encode!()
 
-    HTTPoison.post(endpoint(method), json_body, [@json_header], Config.httposion_options())
+    HTTPClient.post(endpoint(method), json_body, [@json_header], Config.httposion_options())
   end
 
   @spec post(String.t(), keyword(), [Attachment.t()], :multipart) ::
@@ -53,7 +54,7 @@ defmodule Telegex.Request do
       post(method, params)
     else
       multipart_form = build_multipart_form(method, params, attach_fields)
-      HTTPoison.post(endpoint(method), multipart_form, [], Config.httposion_options())
+      HTTPClient.post(endpoint(method), multipart_form, [], Config.httposion_options())
     end
   end
 
