@@ -37,5 +37,7 @@ config :telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter,
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
-- `ReqAdapter`: [`req`](https://hex.pm/packages/req)
-- `HTTPoison`: [`httpoison`](https://hex.pm/packages/httpoison)
+- [`req`](https://hex.pm/packages/req): `ReqAdapter`
+- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter`
+
+Don't have a client library you use? Tell me in issues!
