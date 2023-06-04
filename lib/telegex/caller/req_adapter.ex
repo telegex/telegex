@@ -3,8 +3,7 @@ defmodule Telegex.Caller.ReqAdapter do
 
   use Telegex.Caller
 
-  alias Req.Response
-
+  @type req_resp :: Req.Response.t()
   @type req_error :: %{reason: atom}
 
   @impl true
@@ -15,22 +14,27 @@ defmodule Telegex.Caller.ReqAdapter do
   end
 
   def request(url, body_map \\ %{}, _opts \\ []) do
-    [
-      method: :post,
-      url: url,
-      headers: [@json_header],
-      json: body_map,
-      decode_json: [keys: :atoms]
-    ]
-    |> Keyword.merge(adapter_options())
-    |> Req.new()
-    |> Req.request()
+    req_opts =
+      Keyword.merge(
+        [
+          method: :post,
+          url: url,
+          headers: [@json_header],
+          json: body_map,
+          decode_json: [keys: :atoms]
+        ],
+        adapter_options()
+      )
+
+    req = apply(Req, :new, [req_opts])
+
+    apply(Req, :request, [req])
   end
 
-  @spec parse_response({:ok, Response.t()} | {:error, req_error}) ::
+  @spec parse_response({:ok, req_resp} | {:error, req_error}) ::
           {:ok, any} | {:error, Telegex.error()}
 
-  defp parse_response({:ok, %Response{body: body} = _response}) do
+  defp parse_response({:ok, %{body: body} = _response}) do
     %{ok: ok, result: result, error_code: error_code, description: description} =
       struct_response(body)
 
