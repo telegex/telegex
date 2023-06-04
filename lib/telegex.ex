@@ -1,18 +1,5 @@
 defmodule Telegex do
-  @moduledoc """
-  Documentation for `Telegex`.
-  """
+  @moduledoc false
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Telegex.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  @type error :: Telegex.Error.t() | Telegex.RequestError.t()
 end
