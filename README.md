@@ -18,7 +18,7 @@ Specify the adapter for the HTTP client in the public configuration file:
 config :telegex, Telegex.Caller, adapter: Telegex.Caller.ReqAdapter
 ```
 
-You can also choose `HTTPoisonAdapter` as the adapter.
+You can also choose `HTTPoison` as the client.
 
 Pass options to the adapter, such as timeout:
 
