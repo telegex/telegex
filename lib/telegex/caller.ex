@@ -34,7 +34,7 @@ defmodule Telegex.Caller do
   def adapter_options, do: config()[:options] || []
 
   @spec config :: keyword
-  defp config, do: Application.get_env(:telegex, :caller, [])
+  defp config, do: Application.get_env(:telegex, __MODULE__, [])
 
   @spec struct_response(String.t() | map) :: Response.t()
   def struct_response(json) when is_binary(json) do

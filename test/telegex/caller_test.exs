@@ -5,13 +5,13 @@ defmodule Telegex.CallerTest do
 
   setup do
     on_exit(fn ->
-      # 还原 `caller` 配置
-      Application.put_env(:telegex, :caller, [])
+      # 还原 `Caller` 配置
+      Application.put_env(:telegex, Telegex.Caller, [])
     end)
   end
 
   test "HTTPoisonAdapter ok" do
-    Application.put_env(:telegex, :caller, adapter: Telegex.Caller.HTTPoisonAdapter)
+    Application.put_env(:telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter)
 
     r = call("getMe")
 
@@ -19,7 +19,7 @@ defmodule Telegex.CallerTest do
   end
 
   test "HTTPoisonAdapter error" do
-    Application.put_env(:telegex, :caller,
+    Application.put_env(:telegex, Telegex.Caller,
       adapter: Telegex.Caller.HTTPoisonAdapter,
       options: [recv_timeout: 1]
     )
@@ -30,7 +30,7 @@ defmodule Telegex.CallerTest do
   end
 
   test "ReqAdapter ok" do
-    Application.put_env(:telegex, :caller, adapter: Telegex.Caller.ReqAdapter)
+    Application.put_env(:telegex, Telegex.Caller, adapter: Telegex.Caller.ReqAdapter)
 
     r = call("getMe")
 
@@ -39,7 +39,7 @@ defmodule Telegex.CallerTest do
 
   test "ReqAdapter error" do
     # 传递选项测试超时错误
-    Application.put_env(:telegex, :caller,
+    Application.put_env(:telegex, Telegex.Caller,
       adapter: Telegex.Caller.ReqAdapter,
       options: [connect_options: [timeout: 1]]
     )
