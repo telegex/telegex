@@ -16,9 +16,9 @@ defmodule Telegex.Caller do
   end
 
   @callback call(method :: String.t(), params :: keyword, opts :: keyword) ::
-              {:ok, any} | {:error, Telegex.error()}
+              {:ok, any} | {:error, Telegex.Type.error()}
 
-  @spec call(String.t(), keyword, keyword) :: {:ok, any} | {:error, Telegex.error()}
+  @spec call(String.t(), keyword, keyword) :: {:ok, any} | {:error, Telegex.Type.error()}
   def call(method, params \\ [], opts \\ []), do: impl().call(method, params, opts)
 
   @spec impl() :: module

@@ -69,7 +69,7 @@ defmodule Telegex.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "gen.all": ["gen.doc_json", "gen.types"]
+      "gen.all": ["gen.doc_json", "gen.code", "format"]
     ]
   end
 end

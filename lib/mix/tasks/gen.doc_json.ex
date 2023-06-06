@@ -45,6 +45,7 @@ defmodule Mix.Tasks.Gen.DocJson do
     types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
     updates_section = Enum.find(doc_sections, &(&1.title == "Getting updates"))
     inline_section = Enum.find(doc_sections, &(&1.title == "Inline mode"))
+    methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
 
     types_sub_sections = parse_sub_sections(types_section, doc_nodes)
     updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
@@ -112,13 +113,30 @@ defmodule Mix.Tasks.Gen.DocJson do
       |> Enum.filter(&(&1.comment == :union_type))
       |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
 
+    updates_methods =
+      updates_sub_sections
+      # 排除非方法的子章节
+      |> Enum.filter(&(&1.comment == :method))
+      |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
+    methods =
+      methods_section
+      |> parse_sub_sections(doc_nodes)
+      # 排除非方法的子章节
+      |> Enum.filter(&(&1.comment == :method))
+      |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
     all_types =
       updates_types ++
         types ++ stickers_types ++ inline_types ++ payments_types ++ passport_types ++ game_types
 
     all_union_types = union_types ++ inline_union_types
 
-    json = Jason.encode!(%{types: all_types, union_types: all_union_types}, pretty: true)
+    all_methods = updates_methods ++ methods
+
+    doc_map = %{types: all_types, union_types: all_union_types, methods: all_methods}
+
+    json = Jason.encode!(doc_map, pretty: true)
 
     Mix.Generator.create_file("priv/bots_api_doc.json", json, force: true)
   end
@@ -321,5 +339,107 @@ defmodule Mix.Tasks.Gen.DocJson do
     types = nodes |> Floki.find("ul > li") |> Enum.map(&Floki.text/1)
 
     %{name: section.title, description: description, types: types}
+  end
+
+  defp parse_method(section, doc_nodes) do
+    nodes = Enum.slice(doc_nodes, section.node_beginning..section.node_end)
+
+    description = nodes |> Floki.find("p") |> hd() |> Floki.text()
+
+    %{
+      name: section.title,
+      description: description,
+      parameters: parse_method_parameters(nodes),
+      result_type: parse_method_returns(description)
+    }
+  end
+
+  defp parse_method_parameters(method_nodes) do
+    tr_nodes = Floki.find(method_nodes, "table > tbody > tr")
+
+    tr_parse_run = fn n ->
+      [name, type, required_text, description] = n |> Floki.find("td") |> Enum.map(&Floki.text/1)
+
+      required =
+        case required_text do
+          "Yes" ->
+            true
+
+          "Optional" ->
+            false
+
+          other ->
+            raise "Invalid required text: #{inspect(other)}"
+        end
+
+      %{
+        name: name,
+        type: type,
+        required: required,
+        description: description
+      }
+    end
+
+    Enum.map(tr_nodes, tr_parse_run)
+  end
+
+  @result_type_re_list [
+    ~r/Returns an (Array of \S+) objects/,
+    ~r/On success, a (\S+) object is returned/,
+    ~r/(array of \S+) .+is returned/,
+    ~r/ (\S+) is returned/,
+    ~r/of a (\S+) object.$/,
+    ~r/Returns (\S+) on success/,
+    ~r/Returns the (\S+) of/,
+    ~r/Returns.+as (\S+) object/,
+    ~r/Returns.+as a (\S+) object/,
+    ~r/Returns.+as (\S+) on success/,
+    ~r/Returns a (\S+) object/,
+    ~r/returns a (\S+) object/
+  ]
+
+  defp parse_method_returns(description, i \\ 0) do
+    re = Enum.at(@result_type_re_list, i)
+
+    if re == nil do
+      # 缺少结果类型
+      raise "Missing result type: #{inspect(description: description)}"
+    else
+      case Regex.scan(re, description) do
+        [[_, result_type]] ->
+          :ok = valide_returns(result_type, description)
+          result_type
+
+        _ ->
+          parse_method_returns(description, i + 1)
+      end
+    end
+  end
+
+  defp valide_returns(<<"array of " <> type::binary>>, description) do
+    if !is_titlecase?(type) do
+      # 类型应该以大写开头
+      raise "Type should be titlecase: #{inspect(type: type, description: description)}"
+    else
+      :ok
+    end
+  end
+
+  defp valide_returns(<<"Array of " <> type::binary>>, description) do
+    if !is_titlecase?(type) do
+      # 类型应该以大写开头
+      raise "Type should be titlecase: #{inspect(type: type, description: description)}"
+    else
+      :ok
+    end
+  end
+
+  defp valide_returns(type, description) do
+    if !is_titlecase?(type) do
+      # 类型应该以大写开头
+      raise "Type should be titlecase: #{inspect(type: type, description: description)}"
+    else
+      :ok
+    end
   end
 end

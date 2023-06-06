@@ -32,7 +32,7 @@ defmodule Telegex.Caller.ReqAdapter do
   end
 
   @spec parse_response({:ok, req_resp} | {:error, req_error}) ::
-          {:ok, any} | {:error, Telegex.error()}
+          {:ok, any} | {:error, Telegex.Type.error()}
 
   defp parse_response({:ok, %{body: body} = _response}) do
     %{ok: ok, result: result, error_code: error_code, description: description} =
