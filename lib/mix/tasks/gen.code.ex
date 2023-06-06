@@ -89,8 +89,22 @@ defmodule Mix.Tasks.Gen.Code do
     :boolean
   end
 
-  def build_ftype(<<"Array of " <> type::binary>>) do
-    %ArrayType{elem_type: build_ftype(type)}
+  def build_ftype(<<"Array of " <> type::binary>> = full_type) do
+    if String.contains?(type, ",") && String.contains?(type, "and") do
+      # 此处是为了转换 `media` 字段的类型，它是联合类型，且每一种类型都是数组，只是数组元素类型不同。文档中的描述是：
+      # `Array of InputMediaAudio, InputMediaDocument, InputMediaPhoto and InputMediaVideo`
+      # 将其转换为能被联合类型解析的字符串，如下：
+      # `Array of InputMediaAudio or Array of InputMediaDocument or Array of InputMediaPhoto or Array of InputMediaVideo`
+
+      full_type =
+        full_type
+        |> String.replace(",", " or Array of")
+        |> String.replace("and", "or Array of")
+
+      %UnionType{types: build_union_types(full_type)}
+    else
+      %ArrayType{elem_type: build_ftype(type)}
+    end
   end
 
   # 部分方法文档的描述处使用了小写开头的 array of
