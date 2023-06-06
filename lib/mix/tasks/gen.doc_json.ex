@@ -3,8 +3,6 @@ defmodule Mix.Tasks.Gen.DocJson do
 
   use TypedStruct
 
-  # TODO: 从其它章节中生成剩余的类型。
-
   @section_titles [
     "Recent changes",
     "Authorizing your bot",
@@ -22,9 +20,7 @@ defmodule Mix.Tasks.Gen.DocJson do
   ]
 
   # 完全不需要且干扰解析的子章节
-  @skip_sub_sections [
-    "Sending files"
-  ]
+  @skip_sub_sections []
 
   typedstruct module: Section do
     field :title, String.t(), enforce: true
@@ -46,15 +42,63 @@ defmodule Mix.Tasks.Gen.DocJson do
 
     doc_sections = parse_sections(doc_nodes, "h3")
 
-    available_types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
+    types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
+    updates_section = Enum.find(doc_sections, &(&1.title == "Getting updates"))
+    inline_section = Enum.find(doc_sections, &(&1.title == "Inline mode"))
 
-    types_sub_sections = parse_sub_sections(available_types_section, doc_nodes)
+    types_sub_sections = parse_sub_sections(types_section, doc_nodes)
+    updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
+    inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
+
+    updates_types =
+      updates_sub_sections
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
     types =
       types_sub_sections
       # 排除非类型的子章节
       |> Enum.filter(&(&1.comment == :type))
-      |> Enum.map(fn s -> parse_type_section(s, doc_nodes) end)
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+    stickers_types =
+      doc_sections
+      |> Enum.find(&(&1.title == "Stickers"))
+      |> parse_sub_sections(doc_nodes)
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+    inline_types =
+      inline_sub_sections
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+    payments_types =
+      doc_sections
+      |> Enum.find(&(&1.title == "Payments"))
+      |> parse_sub_sections(doc_nodes)
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+    passport_types =
+      doc_sections
+      |> Enum.find(&(&1.title == "Telegram Passport"))
+      |> parse_sub_sections(doc_nodes)
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
+
+    game_types =
+      doc_sections
+      |> Enum.find(&(&1.title == "Games"))
+      |> parse_sub_sections(doc_nodes)
+      # 排除非类型的子章节
+      |> Enum.filter(&(&1.comment == :type))
+      |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
     union_types =
       types_sub_sections
@@ -62,7 +106,19 @@ defmodule Mix.Tasks.Gen.DocJson do
       |> Enum.filter(&(&1.comment == :union_type))
       |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
 
-    json = Jason.encode!(%{types: types, union_types: union_types}, pretty: true)
+    inline_union_types =
+      inline_sub_sections
+      # 排除非联合类型的子章节
+      |> Enum.filter(&(&1.comment == :union_type))
+      |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
+
+    all_types =
+      updates_types ++
+        types ++ stickers_types ++ inline_types ++ payments_types ++ passport_types ++ game_types
+
+    all_union_types = union_types ++ inline_union_types
+
+    json = Jason.encode!(%{types: all_types, union_types: all_union_types}, pretty: true)
 
     Mix.Generator.create_file("priv/bots_api_doc.json", json, force: true)
   end
@@ -121,34 +177,7 @@ defmodule Mix.Tasks.Gen.DocJson do
           node_end: sub.node_end + section.node_beginning
       }
 
-      sub_nodes = Enum.slice(doc_nodes, sub.node_beginning..sub.node_end)
-
-      skip? = Enum.member?(@skip_sub_sections, sub.title)
-      is_contains_table = !(sub_nodes |> Floki.find("table") |> Enum.empty?())
-
-      # 注意，是否存在 table 并不能表示是否为类型，因为当前存在一些没有字段的类型。
-      # 通过 ul > li > a 标签和是否包含表格共同判断是否为联合类型
-      is_unino_type =
-        !(sub_nodes |> Floki.find("ul > li > a") |> Enum.empty?()) &&
-          !is_contains_table
-
-      # 无效的类型名称，如 `Inline mode objects`，它通常不是直接的类型子章节
-      invalid_tyep_name = String.contains?(sub.title, " ")
-
-      sub =
-        cond do
-          skip? ->
-            %{sub | comment: :skip}
-
-          is_unino_type ->
-            %{sub | comment: :union_type}
-
-          invalid_tyep_name ->
-            %{sub | comment: :invalid_type_name}
-
-          true ->
-            %{sub | comment: :type}
-        end
+      sub = %{sub | comment: sub_comment(sub, doc_nodes)}
 
       validate_section(section.title, i, sub)
 
@@ -160,6 +189,75 @@ defmodule Mix.Tasks.Gen.DocJson do
     |> parse_sections("h4")
     |> Enum.with_index()
     |> Enum.map(build_sub_section)
+  end
+
+  defp sub_comment(sub, doc_nodes) do
+    sub_nodes = Enum.slice(doc_nodes, sub.node_beginning..sub.node_end)
+
+    skip? = Enum.member?(@skip_sub_sections, sub.title)
+
+    # 无效的类型名称，如 `Inline mode objects`，它通常不是直接的类型子章节
+    invalid_type_name = !skip? && String.contains?(sub.title, " ")
+
+    # 是否大写开头
+    is_titlecase = is_titlecase?(sub.title)
+
+    # 是否包含参数
+    is_contains_parameter = is_contains_parameter(sub_nodes)
+
+    is_contains_table =
+      !skip? &&
+        !invalid_type_name &&
+        !(sub_nodes |> Floki.find("table") |> Enum.empty?())
+
+    # 注意，是否存在 table 并不能表示是否为类型，因为当前存在一些没有字段的类型。
+    # 通过 ul > li > a 标签和是否包含表格共同判断是否为联合类型
+    is_unino_type =
+      !skip? && is_titlecase &&
+        !is_contains_parameter &&
+        !invalid_type_name &&
+        !is_contains_table &&
+        !(sub_nodes |> Floki.find("ul > li > a") |> Enum.empty?())
+
+    is_method =
+      !skip? && !is_unino_type &&
+        !invalid_type_name &&
+        !is_titlecase
+
+    cond do
+      skip? ->
+        :skip
+
+      is_unino_type ->
+        :union_type
+
+      invalid_type_name ->
+        :invalid_type_name
+
+      is_method ->
+        :method
+
+      true ->
+        :type
+    end
+  end
+
+  defp is_titlecase?(str) do
+    first_char = String.first(str)
+    capitalized_char = String.upcase(first_char)
+    first_char == capitalized_char
+  end
+
+  defp is_contains_parameter(nodes) do
+    case Floki.find(nodes, "table > thead > tr > th") do
+      [] ->
+        false
+
+      [first_th | _] ->
+        first_th
+        |> Floki.text()
+        |> Kernel.==("Parameter")
+    end
   end
 
   # 检查第一个 type
@@ -184,10 +282,10 @@ defmodule Mix.Tasks.Gen.DocJson do
     :ok
   end
 
-  defp parse_type_section(section, doc_nodes) do
+  defp parse_type(section, doc_nodes) do
     nodes = Enum.slice(doc_nodes, section.node_beginning..section.node_end)
 
-    description = nodes |> Floki.find("p") |> Floki.text()
+    description = nodes |> Floki.find("p") |> hd() |> Floki.text()
 
     %{
       name: section.title,
@@ -218,7 +316,7 @@ defmodule Mix.Tasks.Gen.DocJson do
   defp parse_union_type(section, doc_nodes) do
     nodes = Enum.slice(doc_nodes, section.node_beginning..section.node_end)
 
-    description = nodes |> Floki.find("p") |> Floki.text()
+    description = nodes |> Floki.find("p") |> hd() |> Floki.text()
 
     types = nodes |> Floki.find("ul > li") |> Enum.map(&Floki.text/1)
 
