@@ -1,15 +1,25 @@
 defmodule Telegex.MixProject do
   use Mix.Project
 
+  @version "1.0.0-dev"
+  @description "A Telegram Bot API client based on data and code generation, which is always correct and updated with lightning speed."
+
   def project do
     [
       app: :telegex,
-      version: "1.0.0-dev",
+      version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       dialyzer: dialyzer(),
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      description: @description,
+      name: "Telegex",
+      source_url: "https://github.com/Hentioe/telegex",
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -42,6 +52,7 @@ defmodule Telegex.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:httpoison, "~> 2.1", optional: true, only: [:dev, :test]},
       {:req, "~> 0.3", optional: true, only: [:dev, :test]},
       {:floki, "~> 0.34.3", only: [:dev, :test]},
