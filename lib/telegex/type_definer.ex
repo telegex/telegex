@@ -118,9 +118,9 @@ defmodule Telegex.TypeDefiner do
     fields_ast = Enum.map(fields, fn field -> def_field_ast(field, __CALLER__) end)
 
     quote do
-      unquote(def_moduledoc_ast(description))
-
       typedstruct module: __MODULE__.unquote(name) do
+        unquote(def_moduledoc_ast(description))
+
         unquote(fields_ast)
       end
     end
@@ -130,9 +130,9 @@ defmodule Telegex.TypeDefiner do
     types_ast = Enum.map(types, fn type -> field_type_ast(type) end)
 
     quote do
-      unquote(def_moduledoc_ast(description))
-
       defmodule __MODULE__.unquote(name) do
+        unquote(def_moduledoc_ast(description))
+
         @type t :: unquote(types_to_union(types_ast))
       end
     end
