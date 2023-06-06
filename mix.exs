@@ -7,6 +7,8 @@ defmodule Telegex.MixProject do
       version: "1.0.0-dev",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
+      dialyzer: dialyzer(),
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -27,6 +29,12 @@ defmodule Telegex.MixProject do
     end
   end
 
+  defp dialyzer do
+    [
+      plt_add_apps: [:iex, :mix]
+    ]
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
@@ -36,8 +44,21 @@ defmodule Telegex.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:httpoison, "~> 2.1", optional: true, only: [:dev, :test]},
       {:req, "~> 0.3", optional: true, only: [:dev, :test]},
+      {:floki, "~> 0.34.3", only: [:dev, :test]},
       {:typed_struct, "~> 0.3.0"},
       {:jason, "~> 1.4"}
+    ]
+  end
+
+  # Aliases are shortcuts or tasks specific to the current project.
+  # For example, to install project dependencies and perform other setup tasks, run:
+  #
+  #     $ mix setup
+  #
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      "gen.all": ["gen.doc_json", "gen.types"]
     ]
   end
 end
