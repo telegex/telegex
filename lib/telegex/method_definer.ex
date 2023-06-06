@@ -34,7 +34,7 @@ defmodule Telegex.MethodDefiner do
           params =
             Keyword.merge(
               required_opts,
-              unquote(if has_optional, do: defident(:optionals), else: [])
+              unquote(if has_optional, do: defident(:optional), else: [])
             )
 
           Telegex.Caller.call(unquote(name), params)
@@ -88,7 +88,7 @@ defmodule Telegex.MethodDefiner do
         if Enum.empty?(optional_args) do
           []
         else
-          [default_arg(:optionals)]
+          [default_arg(:optional)]
         end
 
     {fun_name, [], args_ast}
@@ -96,7 +96,7 @@ defmodule Telegex.MethodDefiner do
 
   defp defident(atom_text), do: {atom_text, [], Elixir}
 
-  # code: optionals \\ []
-  # ast: {:\\, [], [{:optionals, [], Elixir}, []]}
+  # code: optional \\ []
+  # ast: {:\\, [], [{:optional, [], Elixir}, []]}
   defp default_arg(arg_name), do: quote(do: unquote(defident(arg_name)) \\ [])
 end
