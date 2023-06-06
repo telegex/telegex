@@ -416,30 +416,20 @@ defmodule Mix.Tasks.Gen.DocJson do
     end
   end
 
-  defp valide_returns(<<"array of " <> type::binary>>, description) do
-    if !is_titlecase?(type) do
-      # 类型应该以大写开头
-      raise "Type should be titlecase: #{inspect(type: type, description: description)}"
-    else
-      :ok
-    end
-  end
+  defp valide_returns(<<"array of " <> type::binary>>, description),
+    do: validate_type_titlecase(type, description)
 
-  defp valide_returns(<<"Array of " <> type::binary>>, description) do
-    if !is_titlecase?(type) do
-      # 类型应该以大写开头
-      raise "Type should be titlecase: #{inspect(type: type, description: description)}"
-    else
-      :ok
-    end
-  end
+  defp valide_returns(<<"Array of " <> type::binary>>, description),
+    do: validate_type_titlecase(type, description)
 
-  defp valide_returns(type, description) do
-    if !is_titlecase?(type) do
+  defp valide_returns(type, description), do: validate_type_titlecase(type, description)
+
+  defp validate_type_titlecase(type, description) do
+    if is_titlecase?(type) do
+      :ok
+    else
       # 类型应该以大写开头
       raise "Type should be titlecase: #{inspect(type: type, description: description)}"
-    else
-      :ok
     end
   end
 end
