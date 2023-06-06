@@ -22,7 +22,7 @@ defmodule EchoBot.Consumer do
   end
 
   defp consume(%{message: %{text: text, chat: chat}} = _update) when text != nil do
-    Telegex.Caller.call("sendMessage", chat_id: chat.id, text: text)
+    Telegex.send_message(chat.id, text)
   end
 
   defp consume(_update) do

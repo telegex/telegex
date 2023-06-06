@@ -18,7 +18,7 @@
       # These are the files included in the analysis:
       files: %{
         #
-        # You can give explicit globs or simply directories.
+        # You can give explicit globs or simply direchories.
         # In the latter case `**/*.{ex,exs}` will be used.
         #
         included: [

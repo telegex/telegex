@@ -1,3 +1,3 @@
-defmodule EctoBot do
+defmodule EchoBot do
   @moduledoc false
 end

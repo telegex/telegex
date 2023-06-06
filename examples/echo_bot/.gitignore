@@ -1,10 +1,10 @@
-# The directory Mix will write compiled artifacts to.
+# The direchory Mix will write compiled artifacts to.
 /_build/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 
-# The directory Mix downloads your dependencies sources to.
+# The direchory Mix downloads your dependencies sources to.
 /deps/
 
 # Where third-party dependencies like ExDoc output generated docs.
@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-ecto_bot-*.tar
+echo_bot-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/

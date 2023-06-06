@@ -32,7 +32,7 @@ defmodule EchoBot.UpdatesPoller do
   @impl true
   def handle_info(:pull, %{offset: offset} = state) do
     offset =
-      case Telegex.Caller.call("getUpdates", offset: offset) do
+      case Telegex.get_updates(offset: offset) do
         {:ok, updates} ->
           # 消费消息
           Enum.each(updates, &Consumer.receive/1)

@@ -1,9 +1,9 @@
-defmodule EctoBot.MixProject do
+defmodule EchoBot.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ecto_bot,
+      app: :echo_bot,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule EctoBot.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {EctoBot.Application, []}
+      mod: {EchoBot.Application, []}
     ]
   end
 

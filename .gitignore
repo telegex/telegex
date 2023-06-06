@@ -24,3 +24,8 @@ telegex-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Waiting for development to be completed before publishing.
+/priv/
+/lib/telegex.ex
+/lib/telegex/type.ex
