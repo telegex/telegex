@@ -1,7 +1,9 @@
 defmodule Telegex.MethodDefiner do
   @moduledoc false
 
-  @type paramater_type :: Telegex.TypeDefiner.field_type()
+  alias Telegex.TypeDefiner
+
+  @type paramater_type :: TypeDefiner.field_type()
 
   defmacro __using__(_) do
     quote do
@@ -19,14 +21,22 @@ defmodule Telegex.MethodDefiner do
   end
 
   defmacro defmethod(name, description, paramaters, _returned_type) do
+    quoted_paramaters = quoted(paramaters, __CALLER__)
+
     method_name = name |> Macro.underscore() |> String.to_atom()
-    required_arg_names = required_arg_names(quoted(paramaters, __CALLER__))
-    optional_arg_names = optional_arg_names(quoted(paramaters, __CALLER__))
+    required_arg_names = required_arg_names(quoted_paramaters)
+    optional_arg_names = optional_arg_names(quoted_paramaters)
+
+    required_arg_types = required_types(quoted_paramaters)
+    optional_arg_names_types = optional_names_types(quoted_paramaters)
 
     has_optional = !Enum.empty?(optional_arg_names)
 
     ast =
       quote do
+        @spec unquote(
+                def_spec_name_args(method_name, required_arg_types, optional_arg_names_types)
+              ) :: {:ok, Telegex.Type.error()} | {:error, any}
         @doc unquote(description)
         def unquote(def_fun_name_args(method_name, required_arg_names, optional_arg_names)) do
           required_opts = unquote(build_required_opts(required_arg_names))
@@ -92,6 +102,39 @@ defmodule Telegex.MethodDefiner do
         end
 
     {fun_name, [], args_ast}
+  end
+
+  defp required_types(paramaters) do
+    paramaters
+    |> Enum.filter(fn paramater -> paramater.required end)
+    |> Enum.map(fn paramater -> paramater.type end)
+  end
+
+  defp optional_names_types(paramaters) do
+    paramaters
+    |> Enum.filter(fn paramater -> !paramater.required end)
+    |> Enum.map(fn paramater -> {paramater.name, paramater.type} end)
+  end
+
+  defp def_spec_name_args(fun_name, required_types, optional_names_types) do
+    required_types_ast = Enum.map(required_types, fn type -> TypeDefiner.field_type_ast(type) end)
+
+    optional_type_ast =
+      Enum.map(optional_names_types, fn {name, type} ->
+        {name, TypeDefiner.field_type_ast(type)}
+      end)
+
+    optional_type_ast =
+      if Enum.empty?(optional_type_ast) do
+        []
+      else
+        # 可选参数类型是一个关键字列表，需要套一层 `[]` 避免列表追加时被剥离出来
+        [optional_type_ast]
+      end
+
+    types_ast = required_types_ast ++ optional_type_ast
+
+    {fun_name, [], types_ast}
   end
 
   defp defident(atom_text), do: {atom_text, [], Elixir}
