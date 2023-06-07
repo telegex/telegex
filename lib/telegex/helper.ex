@@ -1,5 +1,5 @@
 defmodule Telegex.Helper do
-  @moduledoc false
+  @moduledoc "Some helper functions."
 
   alias Telegex.TypeDefiner.{ArrayType, UnionType}
 

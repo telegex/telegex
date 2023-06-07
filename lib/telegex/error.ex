@@ -1,5 +1,5 @@
 defmodule Telegex.Error do
-  @moduledoc false
+  @moduledoc "Error result in API response."
 
   use TypedStruct
 

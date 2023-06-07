@@ -1,5 +1,5 @@
 defmodule Telegex.RequestError do
-  @moduledoc false
+  @moduledoc "Request sending errors, such as network issues such as timeouts, have nothing to do with API response data."
 
   use TypedStruct
 

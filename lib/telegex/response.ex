@@ -1,5 +1,5 @@
 defmodule Telegex.Response do
-  @moduledoc false
+  @moduledoc "Raw API response."
 
   use TypedStruct
 
