@@ -17,12 +17,12 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "== 1.0.0-rc.0"},
+    {:telegex, "~> 1.0.0-rc.1"},
   ]
 end
 ```
 
-> Note: APIs that include `InputFile` in RC.0 do not support local file paths. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
+>Note: APIs that include `InputFile` in RC.0 do not support local file paths. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
 
 ## Configuration
 
@@ -32,17 +32,17 @@ Add bot token to the secret configuration file, like this:
 config :telegex, token: "<BOT_TOKEN>"
 ```
 
-Specify the adapter for the HTTP client in the public configuration file:
+Specify the adapter for the HTTP client in the public configuration file (default is `FinchAdapter`):
 
 ```elixir
-config :telegex, Telegex.Caller, adapter: Telegex.Caller.ReqAdapter
+config :telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter
 ```
 
 Pass options to the adapter, such as timeout:
 
 ```elixir
-config :telegex, Telegex.Caller, adapter: Telegex.Caller.ReqAdapter,
-  options: [connect_options: [timeout: 5 * 1000]]
+config :telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter,
+  options: [recv_timeout: 5 * 1000]
 ```
 
 You can also choose `HTTPoison` as the client. If using HTTPoison, set the corresponding adapter and timeout:
@@ -53,12 +53,13 @@ config :telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter,
   options: [recv_timeout: 5 * 1000]
 ```
 
-As you may have noticed, there are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
+>There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
+- [`finch`](https://hex.pm/packages/finch): `FinchAdapter`
 - [`req`](https://hex.pm/packages/req): `ReqAdapter`
-- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter`
+- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter` (⚠️ may be deprecated)
 
 Don't have a client library you use? Tell me in issues!
 
