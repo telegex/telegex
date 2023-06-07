@@ -4146,4 +4146,145 @@ No more than 50 results per query are allowed.",
     ],
     :boolean
   )
+
+  defmethod(
+    "sendGame",
+    "Use this method to send a game. On success, the sent Message is returned.",
+    [
+      %{
+        name: :chat_id,
+        type: :integer,
+        description: "Unique identifier for the target chat",
+        required: true
+      },
+      %{
+        name: :message_thread_id,
+        type: :integer,
+        description:
+          "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+        required: false
+      },
+      %{
+        name: :game_short_name,
+        type: :string,
+        description:
+          "Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather.",
+        required: true
+      },
+      %{
+        name: :disable_notification,
+        type: :boolean,
+        description:
+          "Sends the message silently. Users will receive a notification with no sound.",
+        required: false
+      },
+      %{
+        name: :protect_content,
+        type: :boolean,
+        description: "Protects the contents of the sent message from forwarding and saving",
+        required: false
+      },
+      %{
+        name: :reply_to_message_id,
+        type: :integer,
+        description: "If the message is a reply, ID of the original message",
+        required: false
+      },
+      %{
+        name: :allow_sending_without_reply,
+        type: :boolean,
+        description:
+          "Pass True if the message should be sent even if the specified replied-to message is not found",
+        required: false
+      },
+      %{
+        name: :reply_markup,
+        type: Telegex.Type.InlineKeyboardMarkup,
+        description:
+          "A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.",
+        required: false
+      }
+    ],
+    Telegex.Type.Message
+  )
+
+  defmethod(
+    "setGameScore",
+    "Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the Message is returned, otherwise True is returned. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.",
+    [
+      %{name: :user_id, type: :integer, description: "User identifier", required: true},
+      %{
+        name: :score,
+        type: :integer,
+        description: "New score, must be non-negative",
+        required: true
+      },
+      %{
+        name: :force,
+        type: :boolean,
+        description:
+          "Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters",
+        required: false
+      },
+      %{
+        name: :disable_edit_message,
+        type: :boolean,
+        description:
+          "Pass True if the game message should not be automatically edited to include the current scoreboard",
+        required: false
+      },
+      %{
+        name: :chat_id,
+        type: :integer,
+        description:
+          "Required if inline_message_id is not specified. Unique identifier for the target chat",
+        required: false
+      },
+      %{
+        name: :message_id,
+        type: :integer,
+        description:
+          "Required if inline_message_id is not specified. Identifier of the sent message",
+        required: false
+      },
+      %{
+        name: :inline_message_id,
+        type: :string,
+        description:
+          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+        required: false
+      }
+    ],
+    %{__struct__: Telegex.TypeDefiner.UnionType, types: [Telegex.Type.Message, :boolean]}
+  )
+
+  defmethod(
+    "getGameHighScores",
+    "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. Returns an Array of GameHighScore objects.",
+    [
+      %{name: :user_id, type: :integer, description: "Target user id", required: true},
+      %{
+        name: :chat_id,
+        type: :integer,
+        description:
+          "Required if inline_message_id is not specified. Unique identifier for the target chat",
+        required: false
+      },
+      %{
+        name: :message_id,
+        type: :integer,
+        description:
+          "Required if inline_message_id is not specified. Identifier of the sent message",
+        required: false
+      },
+      %{
+        name: :inline_message_id,
+        type: :string,
+        description:
+          "Required if chat_id and message_id are not specified. Identifier of the inline message",
+        required: false
+      }
+    ],
+    %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.GameHighScore}
+  )
 end

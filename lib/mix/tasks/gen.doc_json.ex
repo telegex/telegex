@@ -51,6 +51,7 @@ if Mix.env() in [:dev, :test] do
       updating_section = Enum.find(doc_sections, &(&1.title == "Updating messages"))
       stickers_section = Enum.find(doc_sections, &(&1.title == "Stickers"))
       passport_section = Enum.find(doc_sections, &(&1.title == "Telegram Passport"))
+      games_section = Enum.find(doc_sections, &(&1.title == "Games"))
 
       types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
@@ -58,6 +59,7 @@ if Mix.env() in [:dev, :test] do
       payments_sub_sections = parse_sub_sections(payments_section, doc_nodes)
       stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
       passport_sub_sections = parse_sub_sections(passport_section, doc_nodes)
+      games_sub_sections = parse_sub_sections(games_section, doc_nodes)
 
       updates_types =
         updates_sub_sections
@@ -96,10 +98,7 @@ if Mix.env() in [:dev, :test] do
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
       game_types =
-        doc_sections
-        # TODO: 此章节的方法还未生成
-        |> Enum.find(&(&1.title == "Games"))
-        |> parse_sub_sections(doc_nodes)
+        games_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
@@ -166,6 +165,12 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :method))
         |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
 
+      games_methods =
+        games_sub_sections
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
       all_types =
         updates_types ++
           types ++
@@ -184,7 +189,8 @@ if Mix.env() in [:dev, :test] do
           stickers_methods ++
           inline_methods ++
           payments_methods ++
-          passport_methods
+          passport_methods ++
+          games_methods
 
       doc_map = %{types: all_types, union_types: all_union_types, methods: all_methods}
 
