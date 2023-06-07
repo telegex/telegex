@@ -26,6 +26,4 @@ telegex-*.tar
 /tmp/
 
 # Waiting for development to be completed before publishing.
-/priv/
-/lib/telegex.ex
-/lib/telegex/type.ex
+/priv/bots_api_doc.*
