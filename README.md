@@ -105,7 +105,7 @@ iex> Telegex.get_updates limit: 50
 ```elixir
 iex> Telegex.send_message -1001486769003, "Hello!"
 {:ok,
- %Telegex.Model.Message{
+ %Telegex.Type.Message{
    venue: nil,
    chat: %Telegex.Type.Chat{
      # omitted part...
