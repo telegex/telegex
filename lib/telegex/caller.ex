@@ -12,6 +12,8 @@ defmodule Telegex.Caller do
       import unquote(__MODULE__)
 
       @json_header {"content-type", "application/json"}
+
+      @type error :: Telegex.Type.error()
     end
   end
 
@@ -22,7 +24,7 @@ defmodule Telegex.Caller do
   def call(method, params \\ [], opts \\ []), do: impl().call(method, params, opts)
 
   @spec impl() :: module
-  defp impl, do: config()[:adapter] || Telegex.Caller.ReqAdapter
+  def impl, do: config()[:adapter] || Telegex.Caller.FinchAdapter
 
   @spec token() :: String.t()
   def token, do: Application.get_env(:telegex, :token)

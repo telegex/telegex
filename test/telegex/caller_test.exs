@@ -48,4 +48,24 @@ defmodule Telegex.CallerTest do
 
     assert match?({:error, %Telegex.RequestError{reason: :timeout}}, r)
   end
+
+  test "FinchAdapter ok" do
+    Application.put_env(:telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter)
+
+    r = call("getMe")
+
+    assert match?({:ok, %{is_bot: true}}, r)
+  end
+
+  test "FinchAdapter error" do
+    # 传递选项测试超时错误
+    Application.put_env(:telegex, Telegex.Caller,
+      adapter: Telegex.Caller.FinchAdapter,
+      options: [receive_timeout: 1]
+    )
+
+    r = call("getMe")
+
+    assert match?({:error, %Telegex.RequestError{reason: :timeout}}, r)
+  end
 end
