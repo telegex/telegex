@@ -14,7 +14,7 @@ defmodule EchoBot.Consumer do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  def receive(%{} = update) do
+  def receive(%Telegex.Type.Update{} = update) do
     DynamicSupervisor.start_child(
       __MODULE__,
       {Task, fn -> consume(update) end}

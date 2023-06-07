@@ -8,7 +8,7 @@ defmodule EchoBot.UpdatesPoller do
   require Logger
 
   def start_link(_) do
-    {:ok, user} = Telegex.Caller.call("getMe")
+    {:ok, user} = Telegex.get_me()
 
     Logger.info("Bot (@#{user.username}) is working")
 
