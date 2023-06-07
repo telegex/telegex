@@ -139,6 +139,7 @@ defmodule Telegex.TypeDefiner do
 
         # 存储所有引用其它类型的列表
         def __references__, do: unquote(references)
+        def __mate__, do: :type
 
         typedstruct do
           unquote(fields_ast)
@@ -180,6 +181,8 @@ defmodule Telegex.TypeDefiner do
     quote do
       defmodule __MODULE__.unquote(name) do
         unquote(def_moduledoc_ast(description))
+
+        def __mate__, do: :union
 
         @type t :: unquote(types_to_union(types_ast))
       end

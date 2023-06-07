@@ -22,6 +22,15 @@ defmodule Telegex.Helper do
   end
 
   def typedmap(map, type) do
+    _typedmap(type.__mate__(), map, type)
+  end
+
+  # 类型模块为联合类型，直接返回原始 map
+  defp _typedmap(:union, map, _type) do
+    map
+  end
+
+  defp _typedmap(:type, map, type) do
     references = type.__references__()
 
     map =
