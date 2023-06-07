@@ -38,13 +38,17 @@ defmodule Telegex.TypeDefiner do
     end
   end
 
-  def def_field_ast(field, caller) do
-    {field_struct, []} = Code.eval_quoted(field, [], caller)
+  defp quoted(ast, caller) do
+    {quoted, []} = Code.eval_quoted(ast, [], caller)
 
-    type_spec = field_type_ast(field_struct.type)
+    quoted
+  end
 
-    name = field_struct.name
-    enforce = !field_struct.optional
+  def gen_field_ast(field) do
+    type_spec = field_type_ast(field.type)
+
+    name = field.name
+    enforce = !field.optional
 
     quote do
       field unquote(name), unquote(type_spec), enforce: unquote(enforce)
@@ -69,6 +73,12 @@ defmodule Telegex.TypeDefiner do
 
     quote do
       unquote(union_type_ast)
+    end
+  end
+
+  def field_type_ast(module) do
+    quote do
+      unquote(module).t
     end
   end
 
@@ -108,22 +118,60 @@ defmodule Telegex.TypeDefiner do
     end
   end
 
-  def field_type_ast(module) do
+  defmacro deftype(name, description, fields) do
+    quoted_fields = quoted(fields, __CALLER__)
+
+    fields_ast = Enum.map(quoted_fields, &gen_field_ast/1)
+
+    references =
+      if Enum.empty?(quoted_fields) do
+        []
+      else
+        quoted_fields
+        |> Enum.filter(&reference?(&1.type))
+        |> Enum.map(fn f -> {f.name, f.type} end)
+        |> Macro.escape()
+      end
+
     quote do
-      unquote(module).t
+      defmodule __MODULE__.unquote(name) do
+        unquote(def_moduledoc_ast(description))
+
+        # 存储所有引用其它类型的列表
+        def __references__, do: unquote(references)
+
+        typedstruct do
+          unquote(fields_ast)
+        end
+      end
+
+      # 自定义编码过程，去掉所有的 nil 字段
+      defimpl Jason.Encoder, for: __MODULE__.unquote(name) do
+        def encode(struct, opts) do
+          struct
+          |> Map.from_struct()
+          |> Enum.filter(fn {_, v} -> v != nil end)
+          |> Enum.into(%{})
+          |> Jason.encode!()
+        end
+      end
     end
   end
 
-  defmacro deftype(name, description, fields) do
-    fields_ast = Enum.map(fields, fn field -> def_field_ast(field, __CALLER__) end)
+  def reference?(type) when type in [:integer, :string, :boolean, :float] do
+    false
+  end
 
-    quote do
-      typedstruct module: __MODULE__.unquote(name) do
-        unquote(def_moduledoc_ast(description))
+  def reference?(type) when is_struct(type, ArrayType) do
+    reference?(type.elem_type)
+  end
 
-        unquote(fields_ast)
-      end
-    end
+  def reference?(type) when is_struct(type, UnionType) do
+    Enum.find(type.types, &reference?/1) == true
+  end
+
+  def reference?(type) when is_atom(type) do
+    true
   end
 
   defmacro defunion(name, description, types) do

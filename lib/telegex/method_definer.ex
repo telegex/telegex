@@ -49,7 +49,14 @@ defmodule Telegex.MethodDefiner do
               unquote(if has_optional, do: defident(:optional), else: [])
             )
 
-          Telegex.Caller.call(unquote(name), params)
+          case Telegex.Caller.call(unquote(name), params) do
+            {:ok, result} ->
+              # TODO: 可以在编译器确定返回值是基础类型还是引用类型，进而避免调用转换代码
+              {:ok, Telegex.Helper.typedmap(result, unquote(returned_type))}
+
+            e ->
+              e
+          end
         end
       end
 
