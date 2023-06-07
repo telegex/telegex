@@ -1,7 +1,7 @@
 defmodule Telegex.MixProject do
   use Mix.Project
 
-  @version "1.0.0-dev"
+  @version "1.0.0-rc.0"
   @description "A Telegram Bot API client based on data and code generation, which is always correct and updated with lightning speed."
 
   def project do
@@ -14,12 +14,20 @@ defmodule Telegex.MixProject do
       aliases: aliases(),
       deps: deps(),
       description: @description,
+      package: package(),
       name: "Telegex",
-      source_url: "https://github.com/Hentioe/telegex",
+      source_url: "https://github.com/telegex/telegex",
       docs: [
         main: "readme",
         extras: ["README.md"]
       ]
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/telegex/telegex"}
     ]
   end
 
