@@ -21,7 +21,8 @@ defmodule Telegex.Caller.ReqAdapter do
           url: url,
           headers: [@json_header],
           json: body_map,
-          decode_json: [keys: :atoms]
+          decode_json: [keys: :atoms],
+          retry: false
         ],
         adapter_options()
       )
