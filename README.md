@@ -53,13 +53,13 @@ config :telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter,
   options: [recv_timeout: 5 * 1000]
 ```
 
->There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
+>Note: There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
 - [`finch`](https://hex.pm/packages/finch): `FinchAdapter`
-- [`req`](https://hex.pm/packages/req): `ReqAdapter`
-- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter` (⚠️ may be deprecated)
+- [`req`](https://hex.pm/packages/req): `ReqAdapter` (⚠️ may be deprecated)
+- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter`
 
 Don't have a client library you use? Tell me in issues!
 
