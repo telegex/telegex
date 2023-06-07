@@ -22,7 +22,7 @@ defmodule Telegex.Helper do
   end
 
   def typedmap(map, type) do
-    _typedmap(type.__mate__(), map, type)
+    _typedmap(type.__meta__(), map, type)
   end
 
   # 类型模块为联合类型，直接返回原始 map
