@@ -20,7 +20,7 @@ defmodule Telegex.MethodDefiner do
     quoted
   end
 
-  defmacro defmethod(name, description, paramaters, _returned_type) do
+  defmacro defmethod(name, description, paramaters, returned_type) do
     quoted_paramaters = quoted(paramaters, __CALLER__)
 
     method_name = name |> Macro.underscore() |> String.to_atom()
@@ -32,11 +32,13 @@ defmodule Telegex.MethodDefiner do
 
     has_optional = !Enum.empty?(optional_arg_names)
 
+    rtype_ast = TypeDefiner.field_type_ast(quoted(returned_type, __CALLER__))
+
     ast =
       quote do
         @spec unquote(
                 def_spec_name_args(method_name, required_arg_types, optional_arg_names_types)
-              ) :: {:ok, Telegex.Type.error()} | {:error, any}
+              ) :: {:ok, unquote(rtype_ast)} | {:error, Telegex.Type.error()}
         @doc unquote(description)
         def unquote(def_fun_name_args(method_name, required_arg_names, optional_arg_names)) do
           required_opts = unquote(build_required_opts(required_arg_names))
