@@ -46,6 +46,7 @@ if Mix.env() in [:dev, :test] do
       types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
       updates_section = Enum.find(doc_sections, &(&1.title == "Getting updates"))
       inline_section = Enum.find(doc_sections, &(&1.title == "Inline mode"))
+      payments_section = Enum.find(doc_sections, &(&1.title == "Payments"))
       methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
       updating_section = Enum.find(doc_sections, &(&1.title == "Updating messages"))
       stickers_section = Enum.find(doc_sections, &(&1.title == "Stickers"))
@@ -53,6 +54,7 @@ if Mix.env() in [:dev, :test] do
       types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
       inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
+      payments_sub_sections = parse_sub_sections(payments_section, doc_nodes)
       stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
 
       updates_types =
@@ -80,10 +82,7 @@ if Mix.env() in [:dev, :test] do
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
       payments_types =
-        doc_sections
-        # TODO: 此章节的方法还未生成
-        |> Enum.find(&(&1.title == "Payments"))
-        |> parse_sub_sections(doc_nodes)
+        payments_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
@@ -150,6 +149,12 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :method))
         |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
 
+      payments_methods =
+        payments_sub_sections
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
       all_types =
         updates_types ++
           types ++
@@ -161,7 +166,8 @@ if Mix.env() in [:dev, :test] do
       all_union_types = union_types ++ inline_union_types
 
       all_methods =
-        updates_methods ++ methods ++ updating_methods ++ stickers_methods ++ inline_methods
+        updates_methods ++
+          methods ++ updating_methods ++ stickers_methods ++ inline_methods ++ payments_methods
 
       doc_map = %{types: all_types, union_types: all_union_types, methods: all_methods}
 
