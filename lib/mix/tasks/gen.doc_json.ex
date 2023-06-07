@@ -47,10 +47,13 @@ if Mix.env() in [:dev, :test] do
       updates_section = Enum.find(doc_sections, &(&1.title == "Getting updates"))
       inline_section = Enum.find(doc_sections, &(&1.title == "Inline mode"))
       methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
+      updating_section = Enum.find(doc_sections, &(&1.title == "Updating messages"))
+      stickers_section = Enum.find(doc_sections, &(&1.title == "Stickers"))
 
       types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
       inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
+      stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
 
       updates_types =
         updates_sub_sections
@@ -65,9 +68,7 @@ if Mix.env() in [:dev, :test] do
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
       stickers_types =
-        doc_sections
-        |> Enum.find(&(&1.title == "Stickers"))
-        |> parse_sub_sections(doc_nodes)
+        stickers_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
@@ -80,6 +81,7 @@ if Mix.env() in [:dev, :test] do
 
       payments_types =
         doc_sections
+        # TODO: 此章节的方法还未生成
         |> Enum.find(&(&1.title == "Payments"))
         |> parse_sub_sections(doc_nodes)
         # 排除非类型的子章节
@@ -88,6 +90,7 @@ if Mix.env() in [:dev, :test] do
 
       passport_types =
         doc_sections
+        # TODO: 此章节的方法还未生成
         |> Enum.find(&(&1.title == "Telegram Passport"))
         |> parse_sub_sections(doc_nodes)
         # 排除非类型的子章节
@@ -96,6 +99,7 @@ if Mix.env() in [:dev, :test] do
 
       game_types =
         doc_sections
+        # TODO: 此章节的方法还未生成
         |> Enum.find(&(&1.title == "Games"))
         |> parse_sub_sections(doc_nodes)
         # 排除非类型的子章节
@@ -127,14 +131,37 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :method))
         |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
 
+      updating_methods =
+        updating_section
+        |> parse_sub_sections(doc_nodes)
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
+      stickers_methods =
+        stickers_sub_sections
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
+      inline_methods =
+        inline_sub_sections
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
       all_types =
         updates_types ++
           types ++
-          stickers_types ++ inline_types ++ payments_types ++ passport_types ++ game_types
+          stickers_types ++
+          inline_types ++
+          payments_types ++
+          passport_types ++ game_types
 
       all_union_types = union_types ++ inline_union_types
 
-      all_methods = updates_methods ++ methods
+      all_methods =
+        updates_methods ++ methods ++ updating_methods ++ stickers_methods ++ inline_methods
 
       doc_map = %{types: all_types, union_types: all_union_types, methods: all_methods}
 
@@ -398,11 +425,18 @@ if Mix.env() in [:dev, :test] do
       ~r/Returns.+as a (\S+) object/,
       ~r/Returns.+as (\S+) on success/,
       ~r/Returns a (\S+) object/,
-      ~r/returns a (\S+) object/
+      ~r/returns a (\S+) object/,
+      # 此正则用于匹配 `editMessageText` 等更新消息相关的方法普遍存在的两个可能返回值
+      ~r/\S+(\S) is returned/,
+      ~r/Returns.+ (\S+) on success/
     ]
 
-    defp parse_method_returns(description, i \\ 0) do
+    def parse_method_returns(description, i \\ 0) do
       re = Enum.at(@result_type_re_list, i)
+
+      # if description == "Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned." do
+      #   Regex.scan(re, description) |> IO.inspect()
+      # end
 
       if re == nil do
         # 缺少结果类型
@@ -410,6 +444,11 @@ if Mix.env() in [:dev, :test] do
       else
         case Regex.scan(re, description) do
           [[_, result_type]] ->
+            :ok = valide_returns(result_type, description)
+            result_type
+
+          [[_, rt1], [_, rt2]] ->
+            result_type = "#{rt1} or #{rt2}"
             :ok = valide_returns(result_type, description)
             result_type
 
