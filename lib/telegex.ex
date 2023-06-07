@@ -4128,4 +4128,22 @@ No more than 50 results per query are allowed.",
     ],
     :boolean
   )
+
+  defmethod(
+    "setPassportDataErrors",
+    "Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.",
+    [
+      %{name: :user_id, type: :integer, description: "User identifier", required: true},
+      %{
+        name: :errors,
+        type: %{
+          __struct__: Telegex.TypeDefiner.ArrayType,
+          elem_type: Telegex.Type.PassportElementError
+        },
+        description: "A JSON-serialized array describing the errors",
+        required: true
+      }
+    ],
+    :boolean
+  )
 end

@@ -50,12 +50,14 @@ if Mix.env() in [:dev, :test] do
       methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
       updating_section = Enum.find(doc_sections, &(&1.title == "Updating messages"))
       stickers_section = Enum.find(doc_sections, &(&1.title == "Stickers"))
+      passport_section = Enum.find(doc_sections, &(&1.title == "Telegram Passport"))
 
       types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
       inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
       payments_sub_sections = parse_sub_sections(payments_section, doc_nodes)
       stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
+      passport_sub_sections = parse_sub_sections(passport_section, doc_nodes)
 
       updates_types =
         updates_sub_sections
@@ -88,10 +90,7 @@ if Mix.env() in [:dev, :test] do
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
       passport_types =
-        doc_sections
-        # TODO: 此章节的方法还未生成
-        |> Enum.find(&(&1.title == "Telegram Passport"))
-        |> parse_sub_sections(doc_nodes)
+        passport_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
@@ -105,14 +104,20 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
-      union_types =
-        types_sub_sections
+      inline_union_types =
+        inline_sub_sections
         # 排除非联合类型的子章节
         |> Enum.filter(&(&1.comment == :union_type))
         |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
 
-      inline_union_types =
-        inline_sub_sections
+      passport_union_types =
+        passport_sub_sections
+        # 排除非联合类型的子章节
+        |> Enum.filter(&(&1.comment == :union_type))
+        |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
+
+      union_types =
+        types_sub_sections
         # 排除非联合类型的子章节
         |> Enum.filter(&(&1.comment == :union_type))
         |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
@@ -155,19 +160,31 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :method))
         |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
 
+      passport_methods =
+        passport_sub_sections
+        # 排除非方法的子章节
+        |> Enum.filter(&(&1.comment == :method))
+        |> Enum.map(fn s -> parse_method(s, doc_nodes) end)
+
       all_types =
         updates_types ++
           types ++
           stickers_types ++
           inline_types ++
           payments_types ++
-          passport_types ++ game_types
+          passport_types ++
+          game_types
 
-      all_union_types = union_types ++ inline_union_types
+      all_union_types = union_types ++ inline_union_types ++ passport_union_types
 
       all_methods =
         updates_methods ++
-          methods ++ updating_methods ++ stickers_methods ++ inline_methods ++ payments_methods
+          methods ++
+          updating_methods ++
+          stickers_methods ++
+          inline_methods ++
+          payments_methods ++
+          passport_methods
 
       doc_map = %{types: all_types, union_types: all_union_types, methods: all_methods}
 

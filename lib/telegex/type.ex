@@ -93,6 +93,22 @@ defmodule Telegex.Type do
     ]
   )
 
+  defunion(
+    PassportElementError,
+    "This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of:",
+    [
+      Telegex.Type.PassportElementErrorDataField,
+      Telegex.Type.PassportElementErrorFrontSide,
+      Telegex.Type.PassportElementErrorReverseSide,
+      Telegex.Type.PassportElementErrorSelfie,
+      Telegex.Type.PassportElementErrorFile,
+      Telegex.Type.PassportElementErrorFiles,
+      Telegex.Type.PassportElementErrorTranslationFile,
+      Telegex.Type.PassportElementErrorTranslationFiles,
+      Telegex.Type.PassportElementErrorUnspecified
+    ]
+  )
+
   deftype(Update, "This object represents an incoming update.
 At most one of the optional parameters can be present in any given update.", [
     %{
