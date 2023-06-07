@@ -1,0 +1,12 @@
+defmodule Telegex.Type do
+  @moduledoc "All types used in the Bot API responses."
+
+  use Telegex.TypeDefiner
+
+  @type error :: Telegex.Error.t() | Telegex.RequestError.t()
+<%= for union_type <- @union_types do %>
+  defunion(<%= union_type.name %>, "<%= union_type.description %>", <%= union_type.types %>)
+<% end %>
+<%= for args <- @type_args do %>
+  deftype(<%= args.name %>, "<%= args.description %>", <%= args.fields %>)
+<% end %>end
