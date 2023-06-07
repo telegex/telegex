@@ -73,6 +73,10 @@ defmodule Mix.Tasks.Gen.Code do
     :integer
   end
 
+  def build_ftype("Int") do
+    :integer
+  end
+
   def build_ftype("Float") do
     :float
   end
