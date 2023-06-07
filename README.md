@@ -4,6 +4,26 @@ The new Telegram Bot API client features a unique and perfect implementation app
 
 _😋 Three years ago I created this project, and three years later I redesigned it._
 
+## Introduce
+
+This library defines standardized APIs through code generation techniques using magical macro codes. These macros generate implementations from the data sourced from official documentation pages, which I parse into structured JSON data as macro inputs.
+
+As a result, this library strictly adheres to the documentation standards. Due to its reliance on documentation data and code generation, adapting to new API versions is extremely easy. This ensures that it can effortlessly provide all the latest types and APIs while maintaining absolute correctness.
+
+## Installation
+
+Add Telegex to your mix.exs dependencies:
+
+```elixir
+def deps do
+  [
+    {:telegex, "== 1.0.0-rc.0"},
+  ]
+end
+```
+
+> Note: APIs that include `InputFile` in RC.0 do not support local file paths. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
+
 ## Configuration
 
 Add bot token to the secret configuration file, like this:
