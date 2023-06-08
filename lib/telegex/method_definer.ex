@@ -2,6 +2,7 @@ defmodule Telegex.MethodDefiner do
   @moduledoc false
 
   alias Telegex.TypeDefiner
+  alias Telegex.TypeDefiner.{ArrayType, UnionType}
 
   @type paramater_type :: TypeDefiner.field_type()
 
@@ -34,6 +35,9 @@ defmodule Telegex.MethodDefiner do
 
     rtype_ast = TypeDefiner.field_type_ast(quoted(returned_type, __CALLER__))
 
+    # 扫描包含附件的字段列表
+    attachment_param_names = attachment_param_names(quoted_paramaters)
+
     ast =
       quote do
         @spec unquote(
@@ -49,7 +53,9 @@ defmodule Telegex.MethodDefiner do
               unquote(if has_optional, do: defident(:optional), else: [])
             )
 
-          case Telegex.Caller.call(unquote(name), params) do
+          opts = [attachment_fields: unquote(attachment_param_names)]
+
+          case Telegex.Caller.call(unquote(name), params, opts) do
             {:ok, result} ->
               # TODO: 可以在编译器确定返回值是基础类型还是引用类型，进而避免调用转换代码
               {:ok, Telegex.Helper.typedmap(result, unquote(returned_type))}
@@ -145,6 +151,28 @@ defmodule Telegex.MethodDefiner do
 
     {fun_name, [], types_ast}
   end
+
+  defp attachment_param_names(paramaters) do
+    paramaters
+    |> Enum.filter(fn paramater -> include_attachment?(paramater.type) end)
+    |> Enum.map(fn paramater -> paramater.name end)
+  end
+
+  @spec include_attachment?(TypeDefiner.field_type()) :: boolean
+  defp include_attachment?(%UnionType{types: types}) do
+    Enum.find(types, &include_attachment?/1) != nil
+  end
+
+  defp include_attachment?(%ArrayType{elem_type: type}) do
+    include_attachment?(type)
+  end
+
+  # 理论上需要对其它包含附件字段的结构类型或它们的联合类型返回 true，但目前不支持发送结构类型中包含的附件。
+  defp include_attachment?(Telegex.Type.InputFile) do
+    true
+  end
+
+  defp include_attachment?(_), do: false
 
   defp defident(atom_text), do: {atom_text, [], Elixir}
 
