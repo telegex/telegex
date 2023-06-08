@@ -3,8 +3,6 @@ defmodule Telegex.TypeDefiner do
 
   use TypedStruct
 
-  # TODO: 添加生成联合类型模块的宏，会按照原始名称生成模块以及类型数组生成 `@type t :: Model1.t | Model2.t`。目的是让联合类型可以直接被当作普通类型使用。
-
   defmacro __using__(_) do
     quote do
       require Telegex.TypeDefiner
