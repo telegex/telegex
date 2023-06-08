@@ -156,4 +156,4 @@ iex> Telegex.send_message -1001486769003, "Hello!"
  }}
 ```
 
-Is there anything you don't understand about building a Telegram Bot? Have robot development needs? Welcome to contact me.
+Is there anything you don't understand about building a Telegram Bot? Have bot development needs? Welcome to contact me.
