@@ -8,7 +8,7 @@ defmodule Telegex.TypeDefiner do
       require Telegex.TypeDefiner
       import Telegex.TypeDefiner
 
-      alias Telegex.TypeDefiner.{FieldMeta, ArrayType, UnionType}
+      alias Telegex.TypeDefiner.{FieldMeta, Discriminator, ArrayType, UnionType}
     end
   end
 
@@ -18,6 +18,11 @@ defmodule Telegex.TypeDefiner do
 
   typedstruct module: UnionType do
     field :types, [Telegex.TypeDefiner.field_type()]
+  end
+
+  typedstruct module: Discriminator do
+    field :field, atom
+    field :mapping, %{String.t() => [module]}
   end
 
   @type field_type ::
@@ -120,6 +125,7 @@ defmodule Telegex.TypeDefiner do
     quoted_fields = quoted(fields, __CALLER__)
 
     fields_ast = Enum.map(quoted_fields, &gen_field_ast/1)
+    field_names = Enum.map(quoted_fields, fn f -> f.name end)
 
     references =
       if Enum.empty?(quoted_fields) do
@@ -135,9 +141,11 @@ defmodule Telegex.TypeDefiner do
       defmodule __MODULE__.unquote(name) do
         unquote(def_moduledoc_ast(description))
 
+        def __meta__, do: :type
         # 存储所有引用其它类型的列表
         def __references__, do: unquote(references)
-        def __meta__, do: :type
+        # 存储所有字段的列表
+        def __keys__, do: unquote(field_names)
 
         typedstruct do
           unquote(fields_ast)
@@ -173,14 +181,17 @@ defmodule Telegex.TypeDefiner do
     true
   end
 
-  defmacro defunion(name, description, types) do
+  defmacro defunion(name, description, types, opts \\ []) do
     types_ast = Enum.map(types, fn type -> field_type_ast(type) end)
+
+    discriminator = Keyword.get(opts, :discriminator, nil)
 
     quote do
       defmodule __MODULE__.unquote(name) do
         unquote(def_moduledoc_ast(description))
 
         def __meta__, do: :union
+        def __discriminator__, do: unquote(discriminator)
 
         @type t :: unquote(types_to_union(types_ast))
       end

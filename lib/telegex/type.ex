@@ -15,7 +15,18 @@ defmodule Telegex.Type do
       Telegex.Type.ChatMemberRestricted,
       Telegex.Type.ChatMemberLeft,
       Telegex.Type.ChatMemberBanned
-    ]
+    ],
+    discriminator: %{
+      field: :status,
+      mapping: %{
+        "administrator" => [Telegex.Type.ChatMemberAdministrator],
+        "creator" => [Telegex.Type.ChatMemberOwner],
+        "kicked" => [Telegex.Type.ChatMemberBanned],
+        "left" => [Telegex.Type.ChatMemberLeft],
+        "member" => [Telegex.Type.ChatMemberMember],
+        "restricted" => [Telegex.Type.ChatMemberRestricted]
+      }
+    }
   )
 
   defunion(
@@ -29,7 +40,19 @@ defmodule Telegex.Type do
       Telegex.Type.BotCommandScopeChat,
       Telegex.Type.BotCommandScopeChatAdministrators,
       Telegex.Type.BotCommandScopeChatMember
-    ]
+    ],
+    discriminator: %{
+      field: :type,
+      mapping: %{
+        "all_chat_administrators" => [Telegex.Type.BotCommandScopeAllChatAdministrators],
+        "all_group_chats" => [Telegex.Type.BotCommandScopeAllGroupChats],
+        "all_private_chats" => [Telegex.Type.BotCommandScopeAllPrivateChats],
+        "chat" => [Telegex.Type.BotCommandScopeChat],
+        "chat_administrators" => [Telegex.Type.BotCommandScopeChatAdministrators],
+        "chat_member" => [Telegex.Type.BotCommandScopeChatMember],
+        "default" => [Telegex.Type.BotCommandScopeDefault]
+      }
+    }
   )
 
   defunion(
@@ -39,7 +62,15 @@ defmodule Telegex.Type do
       Telegex.Type.MenuButtonCommands,
       Telegex.Type.MenuButtonWebApp,
       Telegex.Type.MenuButtonDefault
-    ]
+    ],
+    discriminator: %{
+      field: :type,
+      mapping: %{
+        "commands" => [Telegex.Type.MenuButtonCommands],
+        "default" => [Telegex.Type.MenuButtonDefault],
+        "web_app" => [Telegex.Type.MenuButtonWebApp]
+      }
+    }
   )
 
   defunion(
@@ -51,7 +82,17 @@ defmodule Telegex.Type do
       Telegex.Type.InputMediaAudio,
       Telegex.Type.InputMediaPhoto,
       Telegex.Type.InputMediaVideo
-    ]
+    ],
+    discriminator: %{
+      field: :type,
+      mapping: %{
+        "animation" => [Telegex.Type.InputMediaAnimation],
+        "audio" => [Telegex.Type.InputMediaAudio],
+        "document" => [Telegex.Type.InputMediaDocument],
+        "photo" => [Telegex.Type.InputMediaPhoto],
+        "video" => [Telegex.Type.InputMediaVideo]
+      }
+    }
   )
 
   defunion(
@@ -78,7 +119,43 @@ defmodule Telegex.Type do
       Telegex.Type.InlineQueryResultVenue,
       Telegex.Type.InlineQueryResultVideo,
       Telegex.Type.InlineQueryResultVoice
-    ]
+    ],
+    discriminator: %{
+      field: :type,
+      mapping: %{
+        "article" => [Telegex.Type.InlineQueryResultArticle],
+        "audio" => [
+          Telegex.Type.InlineQueryResultCachedAudio,
+          Telegex.Type.InlineQueryResultAudio
+        ],
+        "contact" => [Telegex.Type.InlineQueryResultContact],
+        "document" => [
+          Telegex.Type.InlineQueryResultCachedDocument,
+          Telegex.Type.InlineQueryResultDocument
+        ],
+        "game" => [Telegex.Type.InlineQueryResultGame],
+        "gif" => [Telegex.Type.InlineQueryResultCachedGif, Telegex.Type.InlineQueryResultGif],
+        "location" => [Telegex.Type.InlineQueryResultLocation],
+        "mpeg4_gif" => [
+          Telegex.Type.InlineQueryResultCachedMpeg4Gif,
+          Telegex.Type.InlineQueryResultMpeg4Gif
+        ],
+        "photo" => [
+          Telegex.Type.InlineQueryResultCachedPhoto,
+          Telegex.Type.InlineQueryResultPhoto
+        ],
+        "sticker" => [Telegex.Type.InlineQueryResultCachedSticker],
+        "venue" => [Telegex.Type.InlineQueryResultVenue],
+        "video" => [
+          Telegex.Type.InlineQueryResultCachedVideo,
+          Telegex.Type.InlineQueryResultVideo
+        ],
+        "voice" => [
+          Telegex.Type.InlineQueryResultCachedVoice,
+          Telegex.Type.InlineQueryResultVoice
+        ]
+      }
+    }
   )
 
   defunion(
@@ -90,7 +167,8 @@ defmodule Telegex.Type do
       Telegex.Type.InputVenueMessageContent,
       Telegex.Type.InputContactMessageContent,
       Telegex.Type.InputInvoiceMessageContent
-    ]
+    ],
+    []
   )
 
   defunion(
@@ -106,7 +184,21 @@ defmodule Telegex.Type do
       Telegex.Type.PassportElementErrorTranslationFile,
       Telegex.Type.PassportElementErrorTranslationFiles,
       Telegex.Type.PassportElementErrorUnspecified
-    ]
+    ],
+    discriminator: %{
+      field: :source,
+      mapping: %{
+        "data" => [Telegex.Type.PassportElementErrorDataField],
+        "file" => [Telegex.Type.PassportElementErrorFile],
+        "files" => [Telegex.Type.PassportElementErrorFiles],
+        "front_side" => [Telegex.Type.PassportElementErrorFrontSide],
+        "reverse_side" => [Telegex.Type.PassportElementErrorReverseSide],
+        "selfie" => [Telegex.Type.PassportElementErrorSelfie],
+        "translation_file" => [Telegex.Type.PassportElementErrorTranslationFile],
+        "translation_files" => [Telegex.Type.PassportElementErrorTranslationFiles],
+        "unspecified" => [Telegex.Type.PassportElementErrorUnspecified]
+      }
+    }
   )
 
   deftype(Update, "This object represents an incoming update.

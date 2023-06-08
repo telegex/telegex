@@ -358,16 +358,62 @@ if Mix.env() in [:dev, :test] do
       :ok
     end
 
+    @fixed_tvalue_re [
+      # 匹配 `ChatMember` 的 `status` 字段
+      ~r/, always “([^”]+)”$/,
+      # 匹配 `BotCommandScope`,`MenuButton`,`InputMedia`,`InlineQueryResult` 的 `type` 字段
+      # 匹配 `PassportElementErrorDataField` 的 `source` 字段
+      ~r/must be (\S+)$/
+    ]
+
     defp parse_type(section, doc_nodes) do
       nodes = Enum.slice(doc_nodes, section.node_beginning..section.node_end)
 
       description = nodes |> Floki.find("p") |> hd() |> Floki.text()
 
-      %{
+      fields = parse_type_fields(nodes)
+
+      r = %{
         name: section.title,
         description: description,
-        fields: parse_type_fields(nodes)
+        fields: fields
       }
+
+      if fixed = parse_fixed(fields) do
+        Map.put(r, :fixed, fixed)
+      else
+        r
+      end
+    end
+
+    defp parse_fixed([]), do: nil
+
+    defp parse_fixed([first_field | _]) do
+      if first_field.optional do
+        false
+      else
+        if value = parse_fixed_value(first_field.description) do
+          %{field: first_field.name, value: value}
+        else
+          false
+        end
+      end
+    end
+
+    defp parse_fixed_value(description, i \\ 0) do
+      re = Enum.at(@fixed_tvalue_re, i)
+
+      if is_nil(re) do
+        nil
+      else
+        case Regex.scan(re, description) do
+          [[_, value]] ->
+            value
+
+          [] ->
+            parse_fixed_value(description, i + 1)
+        end
+      end
     end
 
     defp parse_type_fields(type_nodes) do

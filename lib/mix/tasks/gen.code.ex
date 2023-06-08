@@ -3,7 +3,7 @@ defmodule Mix.Tasks.Gen.Code do
 
   require Mix.Generator
 
-  alias Telegex.TypeDefiner.{ArrayType, UnionType}
+  alias Telegex.TypeDefiner.{Discriminator, ArrayType, UnionType}
 
   @base_module Telegex.Type
 
@@ -17,7 +17,12 @@ defmodule Mix.Tasks.Gen.Code do
 
     union_types =
       Enum.map(doc_json.union_types, fn ut ->
-        %{name: ut.name, description: ut.description, types: build_utypes_string(ut.types)}
+        %{
+          name: ut.name,
+          description: ut.description,
+          types: build_utypes_string(ut.types),
+          discriminator: build_discriminator_string(ut.types, doc_json.types)
+        }
       end)
 
     apis =
@@ -155,5 +160,36 @@ defmodule Mix.Tasks.Gen.Code do
 
   defp build_api_ptype(type_string) do
     build_ftype(type_string)
+  end
+
+  @spec build_discriminator_string(list, list) :: String.t()
+  defp build_discriminator_string(union_types, types) do
+    discriminator =
+      Enum.reduce(union_types, %Discriminator{mapping: %{}}, fn tname, discriminator ->
+        case find_type(tname, types) do
+          %{fixed: fixed} ->
+            mapping = discriminator.mapping
+
+            pointing_types = Map.get(mapping, fixed.value, []) ++ [build_ftype(tname)]
+            mapping = Map.put(mapping, fixed.value, pointing_types)
+
+            %{discriminator | field: String.to_atom(fixed.field), mapping: mapping}
+
+          _ ->
+            discriminator
+        end
+      end)
+
+    if discriminator.field do
+      [discriminator: Map.from_struct(discriminator)]
+    else
+      []
+    end
+    |> Macro.escape()
+    |> Macro.to_string()
+  end
+
+  defp find_type(tname, types) do
+    Enum.find(types, fn %{name: name} -> name == tname end)
   end
 end
