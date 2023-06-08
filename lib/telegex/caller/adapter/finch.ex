@@ -1,7 +1,7 @@
-defmodule Telegex.Caller.FinchAdapter do
+defmodule Telegex.Caller.Adapter.Finch do
   @moduledoc false
 
-  use Telegex.Caller
+  use Telegex.Caller.Adapter
 
   @type req_resp :: Finch.Response.t()
   @type req_error :: %{reason: atom}
@@ -31,7 +31,7 @@ defmodule Telegex.Caller.FinchAdapter do
 
     req = apply(Finch, :build, build_args)
 
-    apply(Finch, :request, [req, Telegex.Finch, adapter_options()])
+    apply(Finch, :request, [req, Telegex.Finch, options()])
   end
 
   @spec parse_response({:ok, req_resp} | {:error, req_error}) :: {:ok, any} | {:error, error}

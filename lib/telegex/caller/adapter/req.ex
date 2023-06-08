@@ -1,7 +1,7 @@
-defmodule Telegex.Caller.ReqAdapter do
+defmodule Telegex.Caller.Adapter.Req do
   @moduledoc false
 
-  use Telegex.Caller
+  use Telegex.Caller.Adapter
 
   @type req_resp :: Req.Response.t()
   @type req_error :: %{reason: atom}
@@ -24,7 +24,7 @@ defmodule Telegex.Caller.ReqAdapter do
           decode_json: [keys: :atoms],
           retry: false
         ],
-        adapter_options()
+        options()
       )
 
     req = apply(Req, :new, [req_opts])
@@ -32,9 +32,7 @@ defmodule Telegex.Caller.ReqAdapter do
     apply(Req, :request, [req])
   end
 
-  @spec parse_response({:ok, req_resp} | {:error, req_error}) ::
-          {:ok, any} | {:error, Telegex.Type.error()}
-
+  @spec parse_response({:ok, req_resp} | {:error, req_error}) :: {:ok, any} | {:error, error}
   defp parse_response({:ok, %{body: body} = _response}) do
     %{ok: ok, result: result, error_code: error_code, description: description} =
       struct_response(body)

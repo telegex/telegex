@@ -5,11 +5,11 @@ defmodule Telegex.Application do
 
   use Application
 
-  alias Telegex.Caller
+  alias Telegex.Caller.Adapter
 
   @impl true
   def start(_type, _args) do
-    finch_serve? = Caller.impl() == Caller.FinchAdapter
+    finch_serve? = Adapter.impl() == Adapter.Finch
 
     children =
       [

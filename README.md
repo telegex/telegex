@@ -17,7 +17,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.2"},
+    {:telegex, "~> 1.0.0-rc.3"},
   ]
 end
 ```
@@ -35,24 +35,19 @@ config :telegex, token: "<BOT_TOKEN>"
 Specify the adapter for the HTTP client in the public configuration file (default is `FinchAdapter`):
 
 ```elixir
-config :telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter
+config :telegex, caller_adapter: Finch
 ```
 
 Pass options to the adapter, such as timeout:
 
 ```elixir
-config :telegex, Telegex.Caller,
-  adapter: Telegex.Caller.FinchAdapter,
-  options: [receive_timeout: 5 * 1000]
+config :telegex, caller_adapter: {Finch, [receive_timeout: 5 * 1000]}
 ```
 
 You can also choose `HTTPoison` as the client. If using HTTPoison, set the corresponding adapter and timeout:
 
 ```elixir
-
-config :telegex, Telegex.Caller,
-  adapter: Telegex.Caller.HTTPoisonAdapter,
-  options: [recv_timeout: 5 * 1000]
+config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 ```
 
 >Note: There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
