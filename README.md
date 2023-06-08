@@ -22,7 +22,7 @@ def deps do
 end
 ```
 
->Note: APIs that include `InputFile` in RC.0 do not support local file paths. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
+>Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version RC.2. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
 
 ## Configuration
 
