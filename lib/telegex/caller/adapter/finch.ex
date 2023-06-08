@@ -15,7 +15,7 @@ defmodule Telegex.Caller.Adapter.Finch do
     url |> request(params, opts) |> parse_response()
   end
 
-  def request(url, params \\ [], opts \\ []) do
+  defp request(url, params, opts) do
     attachment_fields = Keyword.get(opts, :attachment_fields, [])
 
     build_args =

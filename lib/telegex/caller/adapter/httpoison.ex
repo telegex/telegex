@@ -14,7 +14,7 @@ defmodule Telegex.Caller.Adapter.HTTPoison do
     url |> request(json_body, opts) |> parse_response()
   end
 
-  def request(url, json_body \\ "", _opts \\ []) do
+  defp request(url, json_body, _opts) do
     apply(HTTPoison, :post, [url, json_body, [@json_header], options()])
   end
 
