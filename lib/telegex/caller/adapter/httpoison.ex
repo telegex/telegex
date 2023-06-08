@@ -1,5 +1,5 @@
 defmodule Telegex.Caller.Adapter.HTTPoison do
-  @moduledoc false
+  @moduledoc "HTTPoison based caller adapter."
 
   use Telegex.Caller.Adapter
 

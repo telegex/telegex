@@ -1,5 +1,5 @@
 defmodule Telegex.Caller.Adapter do
-  @moduledoc false
+  @moduledoc "An adapter to help HTTP clients implement callers."
 
   alias Telegex.Response
 
@@ -24,11 +24,8 @@ defmodule Telegex.Caller.Adapter do
   @spec impl() :: module
   def impl, do: Module.concat(__MODULE__, config(:adapter))
 
-  @spec token() :: String.t()
-  def token, do: Application.get_env(:telegex, :token)
-
   @spec build_url(String.t()) :: String.t()
-  def build_url(method), do: "https://api.telegram.org/bot#{token()}/#{method}"
+  def build_url(method), do: "https://api.telegram.org/bot#{Telegex.Instance.token()}/#{method}"
 
   @spec options :: keyword
   def options, do: config(:options)

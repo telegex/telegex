@@ -1,5 +1,5 @@
 defmodule Telegex.Caller do
-  @moduledoc false
+  @moduledoc "Unified call specification for Bot API."
 
   @type error :: Telegex.Type.error()
 

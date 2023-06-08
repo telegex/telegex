@@ -1,5 +1,5 @@
 defmodule Telegex.Caller.Adapter.Req do
-  @moduledoc false
+  @moduledoc "Req based caller adapter."
 
   use Telegex.Caller.Adapter
 

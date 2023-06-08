@@ -1,5 +1,5 @@
 defmodule Telegex.Caller.Adapter.Finch do
-  @moduledoc false
+  @moduledoc "Finch based caller adapter."
 
   use Telegex.Caller.Adapter
 
