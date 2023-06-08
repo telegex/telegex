@@ -17,12 +17,12 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.3"},
+    {:telegex, "~> 1.0.0-rc.4"},
   ]
 end
 ```
 
->Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version RC.2. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
+>Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version RC.4. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
 
 ## Configuration
 
