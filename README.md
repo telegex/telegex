@@ -17,7 +17,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.1"},
+    {:telegex, "~> 1.0.0-rc.2"},
   ]
 end
 ```
@@ -41,15 +41,17 @@ config :telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter
 Pass options to the adapter, such as timeout:
 
 ```elixir
-config :telegex, Telegex.Caller, adapter: Telegex.Caller.FinchAdapter,
-  options: [recv_timeout: 5 * 1000]
+config :telegex, Telegex.Caller,
+  adapter: Telegex.Caller.FinchAdapter,
+  options: [receive_timeout: 5 * 1000]
 ```
 
 You can also choose `HTTPoison` as the client. If using HTTPoison, set the corresponding adapter and timeout:
 
 ```elixir
 
-config :telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter,
+config :telegex, Telegex.Caller,
+  adapter: Telegex.Caller.HTTPoisonAdapter,
   options: [recv_timeout: 5 * 1000]
 ```
 
@@ -57,9 +59,9 @@ config :telegex, Telegex.Caller, adapter: Telegex.Caller.HTTPoisonAdapter,
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
-- [`finch`](https://hex.pm/packages/finch): `FinchAdapter`
-- [`req`](https://hex.pm/packages/req): `ReqAdapter` (⚠️ may be deprecated)
-- [`httpoison`](https://hex.pm/packages/httpoison): `HTTPoisonAdapter`
+- `FinchAdapter`: [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart)
+- `ReqAdapter`: [`req`](https://hex.pm/packages/req) (⚠️ may be deprecated)
+- `HTTPoisonAdapter`: [`httpoison`](https://hex.pm/packages/httpoison)
 
 Don't have a client library you use? Tell me in issues!
 
@@ -153,3 +155,5 @@ iex> Telegex.send_message -1001486769003, "Hello!"
   # omitted part...
  }}
 ```
+
+Is there anything you don't understand about building a Telegram Bot? Have robot development needs? Welcome to contact me.
