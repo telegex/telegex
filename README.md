@@ -54,9 +54,9 @@ config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
-- `Finch`: [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart)
-- `Req`: [`req`](https://hex.pm/packages/req) (⚠️ may be deprecated)
-- `HTTPoison`: [`httpoison`](https://hex.pm/packages/httpoison)
+- [`Finch`](https://hexdocs.pm/telegex/Telegex.Caller.Adapter.Finch.html): [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart)
+- [`Req`](https://hexdocs.pm/telegex/Telegex.Caller.Adapter.Req.html): [`req`](https://hex.pm/packages/req) (⚠️ may be deprecated)
+- [`HTTPoison`](https://hexdocs.pm/telegex/Telegex.Caller.Adapter.HTTPoison.html): [`httpoison`](https://hex.pm/packages/httpoison)
 
 Don't have a client library you use? Tell me in issues!
 
