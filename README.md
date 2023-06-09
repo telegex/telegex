@@ -17,7 +17,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.4"},
+    {:telegex, "~> 1.0.0-rc.5"},
   ]
 end
 ```
@@ -152,5 +152,49 @@ iex> Telegex.send_message -1001486769003, "Hello!"
   # omitted part...
  }}
 ```
+
+## Webhook mode
+
+Add [`plug`](https://hex.pm/packages/plug) and [`bandit`](https://hex.pm/packages/bandit) to your application's deps because they are required for webhook mode.
+
+To work in webhook mode:
+
+1. Create a new module, like `YourProject.HookHandler`
+1. `Use Telegex.Hook.Handler`
+1. Implement `on_init/0` and `on_update/1` callback functions
+1. Add your module to the supervision tree
+
+Full example:
+
+```elixir
+defmodule YourProject.HookHandler do
+  use Telegex.Hook.Handler
+
+  @impl true
+  def on_init do
+    # read some parameters from your env config
+    env_config = Application.get_env(:your_porject, __MODULE__)
+    # delete the webhook and set it again
+    Telegex.delete_webhook()
+    # set the webhook (url is required)
+    Telegex.set_webhook(env_config[:webhook_url])
+    # specify port for web server (port has a default value of 4000, but it may change with library upgrades)
+    %Telegex.Hook.Config{server_port: env_config[:server_port]}
+    # you must return the `Telegex.Hook.Config` struct ↑
+  end
+
+  @impl true
+  def on_update(update) do
+  
+    # consume the update
+    :ok
+  end
+end
+
+```
+
+**Don't forget to add your module to the supervision tree.**
+
+## The end
 
 Is there anything you don't understand about building a Telegram Bot? Have bot development needs? Welcome to contact me.
