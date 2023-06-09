@@ -5,6 +5,8 @@ defmodule Telegex.Helper do
 
   alias Telegex.TypeDefiner.{ArrayType, UnionType}
 
+  require Logger
+
   @doc """
   Convert the map to a struct with type information, which is used in the internal implementation of this function.
   """
@@ -19,7 +21,9 @@ defmodule Telegex.Helper do
   def typedmap(map, %UnionType{types: types}) do
     if is_map(map) do
       # 一个值指向多个可能的具体类型且没有字段值指向类型，此处转换为和 map 有最多重复字段的类型
-      {_, type} = most_repeated_fields_type(map, types)
+      {_, type} = r = most_repeated_fields_type(map, types)
+
+      conditional_warning(r)
 
       typedmap(map, type)
     else
@@ -45,13 +49,22 @@ defmodule Telegex.Helper do
         value = map[discriminator.field]
 
         case discriminator.mapping[value] do
+          nil ->
+            Logger.warning(
+              "this may be caused by changes to the Telegram Bot API or a bug, pointing to an unknown type: #{inspect(field: discriminator.field, value: value)}"
+            )
+
+            map
+
           [type] ->
             # 一个值只指向一个具体类型
             typedmap(map, type)
 
           types ->
             # 一个值指向多个可能的具体类型，此处转换为和 map 有最多重复字段的类型
-            {_, type} = most_repeated_fields_type(map, types)
+            {_, type} = r = most_repeated_fields_type(map, types)
+
+            conditional_warning(r)
 
             typedmap(map, type)
         end
@@ -101,4 +114,12 @@ defmodule Telegex.Helper do
   defp keys_left_count(keys, type) do
     length(keys -- type.__keys__())
   end
+
+  defp conditional_warning({left_count, type}) when left_count > 0 do
+    Logger.warning(
+      "this may be caused by changes to the Telegram Bot API or a bug, the final type's field list did not fully offset the field list of the data: #{inspect(type: type, left_fields_count: left_count)}"
+    )
+  end
+
+  defp conditional_warning(_), do: nil
 end
