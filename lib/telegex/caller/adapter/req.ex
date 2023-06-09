@@ -13,7 +13,7 @@ defmodule Telegex.Caller.Adapter.Req do
     parse_response(r)
   end
 
-  defp request(url, body_map \\ %{}, _opts \\ []) do
+  defp request(url, body_map, _opts) do
     req_opts =
       Keyword.merge(
         [
