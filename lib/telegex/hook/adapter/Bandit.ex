@@ -6,7 +6,8 @@ defmodule Telegex.Hook.Adapter.Bandit do
   @impl true
   def child_spec(config) do
     {Bandit,
-     plug: {Telegex.Hook.Server, %{on_update: config.on_update}},
+     plug:
+       {Telegex.Hook.Server, %{on_update: config.on_update, secret_token: config.secret_token}},
      scheme: :http,
      port: config.server_port}
   end
