@@ -17,7 +17,7 @@ defmodule EchoBot.HookHandler do
 
   @impl true
   def on_update(update) do
-    Consumer.receive(update)
+    Consumer.consume(update)
 
     :ok
   end

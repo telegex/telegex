@@ -21,11 +21,11 @@ defmodule EchoBot.Consumer do
     )
   end
 
-  defp consume(%{message: %{text: text, chat: chat}} = _update) when text != nil do
+  def consume(%{message: %{text: text, chat: chat}} = _update) when text != nil do
     Telegex.send_message(chat.id, text)
   end
 
-  defp consume(_update) do
+  def consume(_update) do
     Logger.debug("Ignore update without text message")
   end
 end

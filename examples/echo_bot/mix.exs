@@ -30,6 +30,7 @@ defmodule EchoBot.MixProject do
       {:finch, "~> 0.16.0"},
       {:multipart, "~> 0.4.0"},
       {:plug, "~> 1.14"},
+      {:plug_cowboy, "~> 2.6"},
       {:bandit, "~> 0.7.7"}
     ]
   end
