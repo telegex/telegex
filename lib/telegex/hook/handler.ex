@@ -1,22 +1,32 @@
 defmodule Telegex.Hook.Handler do
-  @moduledoc false
+  @moduledoc """
+  Generate your webhook handler, which includes a supervisor and a Plug-based child.
+  """
+
+  @type handle_result :: :ok | map
 
   defmacro __using__(_) do
     quote do
+      @behaviour unquote(__MODULE__)
+
       use Supervisor
 
-      @behaviour unquote(__MODULE__)
+      alias Telegex.Hook.Adapter
 
       require Logger
 
       def start_link(_) do
-        %{server_port: server_port} = on_init()
+        config = on_init()
+
+        config =
+          if config.on_update do
+            config
+          else
+            %{config | on_update: &on_update/1}
+          end
 
         children = [
-          {Bandit,
-           plug: {Telegex.Hook.Server, %{on_update: &on_update/1}},
-           scheme: :http,
-           port: server_port}
+          Adapter.impl().child_spec(config)
         ]
 
         opts = [strategy: :one_for_one, name: __MODULE__]
@@ -43,5 +53,5 @@ defmodule Telegex.Hook.Handler do
   end
 
   @callback on_init :: Telegex.Hook.Config.t()
-  @callback on_update(Telegex.Type.Update.t()) :: :ok
+  @callback on_update(Telegex.Type.Update.t()) :: handle_result
 end
