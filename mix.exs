@@ -41,7 +41,7 @@ defmodule Telegex.MixProject do
 
   def extra_applications do
     if Mix.env() in [:dev, :test] do
-      [:httpoison, :req, :finch, :multipart]
+      [:httpoison, :req, :finch, :multipart, :plug, :bandit]
     else
       []
     end
@@ -65,6 +65,8 @@ defmodule Telegex.MixProject do
       {:req, "~> 0.3", optional: true, only: [:dev, :test]},
       {:finch, "~> 0.16.0", optional: true, only: [:dev, :test]},
       {:multipart, "~> 0.4.0", optional: true, only: [:dev, :test]},
+      {:plug, "~> 1.14", optional: true, only: [:dev, :test]},
+      {:bandit, "~> 0.7.7", optional: true, only: [:dev, :test]},
       {:floki, "~> 0.34.3", only: [:dev, :test]},
       {:typed_struct, "~> 0.3.0"},
       {:jason, "~> 1.4"}
