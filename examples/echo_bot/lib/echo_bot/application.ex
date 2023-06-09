@@ -14,7 +14,9 @@ defmodule EchoBot.Application do
       # Updates consumer
       EchoBot.Consumer,
       # Updates poller
-      EchoBot.UpdatesPoller
+      # EchoBot.UpdatesPoller,
+      # Webhook handler (webhook mode)
+      EchoBot.HookHandler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

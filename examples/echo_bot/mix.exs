@@ -28,7 +28,9 @@ defmodule EchoBot.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:telegex, path: "../../"},
       {:finch, "~> 0.16.0"},
-      {:multipart, "~> 0.4.0"}
+      {:multipart, "~> 0.4.0"},
+      {:plug, "~> 1.14"},
+      {:bandit, "~> 0.7.7"}
     ]
   end
 end
