@@ -178,7 +178,8 @@ defmodule YourProject.HookHandler do
     Telegex.delete_webhook()
     # set the webhook (url is required)
     Telegex.set_webhook(env_config[:webhook_url])
-    # specify port for web server (port has a default value of 4000, but it may change with library upgrades)
+    # specify port for web server
+    # port has a default value of 4000, but it may change with library upgrades
     %Telegex.Hook.Config{server_port: env_config[:server_port]}
     # you must return the `Telegex.Hook.Config` struct ↑
   end
