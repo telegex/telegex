@@ -17,7 +17,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.5"},
+    {:telegex, "~> 1.0.0-rc.6"},
   ]
 end
 ```
@@ -155,7 +155,23 @@ iex> Telegex.send_message -1001486769003, "Hello!"
 
 ## Webhook mode
 
-Add [`plug`](https://hex.pm/packages/plug) and [`bandit`](https://hex.pm/packages/bandit) to your application's deps because they are required for webhook mode.
+Add [`plug`](https://hex.pm/packages/plug) and [`remote_ip`](https://hex.pm/packages/remote_ip) to your application's deps because they are required for webhook mode.
+
+You also need to configure adapters for hooks, which provide web services.
+
+Based on [`Bandit`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Bandit.html)
+
+```elixir
+# add `bandit` to your dpes.
+config :telegex, hook_adapter: Bandit
+```
+
+Based on [`Cowboy`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Cowboy.html)
+
+```elixir
+# add `plug_cowboy` to your dpes.
+config :telegex, hook_adapter: Cowboy
+```
 
 To work in webhook mode:
 
