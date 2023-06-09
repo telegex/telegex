@@ -31,7 +31,8 @@ defmodule EchoBot.MixProject do
       {:multipart, "~> 0.4.0"},
       {:plug, "~> 1.14"},
       {:plug_cowboy, "~> 2.6"},
-      {:bandit, "~> 0.7.7"}
+      {:bandit, "~> 0.7.7"},
+      {:remote_ip, "~> 1.1"}
     ]
   end
 end

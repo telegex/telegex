@@ -9,6 +9,7 @@ defmodule EchoBot.UpdatesPoller do
 
   def start_link(_) do
     {:ok, user} = Telegex.get_me()
+    {:ok, _} = Telegex.delete_webhook()
 
     Logger.info("Bot (@#{user.username}) is working")
 
