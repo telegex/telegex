@@ -22,7 +22,7 @@ def deps do
 end
 ```
 
->Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version RC.4. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
+>Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version `1.0.0-rc.*`. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
 
 ## Configuration
 
@@ -37,8 +37,6 @@ Specify the adapter for the HTTP client in the public configuration file:
 ```elixir
 config :telegex, caller_adapter: Finch
 ```
-
->The default is `Telegex.Caller.Adapter.Finch`, and you need to omit the `Telegex.Caller.Adapter` module prefix.
 
 Pass options to the adapter, such as timeout:
 
@@ -159,14 +157,14 @@ Add [`plug`](https://hex.pm/packages/plug) and [`remote_ip`](https://hex.pm/pack
 
 You also need to configure adapters for hooks, which provide web services.
 
-Based on [`Bandit`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Bandit.html)
+Based on [`Bandit`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Bandit.html) - [`bandit`](https://hex.pm/packages/bandit)
 
 ```elixir
 # add `bandit` to your dpes.
 config :telegex, hook_adapter: Bandit
 ```
 
-Based on [`Cowboy`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Cowboy.html)
+Based on [`Cowboy`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Cowboy.html) - [`plug_cowboy`](https://hex.pm/packages/plug_cowboy)
 
 ```elixir
 # add `plug_cowboy` to your dpes.
