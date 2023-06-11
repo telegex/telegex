@@ -3,8 +3,6 @@ defmodule EchoBot.HookHandler do
 
   use Telegex.Hook.Handler
 
-  alias EchoBot.Consumer
-
   @impl true
   def on_init do
     env_config = Application.get_env(:echo_bot, EchoBot.HookHandler)
@@ -19,7 +17,7 @@ defmodule EchoBot.HookHandler do
 
   @impl true
   def on_update(update) do
-    Consumer.consume(update)
+    EchoBot.Dispatcher.dispatch(update)
 
     :ok
   end
