@@ -6,8 +6,6 @@ defmodule Telegex.Caller.Adapter.Finch do
   @type req_resp :: Finch.Response.t()
   @type req_error :: %{reason: atom}
 
-  alias Multipart.Part
-
   @impl true
   def call(method, params, opts) do
     url = build_url(method)
@@ -59,7 +57,7 @@ defmodule Telegex.Caller.Adapter.Finch do
   defp try_build_multipart(params, attachment_fields),
     do: _try_build_multipart(params, attachment_fields)
 
-  defp _try_build_multipart(params, attachment_fields, i \\ 0, multipart \\ Multipart.new()) do
+  defp _try_build_multipart(params, attachment_fields, i \\ 0, multipart \\ new_multipart()) do
     field = Enum.at(attachment_fields, i)
     value = Keyword.get(params, field)
 
@@ -71,9 +69,9 @@ defmodule Telegex.Caller.Adapter.Finch do
       is_nil(field) ->
         multipart = add_other_param_parts(multipart, Keyword.drop(params, attachment_fields))
 
-        body_stream = Multipart.body_stream(multipart)
-        content_length = Multipart.content_length(multipart)
-        content_type = Multipart.content_type(multipart, "multipart/form-data")
+        body_stream = multipart_body_stream(multipart)
+        content_length = multipart_content_length(multipart)
+        content_type = multipart_content_type(multipart, "multipart/form-data")
 
         headers = [{"Content-Type", content_type}, {"Content-Length", to_string(content_length)}]
 
@@ -84,8 +82,8 @@ defmodule Telegex.Caller.Adapter.Finch do
 
         multipart =
           multipart
-          |> Multipart.add_part(Part.file_field(value, fname))
-          |> Multipart.add_part(Part.text_field("attach://#{fname}", field))
+          |> add_part(file_field_part(value, fname))
+          |> add_part(text_field_part("attach://#{fname}", field))
 
         _try_build_multipart(params, attachment_fields, i + 1, multipart)
 
@@ -100,14 +98,42 @@ defmodule Telegex.Caller.Adapter.Finch do
     Enum.reduce(without_attachments_params, multipart, fn {key, value}, updated_multipart ->
       cond do
         is_map(value) ->
-          Multipart.add_part(updated_multipart, Part.text_field(Jason.encode!(value), key))
+          add_part(updated_multipart, text_field_part(Jason.encode!(value), key))
 
         is_binary(value) ->
-          Multipart.add_part(updated_multipart, Part.text_field(value, key))
+          add_part(updated_multipart, text_field_part(value, key))
 
         true ->
-          Multipart.add_part(updated_multipart, Part.text_field(to_string(value), key))
+          add_part(updated_multipart, text_field_part(to_string(value), key))
       end
     end)
+  end
+
+  defp new_multipart() do
+    apply(Multipart, :new, [])
+  end
+
+  defp multipart_body_stream(multipart) do
+    apply(Multipart, :body_stream, [multipart])
+  end
+
+  defp multipart_content_length(multipart) do
+    apply(Multipart, :content_length, [multipart])
+  end
+
+  defp multipart_content_type(multipart, content_type) do
+    apply(Multipart, :content_type, [multipart, content_type])
+  end
+
+  defp add_part(multipart, part) do
+    apply(Multipart, :add_part, [multipart, part])
+  end
+
+  defp text_field_part(value, name) do
+    apply(Multipart.Part, :text_field, [value, name])
+  end
+
+  defp file_field_part(path, name) do
+    apply(Multipart.Part, :file_field, [path, name])
   end
 end
