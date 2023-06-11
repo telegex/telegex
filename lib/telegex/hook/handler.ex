@@ -1,9 +1,9 @@
 defmodule Telegex.Hook.Handler do
   @moduledoc """
-  Generate your webhook handler, which includes a supervisor and a Plug-based child.
+  Generate your webhook handler, which includes a supervisor with a Plug-based child.
   """
 
-  @type handle_result :: :ok | map
+  @type handle_result :: :ok | :error | map
 
   defmacro __using__(_) do
     quote do
@@ -16,7 +16,7 @@ defmodule Telegex.Hook.Handler do
       require Logger
 
       def start_link(_) do
-        config = on_init()
+        config = on_boot()
 
         config =
           if config.on_update do
@@ -29,7 +29,7 @@ defmodule Telegex.Hook.Handler do
           Adapter.impl().child_spec(config)
         ]
 
-        opts = [strategy: :one_for_one, name: __MODULE__]
+        opts = [strategy: :one_for_one, name: unquote(__CALLER__.module).Supervisor]
         Supervisor.start_link(children, opts)
       end
 
@@ -39,7 +39,7 @@ defmodule Telegex.Hook.Handler do
       end
 
       @impl unquote(__MODULE__)
-      def on_init, do: %Telegex.Hook.Config{}
+      def on_boot, do: %Telegex.Hook.Config{}
 
       @impl unquote(__MODULE__)
       def on_update(_update) do
@@ -48,10 +48,10 @@ defmodule Telegex.Hook.Handler do
         )
       end
 
-      defoverridable on_init: 0, on_update: 1
+      defoverridable on_boot: 0, on_update: 1
     end
   end
 
-  @callback on_init :: Telegex.Hook.Config.t()
+  @callback on_boot :: Telegex.Hook.Config.t()
   @callback on_update(Telegex.Type.Update.t()) :: handle_result
 end

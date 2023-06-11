@@ -9,7 +9,7 @@ defmodule Telegex.Hook.Adapter do
     end
   end
 
-  @callback child_spec(Telegex.Hook.Config.t()) :: tuple
+  @callback child_spec(config :: Telegex.Hook.Config.t()) :: tuple
 
   def impl, do: Module.concat(__MODULE__, env_config() || Bandit)
 
