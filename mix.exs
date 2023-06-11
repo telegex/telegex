@@ -1,7 +1,7 @@
 defmodule Telegex.MixProject do
   use Mix.Project
 
-  @version "1.0.0-rc.8-dev"
+  @version "1.0.0-rc.8"
   @description "A Telegram bot framework, with its client-side based on data and code generation, boasts unparalleled adaptation speed and correctness for new versions."
 
   def project do
