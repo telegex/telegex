@@ -17,7 +17,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.7"},
+    {:telegex, "~> 1.0.0-rc.8"},
   ]
 end
 ```
@@ -59,7 +59,7 @@ config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 
 Don't have a client library you use? Tell me in issues!
 
-## Usage
+## API call
 
 All Bot APIs are located under the `Telegex` module, and these APIs fully comply with the required and optional parameters in the documentation, returning specific types (struct rather than map).
 
@@ -150,6 +150,46 @@ iex> Telegex.send_message -1001486769003, "Hello!"
  }}
 ```
 
+## Polling mode
+
+Polling is a simple and effective pattern that ensures messages within the same group arrive in order. Although it may not be the fastest, it is simple and reliable.
+
+To work in polling mode:
+
+1. Create a new module, like `YourProject.PollingHandler`
+1. `Use Telegex.Polling.Handler`
+1. Implement `on_boot/0` and `on_update/1` callback functions
+1. Add your module to the supervision tree
+
+Polling handler example:
+
+```elixir
+defmodule YourProject.PollingHandler do
+  @moduledoc false
+
+  use Telegex.Polling.Handler
+
+  @impl true
+  def on_boot do
+    # delete any potential webhook
+    {:ok, _} = Telegex.delete_webhook()
+    # create configuration (can be empty, because there are default values)
+    %Telegex.Polling.Config{}
+    # you must return the `Telegex.Polling.Config` struct ↑
+  end
+
+  @impl true
+  def on_update(update) do
+    # consume the update
+
+    :ok
+  end
+end
+
+```
+
+**Don't forget to add your module to the supervision tree.**
+
 ## Webhook mode
 
 Add [`plug`](https://hex.pm/packages/plug) and [`remote_ip`](https://hex.pm/packages/remote_ip) to your application's deps because they are required for webhook mode.
@@ -177,7 +217,7 @@ To work in webhook mode:
 1. Implement `on_boot/0` and `on_update/1` callback functions
 1. Add your module to the supervision tree
 
-Full example:
+Hook handler example:
 
 ```elixir
 defmodule YourProject.HookHandler do
@@ -204,10 +244,30 @@ defmodule YourProject.HookHandler do
     :ok
   end
 end
-
 ```
 
 **Don't forget to add your module to the supervision tree.**
+
+## Compatibility mode
+
+You can create handlers for two modes and determine which one to start based on the configuration.
+
+```elixir
+updates_fetcher =
+  if Application.get_env(:your_porject, :work_mode) == :webhook do
+    YourProject.HookHandler
+  else
+    YourProject.PollingHandler
+  end
+
+children = [
+  # omit other children
+  updates_fetcher
+]
+
+opts = [strategy: :one_for_one, name: EchoBot.Supervisor]
+Supervisor.start_link(children, opts)
+```
 
 ## The end
 
