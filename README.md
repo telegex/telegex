@@ -261,7 +261,7 @@ children = [
   updates_fetcher
 ]
 
-opts = [strategy: :one_for_one, name: EchoBot.Supervisor]
+opts = [strategy: :one_for_one, name: YourProject.Supervisor]
 Supervisor.start_link(children, opts)
 ```
 
