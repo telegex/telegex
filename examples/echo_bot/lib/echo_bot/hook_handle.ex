@@ -29,8 +29,6 @@ defmodule EchoBot.HookHandler do
 
   @impl true
   def on_update(update) do
-    EchoBot.Dispatcher.dispatch(update)
-
-    :ok
+    EchoBot.ChainHandler.call(update, %EchoBot.ChainContext{})
   end
 end
