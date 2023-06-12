@@ -3,6 +3,8 @@ defmodule Telegex.Polling.Handler do
   Generate your polling handler, which includes a supervisor with poller and consumer children.
   """
 
+  require Logger
+
   defmacro __using__(_) do
     quote do
       @behaviour unquote(__MODULE__)
@@ -145,15 +147,44 @@ defmodule Telegex.Polling.Handler do
         def receive(update) when is_struct(update, Telegex.Type.Update) do
           DynamicSupervisor.start_child(
             __MODULE__,
-            {Task, fn -> unquote(__CALLER__.module).on_update(update) end}
+            {Task, fn -> consume(update) end}
           )
+        end
+
+        defp consume(update) do
+          case unquote(__CALLER__.module).on_update(update) do
+            {:done, %{payload: payload}} ->
+              unquote(__MODULE__).handle_payload(payload)
+
+            _ ->
+              :ok
+          end
         end
       end
     end
   end
 
+  def handle_payload(%{method: method} = payload) do
+    params = Map.drop(payload, [:method])
+
+    case Telegex.Caller.call(method, Enum.into(params, [])) do
+      {:error, error} ->
+        # 根据 done 的荷载调用失败
+        Logger.error(
+          "Call the method fails with a payload: #{inspect(reason: error, payload: payload)}"
+        )
+
+      _ ->
+        :ok
+    end
+  end
+
+  def handle_payload(payload) do
+    Logger.warning("The payload is not a valid method call: #{inspect(payload: payload)}")
+  end
+
   @callback on_boot :: Telegex.Polling.Config.t()
   @callback on_init(init_arg :: map) :: :ok
-  @callback on_update(update :: Telegex.Type.Update.t()) :: :ok
+  @callback on_update(update :: Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
   @callback on_failure(reason :: Telegex.Type.error()) :: no_return
 end

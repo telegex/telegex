@@ -47,13 +47,15 @@ if Code.ensure_loaded?(Plug) do
           # 没有通过 secret_token 验证，响应无意义数据
           Logger.warning("unauthorized webhook request from #{remote_ip(conn)}")
 
-          %{}
+          :unauthorized
         end
 
-      if is_map(r) do
-        resp_json(conn, r)
-      else
-        resp_json(conn, %{})
+      case r do
+        {:done, %{payload: payload}} ->
+          resp_json(conn, payload)
+
+        _ ->
+          resp_json(conn, %{})
       end
     end
 

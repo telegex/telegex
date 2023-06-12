@@ -3,8 +3,6 @@ defmodule Telegex.Hook.Handler do
   Generate your webhook handler, which includes a supervisor with a Plug-based child.
   """
 
-  @type handle_result :: :ok | :error | map
-
   defmacro __using__(_) do
     quote do
       @behaviour unquote(__MODULE__)
@@ -53,5 +51,5 @@ defmodule Telegex.Hook.Handler do
   end
 
   @callback on_boot :: Telegex.Hook.Config.t()
-  @callback on_update(Telegex.Type.Update.t()) :: handle_result
+  @callback on_update(Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
 end
