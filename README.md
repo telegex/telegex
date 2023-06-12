@@ -1,5 +1,7 @@
 # Telegex
 
+![example workflow](https://github.com/telegex/telegex/actions/workflows/elixir.yml/badge.svg?branch=refactoring/1.0)
+
 A new Telegram bot framework, which is also a perfect Bot API client library.
 
 _😋 Three years ago I created this project, and three years later I redesigned it._
