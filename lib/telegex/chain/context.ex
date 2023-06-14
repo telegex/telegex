@@ -28,7 +28,7 @@ defmodule Telegex.Chain.Context do
         end
       end
 
-    ast |> Macro.to_string() |> IO.puts()
+    # ast |> Macro.to_string() |> IO.puts()
 
     ast
   end
