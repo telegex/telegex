@@ -3,7 +3,7 @@ defmodule Telegex.Chain do
 
   alias Telegex.Type.Update
 
-  @type state :: :ignored | :stop | :done
+  @type state :: :ok | :stop | :done
   @type payload :: %{method: String.t()}
   @type context :: %{payload: payload | nil, reason: any}
   @type result :: {state, context}

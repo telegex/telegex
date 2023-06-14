@@ -2,11 +2,10 @@ defmodule Telegex.Chain.Handler do
   @moduledoc false
 
   # 以管道的形式调用多个 chain
-  def call(chains, update, context \\ %{})
-      when is_list(chains) and is_struct(update, Telegex.Type.Update) and is_map(context) do
+  def call(chains, update, context \\ %{}) when is_list(chains) and is_map(context) do
     call_chain = fn chain, {_state, context} ->
       case chain.call(update, context) do
-        {:ignored, context} -> {:cont, {:ignored, context}}
+        {:ok, context} -> {:cont, {:ok, context}}
         {:stop, context} -> {:halt, {:stop, context}}
         {:done, context} -> {:halt, {:done, context}}
       end
@@ -17,7 +16,7 @@ defmodule Telegex.Chain.Handler do
 
   defmacro __using__(_) do
     quote do
-      import unquote(__MODULE__)
+      import unquote(__MODULE__), only: [pipeline: 1]
 
       require unquote(__MODULE__)
     end
