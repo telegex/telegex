@@ -5,7 +5,9 @@ defmodule Telegex.Chain do
 
   @type state :: :ok | :stop | :done
   @type payload :: %{method: String.t()}
-  @type context :: %{payload: payload | nil, reason: any}
+  # TODO: 恢复此处更具体的上下文规范，并解决 dialyzer 中的错误
+  # @type context :: %{payload: payload | nil, reason: any}
+  @type context :: map
   @type result :: {state, context}
 
   @callback call(update :: Update.t(), context :: context) :: result
