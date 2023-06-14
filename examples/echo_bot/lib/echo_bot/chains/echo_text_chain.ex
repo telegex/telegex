@@ -5,7 +5,7 @@ defmodule EchoBot.EchoTextChain do
 
   @impl true
   def call(%{message: %{text: text}} = _update, context) when text == nil do
-    {:ignore, context}
+    {:ignored, context}
   end
 
   @impl true

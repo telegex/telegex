@@ -6,7 +6,7 @@ defmodule Telegex.Chain.Handler do
       when is_list(chains) and is_struct(update, Telegex.Type.Update) and is_map(context) do
     call_chain = fn chain, {_state, context} ->
       case chain.call(update, context) do
-        {:ignore, context} -> {:cont, {:ignore, context}}
+        {:ignored, context} -> {:cont, {:ignored, context}}
         {:stop, context} -> {:halt, {:stop, context}}
         {:done, context} -> {:halt, {:done, context}}
       end
