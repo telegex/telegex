@@ -45,9 +45,7 @@ defmodule Telegex.Polling.Handler do
 
       @impl unquote(__MODULE__)
       def on_failure(reason) do
-        Logger.error(
-          "Polling error occurred, implementing `on_failure/1` can capture this error: #{inspect(reason)}"
-        )
+        Logger.error("Polling error occurred, use on_failure/1 to capture it: #{inspect(reason)}")
       end
 
       defoverridable on_boot: 0, on_init: 1, on_update: 1, on_failure: 1
