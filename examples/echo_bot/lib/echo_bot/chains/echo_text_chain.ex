@@ -1,15 +1,18 @@
 defmodule EchoBot.EchoTextChain do
   @moduledoc false
 
-  use Telegex.Chain
+  use Telegex.Chain, :message
 
   @impl true
-  def call(%{message: %{text: text}} = _update, context) when text == nil do
-    {:ok, context}
+  def match?(%{text: text} = _message, _context) when is_nil(text) do
+    false
   end
 
   @impl true
-  def call(%{message: %{text: text, chat: chat}} = _update, context) do
+  def match?(_message, _context), do: true
+
+  @impl true
+  def handle(%{chat: chat, text: text} = _update, context) do
     context = %{
       context
       | payload: %{

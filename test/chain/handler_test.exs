@@ -16,7 +16,7 @@ defmodule Telegex.Chain.HandlerTest do
     use Telegex.Chain
 
     @impl true
-    def call(%{message: message} = _update, state) do
+    def handle(%{message: message} = _update, state) do
       case message do
         %{chat: chat} -> {:ok, %{state | chat_id: chat.id}}
         _ -> {:ok, state}
@@ -24,7 +24,7 @@ defmodule Telegex.Chain.HandlerTest do
     end
 
     @impl true
-    def call(_update, state) do
+    def handle(_update, state) do
       {:ok, state}
     end
   end
@@ -33,7 +33,7 @@ defmodule Telegex.Chain.HandlerTest do
     use Telegex.Chain
 
     @impl true
-    def call(%{callback_query: callback_query} = _update, state) do
+    def handle(%{callback_query: callback_query} = _update, state) do
       case callback_query.message do
         %{from: user} -> {:ok, %{state | user_id: user.id}}
         _ -> {:ok, state}
@@ -41,7 +41,7 @@ defmodule Telegex.Chain.HandlerTest do
     end
 
     @impl true
-    def call(_update, state) do
+    def handle(_update, state) do
       {:ok, state}
     end
   end
@@ -50,21 +50,21 @@ defmodule Telegex.Chain.HandlerTest do
     use Telegex.Chain
 
     @impl true
-    def call(_update, %{chat_id: chat_id} = state) when chat_id != nil do
+    def handle(_update, %{chat_id: chat_id} = state) when chat_id != nil do
       payload = %{method: "sendMessage", params: %{chat_id: state.chat_id, text: "Hello"}}
 
       {:done, %{state | payload: payload}}
     end
 
     @impl true
-    def call(_update, state) do
+    def handle(_update, state) do
       {:ok, state}
     end
   end
 
   pipeline([InitSendSourceChain, InitCallSourceChain, SendHelloChain])
 
-  test "call/2" do
+  test "handle/2" do
     r = call(%{message: %{chat: %{id: 10001}}}, %__MODULE__.Context{})
 
     assert {:done,
