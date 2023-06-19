@@ -4,7 +4,8 @@ defmodule EchoBot.EchoTextChain do
   use Telegex.Chain, :message
 
   @impl true
-  def match?(%{text: text} = _message, _context) when is_nil(text) do
+  def match?(%{text: text, chat: %{type: chat_type}} = _message, _context)
+      when is_nil(text) or chat_type != "private" do
     false
   end
 

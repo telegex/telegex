@@ -4,6 +4,8 @@ defmodule EchoBot.ChainHandler do
   use Telegex.Chain.Handler
 
   pipeline([
+    EchoBot.RespStartChain,
+    EchoBot.RespPingChain,
     EchoBot.EchoTextChain
   ])
 end

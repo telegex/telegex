@@ -5,7 +5,7 @@ defmodule EchoBot.HookHandler do
 
   @impl true
   def on_boot do
-    {:ok, user} = Telegex.get_me()
+    {:ok, user} = Telegex.Instance.get_me()
     # read some parameters from your env config
     env_config = Application.get_env(:echo_bot, EchoBot.HookHandler)
     secret_token = "dev-secret-token"
@@ -29,6 +29,6 @@ defmodule EchoBot.HookHandler do
 
   @impl true
   def on_update(update) do
-    EchoBot.ChainHandler.call(update, %EchoBot.ChainContext{})
+    EchoBot.ChainHandler.call(update, %EchoBot.ChainContext{bot: Telegex.Instance.me()})
   end
 end
