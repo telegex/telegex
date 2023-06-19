@@ -14,7 +14,23 @@ defmodule Telegex.Chain do
   @callback match?(data :: any, context :: context) :: boolean
   @callback handle(data :: any, context :: context) :: result
 
-  defmacro __using__(update_field) when update_field in [:callback_query, :message] do
+  defmacro __using__(update_field)
+           when update_field in [
+                  :callback_query,
+                  :channel_post,
+                  :chat_join_request,
+                  :chat_member,
+                  :chosen_inline_result,
+                  :edited_channel_post,
+                  :edited_message,
+                  :inline_query,
+                  :message,
+                  :my_chat_member,
+                  :poll,
+                  :poll_answer,
+                  :pre_checkout_query,
+                  :shipping_query
+                ] do
     quote do
       @behaviour unquote(__MODULE__)
 
@@ -43,6 +59,30 @@ defmodule Telegex.Chain do
         true
       end
 
+      defoverridable call: 2, match?: 2
+    end
+  end
+
+  defmacro __using__({:command, command_name}) do
+    quote do
+      use unquote(__MODULE__), :message
+
+      @command "/#{to_string(unquote(command_name))}"
+
+      @impl true
+      def match?(%{text: @command, chat: %{type: "private"}} = message, context) do
+        true
+      end
+
+      @impl true
+      def match?(%{text: text, chat: %{type: chat_type}} = message, %{bot: bot} = context)
+          when bot != nil and text != nil and chat_type in ["group", "supergroup"] do
+        text == "#{@command}@#{bot.username}"
+      end
+
+      @impl true
+      def match?(_message, _context), do: false
+
       defoverridable match?: 2
     end
   end
@@ -63,7 +103,7 @@ defmodule Telegex.Chain do
       @impl true
       def match?(_update, _context), do: true
 
-      defoverridable match?: 2
+      defoverridable call: 2, match?: 2
     end
   end
 end
