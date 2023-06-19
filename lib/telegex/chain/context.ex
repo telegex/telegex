@@ -9,6 +9,7 @@ defmodule Telegex.Chain.Context do
     end
   end
 
+  @bot_field_spec quote do: {:bot, Telegex.Type.User.t(), enforce: true}
   @payload_field_spec quote do: {:payload, %{method: String.t()}}
   @reason_field_spec quote do: {:reason, any}
 
@@ -17,7 +18,11 @@ defmodule Telegex.Chain.Context do
 
     fields_ast =
       fields_ast ++
-        [gen_field_spec_ast(@payload_field_spec), gen_field_spec_ast(@reason_field_spec)]
+        [
+          gen_field_spec_ast(@bot_field_spec),
+          gen_field_spec_ast(@payload_field_spec),
+          gen_field_spec_ast(@reason_field_spec)
+        ]
 
     ast =
       quote do

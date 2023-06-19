@@ -15,6 +15,9 @@ defmodule Telegex.Application do
       [
         # Starts a worker by calling: Telegex.Worker.start_link(arg)
         # {Telegex.Worker, arg}
+
+        # Instance information cache
+        Telegex.Instance
       ]
       |> serve_children({Finch, name: Telegex.Finch}, finch_serve?)
 
