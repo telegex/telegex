@@ -184,14 +184,14 @@ defmodule Telegex.TypeDefiner do
   defmacro defunion(name, description, types, opts \\ []) do
     types_ast = Enum.map(types, fn type -> field_type_ast(type) end)
 
-    discriminator = Keyword.get(opts, :discriminator, nil)
+    discriminant = Keyword.get(opts, :discriminant, nil)
 
     quote do
       defmodule __MODULE__.unquote(name) do
         unquote(def_moduledoc_ast(description))
 
         def __meta__, do: :union
-        def __discriminator__, do: unquote(discriminator)
+        def __discriminant__, do: unquote(discriminant)
 
         @type t :: unquote(types_to_union(types_ast))
       end

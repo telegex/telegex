@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Gen.Code do
           name: ut.name,
           description: ut.description,
           types: build_utypes_string(ut.types),
-          discriminator: build_discriminator_string(ut.types, doc_json.types)
+          discriminant: build_discriminant_string(ut.types, doc_json.types)
         }
       end)
 
@@ -162,26 +162,26 @@ defmodule Mix.Tasks.Gen.Code do
     build_ftype(type_string)
   end
 
-  @spec build_discriminator_string(list, list) :: String.t()
-  defp build_discriminator_string(union_types, types) do
-    discriminator =
-      Enum.reduce(union_types, %Discriminator{mapping: %{}}, fn tname, discriminator ->
+  @spec build_discriminant_string(list, list) :: String.t()
+  defp build_discriminant_string(union_types, types) do
+    discriminant =
+      Enum.reduce(union_types, %Discriminator{mapping: %{}}, fn tname, discriminant ->
         case find_type(tname, types) do
           %{fixed: fixed} ->
-            mapping = discriminator.mapping
+            mapping = discriminant.mapping
 
             pointing_types = Map.get(mapping, fixed.value, []) ++ [build_ftype(tname)]
             mapping = Map.put(mapping, fixed.value, pointing_types)
 
-            %{discriminator | field: String.to_atom(fixed.field), mapping: mapping}
+            %{discriminant | field: String.to_atom(fixed.field), mapping: mapping}
 
           _ ->
-            discriminator
+            discriminant
         end
       end)
 
-    if discriminator.field do
-      [discriminator: Map.from_struct(discriminator)]
+    if discriminant.field do
+      [discriminant: Map.from_struct(discriminant)]
     else
       []
     end

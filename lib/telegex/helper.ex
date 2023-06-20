@@ -39,19 +39,19 @@ defmodule Telegex.Helper do
     _typedmap(type.__meta__(), map, type)
   end
 
-  # 联合类型根据 discriminator 中字段值执行转换
+  # 联合类型根据 discriminant 中字段值执行转换
   defp _typedmap(:union, map, type) do
-    case type.__discriminator__() do
+    case type.__discriminant__() do
       nil ->
         map
 
-      discriminator ->
-        value = map[discriminator.field]
+      discriminant ->
+        value = map[discriminant.field]
 
-        case discriminator.mapping[value] do
+        case discriminant.mapping[value] do
           nil ->
             Logger.warning(
-              "this may be caused by changes to the Telegram Bot API or a bug, pointing to an unknown type: #{inspect(field: discriminator.field, value: value)}"
+              "this may be caused by changes to the Telegram Bot API or a bug, pointing to an unknown type: #{inspect(field: discriminant.field, value: value)}"
             )
 
             map

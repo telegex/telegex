@@ -16,7 +16,7 @@ defmodule Telegex.Type do
       Telegex.Type.ChatMemberLeft,
       Telegex.Type.ChatMemberBanned
     ],
-    discriminator: %{
+    discriminant: %{
       field: :status,
       mapping: %{
         "administrator" => [Telegex.Type.ChatMemberAdministrator],
@@ -41,7 +41,7 @@ defmodule Telegex.Type do
       Telegex.Type.BotCommandScopeChatAdministrators,
       Telegex.Type.BotCommandScopeChatMember
     ],
-    discriminator: %{
+    discriminant: %{
       field: :type,
       mapping: %{
         "all_chat_administrators" => [Telegex.Type.BotCommandScopeAllChatAdministrators],
@@ -63,7 +63,7 @@ defmodule Telegex.Type do
       Telegex.Type.MenuButtonWebApp,
       Telegex.Type.MenuButtonDefault
     ],
-    discriminator: %{
+    discriminant: %{
       field: :type,
       mapping: %{
         "commands" => [Telegex.Type.MenuButtonCommands],
@@ -83,7 +83,7 @@ defmodule Telegex.Type do
       Telegex.Type.InputMediaPhoto,
       Telegex.Type.InputMediaVideo
     ],
-    discriminator: %{
+    discriminant: %{
       field: :type,
       mapping: %{
         "animation" => [Telegex.Type.InputMediaAnimation],
@@ -120,7 +120,7 @@ defmodule Telegex.Type do
       Telegex.Type.InlineQueryResultVideo,
       Telegex.Type.InlineQueryResultVoice
     ],
-    discriminator: %{
+    discriminant: %{
       field: :type,
       mapping: %{
         "article" => [Telegex.Type.InlineQueryResultArticle],
@@ -185,7 +185,7 @@ defmodule Telegex.Type do
       Telegex.Type.PassportElementErrorTranslationFiles,
       Telegex.Type.PassportElementErrorUnspecified
     ],
-    discriminator: %{
+    discriminant: %{
       field: :source,
       mapping: %{
         "data" => [Telegex.Type.PassportElementErrorDataField],
