@@ -87,6 +87,24 @@ defmodule Telegex.Chain do
     end
   end
 
+  defmacro __using__({:callback_query, prefix: prefix}) do
+    quote do
+      use unquote(__MODULE__), :callback_query
+
+      @prefix to_string(unquote(prefix))
+
+      @impl true
+      def match?(%{data: <<@prefix <> _rest::binary>>} = _callback_query, _context) do
+        true
+      end
+
+      @impl true
+      def match?(_callback_query, _context), do: false
+
+      defoverridable match?: 2
+    end
+  end
+
   defmacro __using__(_) do
     quote do
       @behaviour unquote(__MODULE__)
