@@ -6,6 +6,7 @@ defmodule EchoBot.ChainHandler do
   pipeline([
     EchoBot.RespStartChain,
     EchoBot.RespPingChain,
-    EchoBot.EchoTextChain
+    EchoBot.EchoTextChain,
+    EchoBot.CallHelloChain
   ])
 end
