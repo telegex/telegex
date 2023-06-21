@@ -1,6 +1,10 @@
 # Telegex
 
-![example workflow](https://github.com/telegex/telegex/actions/workflows/elixir.yml/badge.svg?branch=refactoring/1.0)
+[![.github/workflows/elixir.yml](https://github.com/telegex/telegex/actions/workflows/elixir.yml/badge.svg?branch=master)](https://github.com/telegex/telegex/actions/workflows/elixir.yml)
+[![Module Version](https://img.shields.io/hexpm/v/telegex.svg)](https://hex.pm/packages/telegex)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/telegex/)
+[![Total Download](https://img.shields.io/hexpm/dt/telegex.svg)](https://hex.pm/packages/telegex)
+[![Last Updated](https://img.shields.io/github/last-commit/telegex/telegex.svg)](https://github.com/telegex/telegex/commits/master)
 
 A new Telegram bot framework, which is also a perfect Bot API client library.
 
