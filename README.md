@@ -19,12 +19,10 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.0.0-rc.10"},
+    {:telegex, "~> 1.0.0"},
   ]
 end
 ```
-
->Note: `InputFile` with local file paths is not supported in the structured type of API parameters in version `1.0.0-rc.*`. Please use the file ID instead. This is temporary, and local file input will be supported upon the release of version 1.0.
 
 ## Configuration
 
@@ -56,10 +54,8 @@ config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
-- `Finch`: [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart)
-- `HTTPoison`: [`httpoison`](https://hex.pm/packages/httpoison) (⚠️ sending local files is not supported, temporarily)
-
-Don't have a client library you use? Tell me in issues!
+- `Finch`: [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart) (recommend)
+- `HTTPoison`: [`httpoison`](https://hex.pm/packages/httpoison) (⚠️ sending local files is not supported)
 
 ## API call
 
@@ -253,7 +249,7 @@ end
 You can create handlers for two modes and determine which one to start based on the configuration.
 
 ```elixir
-updates_fetcher =
+updates_handler =
   if Application.get_env(:your_porject, :work_mode) == :webhook do
     YourProject.HookHandler
   else
@@ -262,7 +258,7 @@ updates_fetcher =
 
 children = [
   # omit other children
-  updates_fetcher
+  updates_handler
 ]
 
 opts = [strategy: :one_for_one, name: YourProject.Supervisor]
