@@ -1,5 +1,7 @@
 # Telegex
 
+**⚠️ This branch will be deleted soon and is no longer maintained, please use the refactored [1.0](https://github.com/telegex/telegex) version.**
+
 This library is a client implementation of the official bot API, without any encapsulation. Original flavor!
 
 ## A little more cautious 😝
