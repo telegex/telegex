@@ -7,9 +7,9 @@ name: Elixir CI
 
 on:
   push:
-    branches: ["refactoring/1.0"]
+    branches: ["master"]
   pull_request:
-    branches: ["refactoring/1.0"]
+    branches: ["master"]
 
 permissions:
   contents: read
