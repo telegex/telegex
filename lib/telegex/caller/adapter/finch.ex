@@ -61,13 +61,18 @@ defmodule Telegex.Caller.Adapter.Finch do
     field = Enum.at(attachment_fields, i)
     value = Keyword.get(params, field)
 
+    not_exists_field? = is_nil(field)
+
     cond do
-      is_nil(field) && Enum.empty?(multipart.parts) ->
+      not_exists_field? && Enum.empty?(multipart.parts) ->
         # 如果返回时发现没有添加任何 part，则返回 :none
         :none
 
-      is_nil(field) ->
-        multipart = add_other_param_parts(multipart, Keyword.drop(params, attachment_fields))
+      not_exists_field? ->
+        top_level_attachments =
+          Enum.filter(attachment_fields, fn field -> is_binary(Keyword.get(params, field)) end)
+
+        multipart = add_other_param_parts(multipart, Keyword.drop(params, top_level_attachments))
 
         body_stream = multipart_body_stream(multipart)
         content_length = multipart_content_length(multipart)
@@ -77,27 +82,87 @@ defmodule Telegex.Caller.Adapter.Finch do
 
         {headers, body_stream}
 
-      is_binary(value) && File.exists?(value) ->
-        fname = Path.basename(value)
-
-        multipart =
-          multipart
-          |> add_part(file_field_part(value, fname))
-          |> add_part(text_field_part("attach://#{fname}", field))
-
-        _try_build_multipart(params, attachment_fields, i + 1, multipart)
-
       true ->
-        # 达到此处通常表示字段值不是字符串，或不是本地文件
-        # TODO: 添加对结构类型附件的支持（结构中包含了一个或多个附件字段）
+        {multipart, params} = attach_param(field, value, multipart, params)
+
         _try_build_multipart(params, attachment_fields, i + 1, multipart)
+    end
+  end
+
+  @spec attach_param(atom, String.t() | map | list | nil, Multipart.t(), keyword | map) ::
+          {Multipart.t(), keyword | map}
+
+  def attach_param(_field, nil, multipart, params), do: {multipart, params}
+
+  def attach_param(field, value, multipart, params) when is_binary(value) do
+    fname = Path.basename(value)
+    attach_url = "attach://#{fname}"
+
+    top_level_param? = !is_map(params)
+
+    multipart = add_part(multipart, file_field_part(value, fname))
+
+    multipart =
+      if top_level_param? do
+        # 顶级附件参数，需附加 text 字段
+        add_part(multipart, text_field_part(attach_url, field))
+      else
+        # 非顶级附件参数，不附加 text 字段
+        multipart
+      end
+
+    params =
+      if top_level_param? do
+        Keyword.put(params, field, attach_url)
+      else
+        Map.put(params, field, attach_url)
+      end
+
+    {multipart, params}
+  end
+
+  def attach_param(field, value, multipart, params) when is_map(value) do
+    # 将结构类型的参数值自身作为参数，并获得重写后的结构参数
+    {multipart, value} = attach_struct(value, multipart)
+    # 重写参数值
+    params = Keyword.put(params, field, value)
+
+    {multipart, params}
+  end
+
+  def attach_param(field, value, multipart, params) when is_list(value) do
+    {multipart, value} =
+      Enum.reduce(value, {multipart, []}, fn subv, {updated_multipart, subvs} ->
+        {updated_multipart, subv} = attach_struct(subv, updated_multipart)
+
+        {updated_multipart, subvs ++ [subv]}
+      end)
+
+    # 重写字段的值
+    params = Keyword.put(params, field, value)
+
+    {multipart, params}
+  end
+
+  defp attach_struct(value, multipart) do
+    if function_exported?(value.__struct__, :__attachments__, 0) do
+      attachment_fields = value.__struct__.__attachments__()
+
+      attach_fun = fn field, {updated_multipart, updated_params} ->
+        attach_param(field, Map.get(value, field), updated_multipart, updated_params)
+      end
+
+      # 将结构类型的参数值自身作为参数，并获得重写后的结构参数
+      Enum.reduce(attachment_fields, {multipart, value}, attach_fun)
+    else
+      {multipart, value}
     end
   end
 
   defp add_other_param_parts(multipart, without_attachments_params) do
     Enum.reduce(without_attachments_params, multipart, fn {key, value}, updated_multipart ->
       cond do
-        is_map(value) ->
+        is_map(value) or is_list(value) ->
           add_part(updated_multipart, text_field_part(Jason.encode!(value), key))
 
         is_binary(value) ->

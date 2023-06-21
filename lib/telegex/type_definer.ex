@@ -126,6 +126,7 @@ defmodule Telegex.TypeDefiner do
 
     fields_ast = Enum.map(quoted_fields, &gen_field_ast/1)
     field_names = Enum.map(quoted_fields, fn f -> f.name end)
+    attachment_field_names = build_attachment_field_names(quoted_fields)
 
     references =
       if Enum.empty?(quoted_fields) do
@@ -146,6 +147,8 @@ defmodule Telegex.TypeDefiner do
         def __references__, do: unquote(references)
         # 存储所有字段的列表
         def __keys__, do: unquote(field_names)
+        # 存储附件类型的字段列表
+        def __attachments__, do: unquote(attachment_field_names)
 
         typedstruct do
           unquote(fields_ast)
@@ -180,6 +183,35 @@ defmodule Telegex.TypeDefiner do
   def reference?(type) when is_atom(type) do
     true
   end
+
+  defp build_attachment_field_names(fields) do
+    fields
+    |> Enum.filter(fn f -> attachment_type?(f.type) || attachment_description?(f.description) end)
+    |> Enum.map(fn f -> f.name end)
+  end
+
+  @doc """
+  判断类型是否为附件类型。
+  """
+  def attachment_type?(Telegex.Type.InputFile) do
+    true
+  end
+
+  def attachment_type?(%UnionType{types: types}) do
+    Enum.find(types, &attachment_type?/1) != nil
+  end
+
+  def attachment_type?(%ArrayType{elem_type: type}) do
+    attachment_type?(type)
+  end
+
+  def attachment_type?(_), do: false
+
+  def attachment_description?(<<"File to send. Pass a file_id to send" <> _rest::binary>>) do
+    true
+  end
+
+  def attachment_description?(_), do: false
 
   defmacro defunion(name, description, types, opts \\ []) do
     types_ast = Enum.map(types, fn type -> field_type_ast(type) end)

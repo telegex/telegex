@@ -159,20 +159,25 @@ defmodule Telegex.MethodDefiner do
   end
 
   @spec include_attachment?(TypeDefiner.field_type()) :: boolean
-  defp include_attachment?(%UnionType{types: types}) do
+  def include_attachment?(Telegex.Type.InputFile), do: true
+
+  def include_attachment?(type) when is_atom(type) do
+    Code.ensure_loaded(type)
+
+    if function_exported?(type, :__attachments__, 0) && !Enum.empty?(type.__attachments__()) do
+      true
+    else
+      TypeDefiner.attachment_type?(type)
+    end
+  end
+
+  def include_attachment?(%UnionType{types: types}) do
     Enum.find(types, &include_attachment?/1) != nil
   end
 
-  defp include_attachment?(%ArrayType{elem_type: type}) do
+  def include_attachment?(%ArrayType{elem_type: type}) do
     include_attachment?(type)
   end
-
-  # 理论上需要对其它包含附件字段的结构类型或它们的联合类型返回 true，但目前不支持发送结构类型中包含的附件。
-  defp include_attachment?(Telegex.Type.InputFile) do
-    true
-  end
-
-  defp include_attachment?(_), do: false
 
   defp defident(atom_text), do: {atom_text, [], Elixir}
 
