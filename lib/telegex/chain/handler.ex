@@ -5,7 +5,6 @@ defmodule Telegex.Chain.Handler do
   def call(chains, update, context \\ %{}) when is_list(chains) and is_map(context) do
     call_chain = fn chain, {_state, context} ->
       case chain.call(update, context) do
-        # TODO: 此处添加错误返回值的处理，改为 stop 状态并携带错误信息
         {:ok, context} -> {:cont, {:ok, context}}
         {:stop, context} -> {:halt, {:stop, context}}
         {:done, context} -> {:halt, {:done, context}}

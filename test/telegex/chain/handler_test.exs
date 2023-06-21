@@ -65,27 +65,34 @@ defmodule Telegex.Chain.HandlerTest do
   pipeline([InitSendSourceChain, InitCallSourceChain, SendHelloChain])
 
   test "handle/2" do
+    chat_id = -1_001_486_769_003
     bot = %{username: "telegex_dev_bot"}
 
-    r = call(%{message: %{chat: %{id: 10001}}}, %__MODULE__.Context{bot: bot})
+    r = call(%{message: %{chat: %{id: chat_id}}}, %__MODULE__.Context{bot: bot})
 
     assert {:done,
             %Context{
-              chat_id: 10001,
+              chat_id: chat_id,
               user_id: nil,
               bot: bot,
-              payload: %{params: %{text: "Hello", chat_id: 10001}, method: "sendMessage"},
+              payload: %{
+                params: %{text: "Hello", chat_id: chat_id},
+                method: "sendMessage"
+              },
               reason: nil
             }} == r
 
     bot = %{username: "telegex_dev_bot"}
 
-    r = call(%{callback_query: %{message: %{from: %{id: 10001}}}}, %__MODULE__.Context{bot: bot})
+    r =
+      call(%{callback_query: %{message: %{from: %{id: chat_id}}}}, %__MODULE__.Context{
+        bot: bot
+      })
 
     assert {:ok,
             %Context{
               chat_id: nil,
-              user_id: 10001,
+              user_id: chat_id,
               bot: bot,
               payload: nil,
               reason: nil
