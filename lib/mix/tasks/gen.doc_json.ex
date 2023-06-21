@@ -31,11 +31,7 @@ if Mix.env() in [:dev, :test] do
     end
 
     def run(_args) do
-      # TODO: 将网页下载为一个自定义任务。
-      # {:ok, _} = Application.ensure_all_started(:req)
-      # %{body: body} = Req.get!("https://core.telegram.org/bots/api", @req_options)
-
-      doc_html = File.read!("priv/bots_api_doc.html")
+      doc_html = File.read!("priv/bot_api_doc.html")
 
       {:ok, document} = Floki.parse_document(doc_html)
 
@@ -196,7 +192,7 @@ if Mix.env() in [:dev, :test] do
 
       json = Jason.encode!(doc_map, pretty: true)
 
-      Mix.Generator.create_file("priv/bots_api_doc.json", json, force: true)
+      Mix.Generator.create_file("priv/bot_api_doc.json", json, force: true)
     end
 
     defp parse_sections(nodes, tag, i \\ 0, sections \\ []) do

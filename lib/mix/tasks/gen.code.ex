@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Gen.Code do
   @base_module Telegex.Type
 
   def run(_args) do
-    doc_json = Jason.decode!(File.read!("priv/bots_api_doc.json"), keys: :atoms)
+    doc_json = Jason.decode!(File.read!("priv/bot_api_doc.json"), keys: :atoms)
 
     type_args =
       Enum.map(doc_json.types, fn type ->

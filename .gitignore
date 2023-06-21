@@ -24,6 +24,3 @@ telegex-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
-
-# Waiting for development to be completed before publishing.
-/priv/bots_api_doc.*
