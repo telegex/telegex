@@ -222,7 +222,7 @@ defmodule YourProject.HookHandler do
   @impl true
   def on_boot do
     # read some parameters from your env config
-    env_config = Application.get_env(:your_porject, __MODULE__)
+    env_config = Application.get_env(:your_project, __MODULE__)
     # delete the webhook and set it again
     {:ok, true} = Telegex.delete_webhook()
     # set the webhook (url is required)
@@ -250,7 +250,7 @@ You can create handlers for two modes and determine which one to start based on 
 
 ```elixir
 updates_handler =
-  if Application.get_env(:your_porject, :work_mode) == :webhook do
+  if Application.get_env(:your_project, :work_mode) == :webhook do
     YourProject.HookHandler
   else
     YourProject.PollingHandler
