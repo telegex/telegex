@@ -4,7 +4,7 @@
 
 A new Telegram bot framework, which is also a perfect Bot API client library.
 
-_😋 Three years ago I created this project, and three years later I redesigned it._
+_All API functions, comments, types (structures and specifications) of Telegex are generated from documents. I parse the documents into structured data and publish it on [telegex/api_doc.json](https://github.com/telegex/api_doc.json)._
 
 ## Introduction
 
