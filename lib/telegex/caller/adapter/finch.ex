@@ -62,6 +62,7 @@ defmodule Telegex.Caller.Adapter.Finch do
     value = Keyword.get(params, field)
 
     not_exists_field? = is_nil(field)
+    file_exists? = value && File.exists?(value)
 
     cond do
       not_exists_field? && Enum.empty?(multipart.parts) ->
@@ -81,6 +82,10 @@ defmodule Telegex.Caller.Adapter.Finch do
         headers = [{"Content-Type", content_type}, {"Content-Length", to_string(content_length)}]
 
         {headers, body_stream}
+
+      !file_exists? ->
+        # 文件不存在，保持原样继续处理下一个附件字段
+        _try_build_multipart(params, attachment_fields, i + 1, multipart)
 
       true ->
         {multipart, params} = attach_param(field, value, multipart, params)
