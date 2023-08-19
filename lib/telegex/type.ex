@@ -497,6 +497,13 @@ At most one of the optional parameters can be present in any given update.", [
       optional: true
     },
     %{
+      name: :emoji_status_expiration_date,
+      type: :integer,
+      description:
+        "Optional. Expiration date of the emoji status of the other party in a private chat, if any. Returned only in getChat.",
+      optional: true
+    },
+    %{
       name: :bio,
       type: :string,
       description:
@@ -799,6 +806,12 @@ At most one of the optional parameters can be present in any given update.", [
       name: :sticker,
       type: Telegex.Type.Sticker,
       description: "Optional. Message is a sticker, information about the sticker",
+      optional: true
+    },
+    %{
+      name: :story,
+      type: Telegex.Type.Story,
+      description: "Optional. Message is a forwarded story",
       optional: true
     },
     %{
@@ -1342,6 +1355,12 @@ At most one of the optional parameters can be present in any given update.", [
     ]
   )
 
+  deftype(
+    Story,
+    "This object represents a message about a forwarded story in the chat. Currently holds no information.",
+    []
+  )
+
   deftype(Video, "This object represents a video file.", [
     %{
       name: :file_id,
@@ -1534,16 +1553,24 @@ At most one of the optional parameters can be present in any given update.", [
   deftype(PollAnswer, "This object represents an answer of a user in a non-anonymous poll.", [
     %{name: :poll_id, type: :string, description: "Unique poll identifier", optional: false},
     %{
+      name: :voter_chat,
+      type: Telegex.Type.Chat,
+      description:
+        "Optional. The chat that changed the answer to the poll, if the voter is anonymous",
+      optional: true
+    },
+    %{
       name: :user,
       type: Telegex.Type.User,
-      description: "The user, who changed the answer to the poll",
-      optional: false
+      description:
+        "Optional. The user that changed the answer to the poll, if the voter isn't anonymous",
+      optional: true
     },
     %{
       name: :option_ids,
       type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer},
       description:
-        "0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.",
+        "0-based identifiers of chosen answer options. May be empty if the vote was retracted.",
       optional: false
     }
   ])

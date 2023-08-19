@@ -2702,6 +2702,21 @@ defmodule Telegex do
   )
 
   defmethod(
+    "unpinAllGeneralForumTopicMessages",
+    "Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.",
+    [
+      %{
+        name: :chat_id,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]},
+        description:
+          "Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)",
+        required: true
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "answerCallbackQuery",
     "Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.",
     [
