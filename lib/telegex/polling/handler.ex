@@ -88,28 +88,28 @@ defmodule Telegex.Polling.Handler do
           offset =
             case Telegex.get_updates(updates_opts) do
               {:ok, []} ->
-                # 返回旧的 offset
+                # Return old offset value.
                 state.offset
 
               {:ok, updates} ->
-                # 消费消息
+                # Consume each message.
                 _ =
                   updates
                   |> Stream.each(&unquote(__CALLER__.module).UpdatesConsumer.receive/1)
                   |> Stream.run()
 
-                # 计算新的 offset
+                # Calculate and return new offset value.
                 List.last(updates).update_id + 1
 
               {:error, reason} ->
                 unquote(__CALLER__.module).on_failure(reason)
 
-                # 返回旧的 offset
+                # Return old offset value.
                 state.offset
             end
 
-          # 每 35ms 一个拉取请求，避免 429 错误
-          :timer.sleep(35)
+          # Sleep the pull process based on the configured interval.
+          :timer.sleep(state.interval)
 
           schedule_pull_updates()
 
@@ -118,7 +118,7 @@ defmodule Telegex.Polling.Handler do
 
         @impl true
         def handle_info({:ssl_closed, _} = msg, state) do
-          Logger.warning("Known network failure: #{inspect(msg: msg)}")
+          Logger.warning("Captured network failure: #{inspect(msg: msg)}")
 
           {:noreply, state}
         end

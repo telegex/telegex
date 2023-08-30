@@ -1,9 +1,20 @@
 defmodule Telegex.Polling.Config do
-  @moduledoc false
+  @moduledoc """
+  Configure polling mode.
+
+  Return the `%Telegex.Polling.Config{...}` struct for configuring the polling mode.
+
+  ## Field descriptions
+
+    * `interval` - Interval in milliseconds between pulling updates. Defaults to `35`.
+    * `offset` - The `offset` parameter of the [`getUpdates`](https://core.telegram.org/bots/api#getupdates) method.
+    * `limit` - The `limit` parameter of the [`getUpdates`](https://core.telegram.org/bots/api#getupdates) method. Defaults to `100`.
+    * `timeout` - The `timeout` parameter of the [`getUpdates`](https://core.telegram.org/bots/api#getupdates) method. Defaults to `0`.
+    * `allowed_updates` - The `allowed_updates` parameter of the [`getUpdates`](https://core.telegram.org/bots/api#getupdates) method.
+  """
 
   use TypedStruct
 
-  # 此处有关 `get_update/1` 函数可选参数的默认值应参考 https://core.telegram.org/bots/api#getupdates
   typedstruct do
     field :interval, non_neg_integer, default: 35
     field :offset, integer, default: 0
