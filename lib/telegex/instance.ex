@@ -12,6 +12,9 @@ defmodule Telegex.Instance do
   @spec token() :: String.t()
   def token, do: Application.get_env(:telegex, :token)
 
+  @spec api() :: String.t
+  def api, do: Application.get_env(:telegex, :api)
+
   @impl true
   def init(state) do
     {:ok, state}
