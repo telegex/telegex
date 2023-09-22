@@ -1760,7 +1760,7 @@ defmodule Telegex do
         name: :until_date,
         type: :integer,
         description:
-          "Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.",
+          "Date when the user will be unbanned; Unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.",
         required: false
       },
       %{
@@ -1835,7 +1835,7 @@ defmodule Telegex do
         name: :until_date,
         type: :integer,
         description:
-          "Date when restrictions will be lifted for the user, unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever",
+          "Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever",
         required: false
       }
     ],
@@ -1869,26 +1869,48 @@ defmodule Telegex do
         name: :can_manage_chat,
         type: :boolean,
         description:
-          "Pass True if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+          "Pass True if the administrator can access the chat event log, chat statistics, boost list in channels, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
         required: false
       },
       %{
         name: :can_post_messages,
         type: :boolean,
-        description: "Pass True if the administrator can create channel posts, channels only",
+        description:
+          "Pass True if the administrator can post messages in the channel; channels only",
         required: false
       },
       %{
         name: :can_edit_messages,
         type: :boolean,
         description:
-          "Pass True if the administrator can edit messages of other users and can pin messages, channels only",
+          "Pass True if the administrator can edit messages of other users and can pin messages; channels only",
         required: false
       },
       %{
         name: :can_delete_messages,
         type: :boolean,
         description: "Pass True if the administrator can delete messages of other users",
+        required: false
+      },
+      %{
+        name: :can_post_stories,
+        type: :boolean,
+        description:
+          "Pass True if the administrator can post stories in the channel; channels only",
+        required: false
+      },
+      %{
+        name: :can_edit_stories,
+        type: :boolean,
+        description:
+          "Pass True if the administrator can edit stories posted by other users; channels only",
+        required: false
+      },
+      %{
+        name: :can_delete_stories,
+        type: :boolean,
+        description:
+          "Pass True if the administrator can delete stories posted by other users; channels only",
         required: false
       },
       %{

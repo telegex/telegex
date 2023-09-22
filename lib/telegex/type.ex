@@ -500,7 +500,7 @@ At most one of the optional parameters can be present in any given update.", [
       name: :emoji_status_expiration_date,
       type: :integer,
       description:
-        "Optional. Expiration date of the emoji status of the other party in a private chat, if any. Returned only in getChat.",
+        "Optional. Expiration date of the emoji status of the other party in a private chat in Unix time, if any. Returned only in getChat.",
       optional: true
     },
     %{
@@ -1004,7 +1004,7 @@ At most one of the optional parameters can be present in any given update.", [
       name: :write_access_allowed,
       type: Telegex.Type.WriteAccessAllowed,
       description:
-        "Optional. Service message: the user allowed the bot added to the attachment menu to write messages",
+        "Optional. Service message: the user allowed the bot to write messages after adding it to the attachment or side menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess",
       optional: true
     },
     %{
@@ -1894,12 +1894,27 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     WriteAccessAllowed,
-    "This object represents a service message about a user allowing a bot to write messages after adding the bot to the attachment menu or launching a Web App from a link.",
+    "This object represents a service message about a user allowing a bot to write messages after adding it to the attachment menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess.",
     [
+      %{
+        name: :from_request,
+        type: :boolean,
+        description:
+          "Optional. True, if the access was granted after the user accepted an explicit request from a Web App sent by the method requestWriteAccess",
+        optional: true
+      },
       %{
         name: :web_app_name,
         type: :string,
-        description: "Optional. Name of the Web App which was launched from a link",
+        description:
+          "Optional. Name of the Web App, if the access was granted when the Web App was launched from a link",
+        optional: true
+      },
+      %{
+        name: :from_attachment_menu,
+        type: :boolean,
+        description:
+          "Optional. True, if the access was granted when the bot was added to the attachment or side menu",
         optional: true
       }
     ]
@@ -2588,7 +2603,7 @@ At most one of the optional parameters can be present in any given update.", [
       name: :can_manage_chat,
       type: :boolean,
       description:
-        "True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+        "True, if the administrator can access the chat event log, chat statistics, boost list in channels, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
       optional: false
     },
     %{
@@ -2632,7 +2647,8 @@ At most one of the optional parameters can be present in any given update.", [
     %{
       name: :can_post_messages,
       type: :boolean,
-      description: "Optional. True, if the administrator can post in the channel; channels only",
+      description:
+        "Optional. True, if the administrator can post messages in the channel; channels only",
       optional: true
     },
     %{
@@ -2647,6 +2663,27 @@ At most one of the optional parameters can be present in any given update.", [
       type: :boolean,
       description:
         "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
+      optional: true
+    },
+    %{
+      name: :can_post_stories,
+      type: :boolean,
+      description:
+        "Optional. True, if the administrator can post stories in the channel; channels only",
+      optional: true
+    },
+    %{
+      name: :can_edit_stories,
+      type: :boolean,
+      description:
+        "Optional. True, if the administrator can edit stories posted by other users; channels only",
+      optional: true
+    },
+    %{
+      name: :can_delete_stories,
+      type: :boolean,
+      description:
+        "Optional. True, if the administrator can delete stories posted by other users; channels only",
       optional: true
     },
     %{
@@ -2721,7 +2758,7 @@ At most one of the optional parameters can be present in any given update.", [
         name: :can_manage_chat,
         type: :boolean,
         description:
-          "True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+          "True, if the administrator can access the chat event log, chat statistics, boost list in channels, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
         optional: false
       },
       %{
@@ -2766,7 +2803,7 @@ At most one of the optional parameters can be present in any given update.", [
         name: :can_post_messages,
         type: :boolean,
         description:
-          "Optional. True, if the administrator can post in the channel; channels only",
+          "Optional. True, if the administrator can post messages in the channel; channels only",
         optional: true
       },
       %{
@@ -2781,6 +2818,27 @@ At most one of the optional parameters can be present in any given update.", [
         type: :boolean,
         description:
           "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
+        optional: true
+      },
+      %{
+        name: :can_post_stories,
+        type: :boolean,
+        description:
+          "Optional. True, if the administrator can post stories in the channel; channels only",
+        optional: true
+      },
+      %{
+        name: :can_edit_stories,
+        type: :boolean,
+        description:
+          "Optional. True, if the administrator can edit stories posted by other users; channels only",
+        optional: true
+      },
+      %{
+        name: :can_delete_stories,
+        type: :boolean,
+        description:
+          "Optional. True, if the administrator can delete stories posted by other users; channels only",
         optional: true
       },
       %{
@@ -2931,7 +2989,7 @@ At most one of the optional parameters can be present in any given update.", [
         name: :until_date,
         type: :integer,
         description:
-          "Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever",
+          "Date when restrictions will be lifted for this user; Unix time. If 0, then the user is restricted forever",
         optional: false
       }
     ]
@@ -2976,7 +3034,7 @@ At most one of the optional parameters can be present in any given update.", [
         name: :until_date,
         type: :integer,
         description:
-          "Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever",
+          "Date when restrictions will be lifted for this user; Unix time. If 0, then the user is banned forever",
         optional: false
       }
     ]
