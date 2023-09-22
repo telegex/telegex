@@ -25,7 +25,9 @@ defmodule Telegex.Caller.Adapter do
   def impl, do: Module.concat(__MODULE__, config(:adapter))
 
   @spec build_url(String.t()) :: String.t()
-  def build_url(method), do: "#{Telegex.Global.base_url()}#{Telegex.Instance.token()}/#{method}"
+  def build_url(method) do
+    "#{Telegex.Global.api_base_url()}#{Telegex.Instance.token()}/#{method}"
+  end
 
   @spec options :: keyword
   def options, do: config(:options)
