@@ -1,11 +1,7 @@
 defmodule Telegex.Caller.Adapter do
   @moduledoc "An adapter to help HTTP clients implement callers."
 
-  alias Telegex.Response
-
-  @type config_key :: :adapter | :options
-
-  @default_adapter Finch
+  alias Telegex.{Response, Global}
 
   defmacro __using__(_opts) do
     quote do
@@ -22,29 +18,26 @@ defmodule Telegex.Caller.Adapter do
   end
 
   @spec impl() :: module
-  def impl, do: Module.concat(__MODULE__, config(:adapter))
+  def impl, do: Module.concat(__MODULE__, adapter_name())
 
   @spec build_url(String.t()) :: String.t()
   def build_url(method) do
-    "#{Telegex.Global.api_base_url()}#{Telegex.Instance.token()}/#{method}"
+    "#{Global.api_base_url()}#{Telegex.Instance.token()}/#{method}"
   end
 
   @spec options :: keyword
-  def options, do: config(:options)
-
-  @spec config(config_key) :: module | keyword
-  defp config(:adapter) do
-    case Application.get_env(:telegex, :caller_adapter) do
-      {adapter, _options} -> adapter || @default_adapter
-      nil -> @default_adapter
-      adapter -> adapter
+  def options do
+    case Global.caller_adapter() do
+      {_adapter, options} -> options
+      _ -> []
     end
   end
 
-  defp config(:options) do
-    case Application.get_env(:telegex, :caller_adapter) do
-      {_adapter, options} -> options || []
-      _ -> []
+  @spec adapter_name :: module
+  defp adapter_name do
+    case Global.caller_adapter() do
+      {adapter, _options} -> adapter
+      adapter -> adapter
     end
   end
 

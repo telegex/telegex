@@ -1,5 +1,9 @@
 defmodule Telegex.Instance do
-  @moduledoc false
+  @moduledoc """
+  Independent configuration and information for bot instances.
+
+  **Note: This module is not officially implemented at the moment, reserved for multi-instance support.**
+  """
 
   use GenServer
 
@@ -10,7 +14,7 @@ defmodule Telegex.Instance do
   end
 
   @spec token() :: String.t()
-  def token, do: Application.get_env(:telegex, :token)
+  def token, do: Telegex.Global.token()
 
   @impl true
   def init(state) do

@@ -11,7 +11,5 @@ defmodule Telegex.Hook.Adapter do
 
   @callback child_spec(config :: Telegex.Hook.Config.t()) :: tuple
 
-  def impl, do: Module.concat(__MODULE__, env_config() || Bandit)
-
-  defp env_config, do: Application.get_env(:telegex, :hook_adapter)
+  def impl, do: Module.concat(__MODULE__, Telegex.Global.hook_adapter())
 end
