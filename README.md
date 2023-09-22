@@ -14,7 +14,7 @@ _All API functions, comments, types (structures and specifications) of Telegex a
 
 Telegex is not only a client for Bot API, but also a framework for building bots. It provides convenient support for receiving updates and implements an advanced processing model based on "chains".
 
->The section regarding chains currently has no documentation available. Join the group, communicate about Elixir and bot development: [@elixir_telegex](https://t.me/elixir_telegex)
+>The section regarding chains currently has no documentation available. Join the group for help: [@elixir_telegex](https://t.me/elixir_telegex).
 
 ## Installation
 
@@ -23,7 +23,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.1"},
+    {:telegex, "~> 1.2"},
   ]
 end
 ```
@@ -60,6 +60,8 @@ config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 
 - `Finch`: [`finch`](https://hex.pm/packages/finch), [`multipart`](https://hex.pm/packages/multipart) (recommend)
 - `HTTPoison`: [`httpoison`](https://hex.pm/packages/httpoison) (⚠️ sending local files is not supported)
+
+_For complete configuration, please refer to the [`Telegex.Global`](https://hexdocs.pm/telegex/Telegex.Global.html) module documentation._
 
 ## API call
 
