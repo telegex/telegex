@@ -29,23 +29,33 @@ defmodule Telegex.Polling.Handler do
       end
 
       @impl unquote(__MODULE__)
-      def on_boot, do: %{}
+      def on_boot do
+        Logger.error("Polling mode is not configured, use `on_boot/0` to configure it")
+
+        %Telegex.Polling.Config{}
+      end
 
       @impl unquote(__MODULE__)
       def on_update(_update) do
         Logger.warning(
           "New update from Telegram Bot API Server, but `on_update/1` is not implemented"
         )
+
+        :ok
       end
 
       @impl unquote(__MODULE__)
       def on_init(_init_arg) do
         Logger.info("Updates poller started")
+
+        :ok
       end
 
       @impl unquote(__MODULE__)
       def on_failure(reason) do
-        Logger.error("Polling error occurred, use on_failure/1 to capture it: #{inspect(reason)}")
+        Logger.error(
+          "Polling error occurred, use `on_failure/1` to capture it: #{inspect(reason)}"
+        )
       end
 
       defoverridable on_boot: 0, on_init: 1, on_update: 1, on_failure: 1
@@ -117,8 +127,8 @@ defmodule Telegex.Polling.Handler do
         end
 
         @impl true
-        def handle_info({:ssl_closed, _} = msg, state) do
-          Logger.warning("Captured network failure: #{inspect(msg: msg)}")
+        def handle_info({:ssl_closed, _} = message, state) do
+          Logger.warning("Captured network failure: #{inspect(message)}")
 
           {:noreply, state}
         end
@@ -150,13 +160,17 @@ defmodule Telegex.Polling.Handler do
         end
 
         defp consume(update) do
-          case unquote(__CALLER__.module).on_update(update) do
-            {:done, %{payload: payload}} ->
-              unquote(__MODULE__).handle_payload(payload)
+          update |> unquote(__CALLER__.module).on_update() |> consume_context()
+        end
 
-            _ ->
-              :ok
-          end
+        defp consume_context({:done, %{payload: payload}}) do
+          unquote(__MODULE__).handle_payload(payload)
+
+          :error
+        end
+
+        defp consume_context(_) do
+          :ignore
         end
       end
     end
@@ -167,7 +181,6 @@ defmodule Telegex.Polling.Handler do
 
     case Telegex.Caller.call(method, Enum.into(params, [])) do
       {:error, error} ->
-        # 根据 done 的荷载调用失败
         Logger.error(
           "Call the method fails with a payload: #{inspect(reason: error, payload: payload)}"
         )
