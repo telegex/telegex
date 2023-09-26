@@ -6,12 +6,13 @@ defmodule EchoBot.PollingHandler do
   @impl true
   def on_boot do
     {:ok, user} = Telegex.Instance.get_me()
-    # 删除可能存在的 webhook
+    # delete any potential webhook
     {:ok, _} = Telegex.delete_webhook()
 
     Logger.info("Bot (@#{user.username}) is working (polling)")
 
     %Telegex.Polling.Config{}
+    # you must return the `Telegex.Polling.Config` struct ↑
   end
 
   @impl true
