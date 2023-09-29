@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Elixir CI
+name: elixir-1.15-otp-26-ci
 
 on:
   push:
@@ -31,10 +31,10 @@ jobs:
           config :telegex, token: "${{ secrets.BOT_TOKEN }}"
           EOT
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1.15.4
+        uses: erlef/setup-beam@v1.16.0
         with:
-          elixir-version: "1.14.5" # Define the elixir version [required]
-          otp-version: "26.0" # Define the OTP version [required]
+          elixir-version: "1.15.6" # Define the elixir version [required]
+          otp-version: "26.1.1" # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
