@@ -1,6 +1,7 @@
 # Telegex
 
-[![.github/workflows/elixir.yml](https://github.com/telegex/telegex/actions/workflows/elixir.yml/badge.svg?branch=master)](https://github.com/telegex/telegex/actions/workflows/elixir.yml)
+[![.github/workflows/otp-26.yml](https://github.com/telegex/telegex/actions/workflows/otp-26.yml/badge.svg?branch=master)](https://github.com/telegex/telegex/actions/workflows/otp-26.yml)
+[![.github/workflows/otp-25.yml](https://github.com/telegex/telegex/actions/workflows/otp-25.yml/badge.svg?branch=master)](https://github.com/telegex/telegex/actions/workflows/otp-25.yml)
 [![Module Version](https://img.shields.io/hexpm/v/telegex.svg)](https://hex.pm/packages/telegex)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/telegex/)
 [![Total Download](https://img.shields.io/hexpm/dt/telegex.svg)](https://hex.pm/packages/telegex)
