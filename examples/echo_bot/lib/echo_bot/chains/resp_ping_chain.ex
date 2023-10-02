@@ -4,7 +4,7 @@ defmodule EchoBot.RespPingChain do
   use Telegex.Chain, {:command, :ping}
 
   @impl true
-  def handle(%{chat: chat, text: _text} = _update, context) do
+  def handle(%{chat: chat, text: _text} = _message, context) do
     context = %{
       context
       | payload: %{

@@ -14,7 +14,7 @@ defmodule EchoBot.RespStartChain do
   def match?(_message, _context), do: false
 
   @impl true
-  def handle(%{chat: chat, text: _text} = _update, context) do
+  def handle(%{chat: chat, text: _text} = _message, context) do
     markup = %InlineKeyboardMarkup{
       inline_keyboard: [
         [

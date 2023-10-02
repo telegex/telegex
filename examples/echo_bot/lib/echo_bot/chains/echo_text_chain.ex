@@ -13,7 +13,7 @@ defmodule EchoBot.EchoTextChain do
   def match?(_message, _context), do: true
 
   @impl true
-  def handle(%{chat: chat, text: text} = _update, context) do
+  def handle(%{chat: chat, text: text} = _message, context) do
     context = %{
       context
       | payload: %{
