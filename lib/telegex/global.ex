@@ -27,7 +27,7 @@ defmodule Telegex.Global do
   @spec hook_adapter :: module
   def hook_adapter do
     # The default adapter is `Bandit`
-    get_option(:caller_adapter, Bandit)
+    get_option(:hook_adapter, Bandit)
   end
 
   @spec token :: String.t()
