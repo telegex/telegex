@@ -249,6 +249,8 @@ defmodule YourProject.HookHandler do
 end
 ```
 
+_For complete configuration, please refer to the [`Telegex.Hook.Adapter`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.html) module documentation._
+
 **Don't forget to add your module to the supervision tree.**
 
 ## Compatibility mode
