@@ -64,7 +64,7 @@ defmodule Telegex.MixProject do
       {:httpoison, "~> 2.1", optional: true, only: [:dev, :test]},
       {:finch, "~> 0.16.0", optional: true, only: [:dev, :test]},
       {:multipart, "~> 0.4.0", optional: true, only: [:dev, :test]},
-      {:plug, "~> 1.14", optional: true, only: [:dev, :test]},
+      {:plug, "~> 1.15", optional: true, only: [:dev, :test]},
       {:plug_cowboy, "~> 2.6", optional: true, only: [:dev, :test]},
       {:remote_ip, "~> 1.1", optional: true, only: [:dev, :test]},
       {:bandit, "~> 0.7.7", optional: true, only: [:dev, :test]},
