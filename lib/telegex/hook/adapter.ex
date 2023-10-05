@@ -56,7 +56,7 @@ defmodule Telegex.Hook.Adapter do
   end
   ```
 
-  _Note: `webhook_url` must be a full URL, such as `https://your.domain.com/hook_updates`, where `hook_updates` path is fixed._
+  _Note: `webhook_url` must be a full URL, such as `https://your.domain.com/updates_hook`, where `updates_hook` path is fixed._
   """
 
   defmacro __using__(_) do
