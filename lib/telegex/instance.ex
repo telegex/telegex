@@ -9,8 +9,14 @@ defmodule Telegex.Instance do
 
   require Logger
 
+  use TypedStruct
+
+  typedstruct module: State do
+    field :bot, Telegex.Type.User.t()
+  end
+
   def start_link(_) do
-    GenServer.start_link(__MODULE__, %{me: nil}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, %State{}, name: __MODULE__)
   end
 
   @spec token() :: String.t()
@@ -21,31 +27,35 @@ defmodule Telegex.Instance do
     {:ok, state}
   end
 
-  @spec get_me :: {:ok, Telegex.Type.User.t()} | {:error, Telegex.Type.error()}
-  def get_me do
-    GenServer.call(__MODULE__, :get_me, :infinity)
+  @doc """
+  Call the `Telegex.get_me/0` function to get and cache the bot's own user information.
+  """
+  @spec fetch_me :: {:ok, Telegex.Type.User.t()} | {:error, Telegex.Type.error()}
+  def fetch_me do
+    GenServer.call(__MODULE__, :fetch_me, :infinity)
   end
 
-  @spec me :: Telegex.Type.User.t()
-  def me do
-    GenServer.call(__MODULE__, :me)
+  @doc """
+  Get the cached bot's own user information.
+  """
+  @spec bot :: Telegex.Type.User.t()
+  def bot do
+    GenServer.call(__MODULE__, :bot)
   end
 
   @impl true
-  def handle_call(:get_me, _from, state) do
-    r = Telegex.get_me()
+  def handle_call(:fetch_me, _from, state) do
+    case Telegex.get_me() do
+      {:ok, bot} = r ->
+        {:reply, r, %{state | bot: bot}}
 
-    case r do
-      {:ok, bot} ->
-        {:reply, r, %{state | me: bot}}
-
-      {:error, _} ->
+      {:error, _} = r ->
         {:reply, r, state}
     end
   end
 
   @impl true
-  def handle_call(:me, _from, %{me: bot} = state) do
+  def handle_call(:bot, _from, %{bot: bot} = state) do
     {:reply, bot, state}
   end
 end
