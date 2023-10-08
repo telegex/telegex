@@ -7,18 +7,18 @@ defmodule EchoBot.Application do
 
   @impl true
   def start(_type, _args) do
-    updates_fetcher =
+    updates_handler =
       if EchoBot.work_mode() == :webhook do
-        EchoBot.HookHandler
+        EchoBot.UpdatesAngler
       else
-        EchoBot.PollingHandler
+        EchoBot.UpdatesPoller
       end
 
     children = [
       # Starts a worker by calling: EchoBot.Worker.start_link(arg)
       # {EchoBot.Worker, arg}
 
-      updates_fetcher
+      updates_handler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

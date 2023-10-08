@@ -1,7 +1,7 @@
-defmodule EchoBot.HookHandler do
+defmodule EchoBot.UpdatesAngler do
   @moduledoc false
 
-  use Telegex.Hook.Handler
+  use Telegex.GenAngler
 
   @impl true
   def on_boot do

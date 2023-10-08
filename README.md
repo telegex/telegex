@@ -162,7 +162,7 @@ Polling is a simple and effective pattern that ensures messages within the same 
 To work in polling mode:
 
 1. Create a new module, like `YourProject.PollingHandler`
-1. `Use Telegex.Polling.Handler`
+1. `Use Telegex.Polling.GenHandler`
 1. Implement `on_boot/0` and `on_update/1` callback functions
 1. Add your module to the supervision tree
 
@@ -170,7 +170,7 @@ Polling handler example:
 
 ```elixir
 defmodule YourProject.PollingHandler do
-  use Telegex.Polling.Handler
+  use Telegex.Polling.GenHandler
 
   @impl true
   def on_boot do
@@ -216,7 +216,7 @@ config :telegex, hook_adapter: Cowboy
 To work in webhook mode:
 
 1. Create a new module, like `YourProject.HookHandler`
-1. `Use Telegex.Hook.Handler`
+1. `Use Telegex.Hook.GenHandler`
 1. Implement `on_boot/0` and `on_update/1` callback functions
 1. Add your module to the supervision tree
 
@@ -224,7 +224,7 @@ Hook handler example:
 
 ```elixir
 defmodule YourProject.HookHandler do
-  use Telegex.Hook.Handler
+  use Telegex.Hook.GenHandler
 
   @impl true
   def on_boot do

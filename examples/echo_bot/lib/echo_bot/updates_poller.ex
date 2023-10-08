@@ -1,7 +1,7 @@
-defmodule EchoBot.PollingHandler do
+defmodule EchoBot.UpdatesPoller do
   @moduledoc false
 
-  use Telegex.Polling.Handler
+  use Telegex.GenPoller
 
   @impl true
   def on_boot do

@@ -1,4 +1,4 @@
-defmodule Telegex.Polling.Handler do
+defmodule Telegex.Polling.GenHandler do
   @moduledoc """
   Generate your polling handler, which includes a supervisor with poller and consumer children.
   """
