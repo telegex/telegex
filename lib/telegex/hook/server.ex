@@ -37,11 +37,12 @@ if Code.ensure_loaded?(Plug) do
           update = Helper.typedmap(conn.body_params, Telegex.Type.Update)
 
           on_update = conn.private[:on_update]
+          on_failure = conn.private[:on_failure]
 
           try do
             on_update.(update)
           rescue
-            _ -> :error
+            e -> on_failure.(update, e)
           end
         else
           # 没有通过 secret_token 验证，响应无意义数据

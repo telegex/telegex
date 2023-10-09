@@ -19,4 +19,9 @@ defmodule EchoBot.UpdatesPoller do
   def on_update(update) do
     EchoBot.ChainHandler.call(update, %EchoBot.ChainContext{bot: Telegex.Instance.bot()})
   end
+
+  @impl true
+  def on_failure(update, e) do
+    Logger.error("Uncaught Error: #{inspect(update_id: update.update_id, error: e)}")
+  end
 end

@@ -72,12 +72,9 @@ defmodule Telegex.Hook.GenHandler do
       def start_link(_) do
         config = on_boot()
 
-        config =
-          if config.on_update do
-            config
-          else
-            %{config | on_update: &on_update/1}
-          end
+        config
+        |> Map.put_new(:on_update, &on_update/1)
+        |> Map.put_new(:on_failure, &on_failure/2)
 
         children = [
           Adapter.impl().child_spec(config)
@@ -100,12 +97,20 @@ defmodule Telegex.Hook.GenHandler do
         Logger.warning(
           "New update from Telegram Bot API Server, but `on_update/1` is not implemented"
         )
+
+        :ok
       end
 
-      defoverridable on_boot: 0, on_update: 1
+      @impl unquote(__MODULE__)
+      def on_failure(_update, reason) do
+        Logger.error("An error occurs, override `on_failure/2` to catch it: #{inspect(reason)}")
+      end
+
+      defoverridable on_boot: 0, on_update: 1, on_failure: 2
     end
   end
 
   @callback on_boot :: Telegex.Hook.Config.t()
   @callback on_update(Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
+  @callback on_failure(Telegex.Type.Update.t(), any) :: no_return
 end

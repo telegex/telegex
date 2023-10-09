@@ -52,13 +52,11 @@ defmodule Telegex.Polling.GenHandler do
       end
 
       @impl unquote(__MODULE__)
-      def on_failure(reason) do
-        Logger.error(
-          "Polling error occurred, use `on_failure/1` to capture it: #{inspect(reason)}"
-        )
+      def on_failure(_update, reason) do
+        Logger.error("An error occurs, override `on_failure/2` to catch it: #{inspect(reason)}")
       end
 
-      defoverridable on_boot: 0, on_init: 1, on_update: 1, on_failure: 1
+      defoverridable on_boot: 0, on_init: 1, on_update: 1, on_failure: 2
 
       defmodule UpdatesPoller do
         @moduledoc false
@@ -112,7 +110,7 @@ defmodule Telegex.Polling.GenHandler do
                 List.last(updates).update_id + 1
 
               {:error, reason} ->
-                unquote(__CALLER__.module).on_failure(reason)
+                Logger.warning("Polling updates fails: #{inspect(reason)}")
 
                 # Return old offset value.
                 state.offset
@@ -160,13 +158,15 @@ defmodule Telegex.Polling.GenHandler do
         end
 
         defp consume(update) do
-          update |> unquote(__CALLER__.module).on_update() |> consume_context()
+          try do
+            update |> unquote(__CALLER__.module).on_update() |> consume_context()
+          rescue
+            e -> unquote(__CALLER__.module).on_failure(update, e)
+          end
         end
 
         defp consume_context({:done, %{payload: payload}}) do
           unquote(__MODULE__).handle_payload(payload)
-
-          :error
         end
 
         defp consume_context(_) do
@@ -180,10 +180,10 @@ defmodule Telegex.Polling.GenHandler do
     params = Map.drop(payload, [:method])
 
     case Telegex.Caller.call(method, Enum.into(params, [])) do
-      {:error, error} ->
-        Logger.error(
-          "Call the method fails with a payload: #{inspect(reason: error, payload: payload)}"
-        )
+      {:error, reason} ->
+        Logger.error("Calling payload failed: #{inspect(reason: reason, payload: payload)}")
+
+        :error
 
       _ ->
         :ok
@@ -191,11 +191,13 @@ defmodule Telegex.Polling.GenHandler do
   end
 
   def handle_payload(payload) do
-    Logger.warning("The payload is not a valid method call: #{inspect(payload: payload)}")
+    Logger.warning("Invalid payload called: #{inspect(payload: payload)}")
+
+    :error
   end
 
   @callback on_boot :: Telegex.Polling.Config.t()
   @callback on_init(init_arg :: map) :: :ok
   @callback on_update(update :: Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
-  @callback on_failure(reason :: Telegex.Type.error()) :: no_return
+  @callback on_failure(Telegex.Type.Update.t(), any) :: no_return
 end
