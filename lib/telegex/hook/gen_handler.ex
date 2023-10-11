@@ -112,5 +112,6 @@ defmodule Telegex.Hook.GenHandler do
 
   @callback on_boot :: Telegex.Hook.Config.t()
   @callback on_update(Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
-  @callback on_failure(Telegex.Type.Update.t(), any) :: no_return
+  @callback on_failure(update :: Telegex.Type.Update.t(), {e :: any, stacktrace :: any}) ::
+              no_return
 end

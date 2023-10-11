@@ -42,7 +42,7 @@ if Code.ensure_loaded?(Plug) do
           try do
             on_update.(update)
           rescue
-            e -> on_failure.(update, e)
+            e -> on_failure.(update, {e, __STACKTRACE__})
           end
         else
           # 没有通过 secret_token 验证，响应无意义数据
