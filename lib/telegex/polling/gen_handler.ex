@@ -161,7 +161,7 @@ defmodule Telegex.Polling.GenHandler do
           try do
             update |> unquote(__CALLER__.module).on_update() |> consume_context()
           rescue
-            e -> unquote(__CALLER__.module).on_failure(update, e)
+            e -> unquote(__CALLER__.module).on_failure(update, {e, __STACKTRACE__})
           end
         end
 
@@ -199,5 +199,6 @@ defmodule Telegex.Polling.GenHandler do
   @callback on_boot :: Telegex.Polling.Config.t()
   @callback on_init(init_arg :: map) :: :ok
   @callback on_update(update :: Telegex.Type.Update.t()) :: :ok | Telegex.Chain.result()
-  @callback on_failure(Telegex.Type.Update.t(), any) :: no_return
+  @callback on_failure(update :: Telegex.Type.Update.t(), {e :: any, stacktrace :: any}) ::
+              no_return
 end
