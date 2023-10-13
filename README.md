@@ -24,7 +24,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.3.0"},
+    {:telegex, "~> 1.3.1"},
   ]
 end
 ```
@@ -249,7 +249,7 @@ defmodule YourProject.HookHandler do
 end
 ```
 
-_For complete configuration, please refer to the [`Telegex.Hook.Adapter`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.html) module documentation._
+_For complete configuration, please refer to the [`Telegex.Hook.GenHandler`](https://hexdocs.pm/telegex/Telegex.Hook.GenHandler.html) module documentation._
 
 **Don't forget to add your module to the supervision tree.**
 
