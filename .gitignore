@@ -24,3 +24,6 @@ telegex-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Ignore development and environment file for local development.
+/dev.env
