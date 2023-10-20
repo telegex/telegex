@@ -7,7 +7,7 @@ defmodule EchoBot.UpdatesAngler do
   def on_boot do
     {:ok, user} = Telegex.Instance.fetch_me()
     # read some parameters from your env config
-    env_config = Application.get_env(:echo_bot, EchoBot.HookHandler)
+    env_config = Application.get_env(:echo_bot, __MODULE__)
     secret_token = "dev-secret-token"
     # delete the webhook and set it again
     Telegex.delete_webhook()
@@ -25,6 +25,11 @@ defmodule EchoBot.UpdatesAngler do
     Logger.info("Bot (@#{user.username}) is working (webhook)")
 
     config
+  end
+
+  @impl true
+  def on_update(update) do
+    EchoBot.ChainHandler.call(update, %EchoBot.ChainContext{bot: Telegex.Instance.bot()})
   end
 
   @impl true
