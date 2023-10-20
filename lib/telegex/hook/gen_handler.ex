@@ -72,12 +72,8 @@ defmodule Telegex.Hook.GenHandler do
       def start_link(_) do
         config = on_boot()
 
-        config
-        |> Map.put_new(:on_update, &on_update/1)
-        |> Map.put_new(:on_failure, &on_failure/2)
-
         children = [
-          Adapter.impl().child_spec(config)
+          Adapter.impl().child_spec(__MODULE__, config)
         ]
 
         opts = [strategy: :one_for_one, name: unquote(__CALLER__.module).Supervisor]

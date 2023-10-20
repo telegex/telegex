@@ -19,14 +19,14 @@ if Code.ensure_loaded?(Plug) do
     require Logger
 
     @impl true
-    def init(%{on_update: on_update, secret_token: secret_token}) do
-      %{on_update: on_update, secret_token: secret_token}
+    def init(%{handler_module: handler_module, secret_token: secret_token}) do
+      %{handler_module: handler_module, secret_token: secret_token}
     end
 
     @impl true
-    def call(conn, %{on_update: on_update, secret_token: secret_token} = args) do
+    def call(conn, %{handler_module: handler_module, secret_token: secret_token} = args) do
       conn
-      |> put_private(:on_update, on_update)
+      |> put_private(:handler_module, handler_module)
       |> put_private(:secret_token, secret_token)
       |> super(args)
     end
@@ -36,17 +36,16 @@ if Code.ensure_loaded?(Plug) do
         if authorized?(conn) do
           update = Helper.typedmap(conn.body_params, Telegex.Type.Update)
 
-          on_update = conn.private[:on_update]
-          on_failure = conn.private[:on_failure]
+          handler_module = conn.private[:handler_module]
 
           try do
-            on_update.(update)
+            handler_module.on_update(update)
           rescue
-            e -> on_failure.(update, {e, __STACKTRACE__})
+            e -> handler_module.on_failure(update, {e, __STACKTRACE__})
           end
         else
           # 没有通过 secret_token 验证，响应无意义数据
-          Logger.warning("unauthorized webhook request from #{remote_ip(conn)}")
+          Logger.warning("Unauthorized webhook request from `#{remote_ip(conn)}`")
 
           :unauthorized
         end
