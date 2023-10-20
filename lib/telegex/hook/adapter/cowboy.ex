@@ -4,13 +4,12 @@ defmodule Telegex.Hook.Adapter.Cowboy do
   use Telegex.Hook.Adapter
 
   @impl true
-  def child_spec(config) do
+  def child_spec(handler_module, config) do
     {Plug.Cowboy,
      plug:
        {Telegex.Hook.Server,
         %{
-          on_update: config.on_update,
-          on_failure: config.on_failure,
+          handler_module: handler_module,
           secret_token: config.secret_token
         }},
      scheme: :http,
