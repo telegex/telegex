@@ -24,7 +24,7 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.3.1"},
+    {:telegex, "~> 1.3.2"},
   ]
 end
 ```
