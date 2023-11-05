@@ -5,3 +5,10 @@ run-echo-bot:
     (cd examples/echo_bot \
         && rm -rf _build/dev/lib/plug \
         && iex -S mix)
+
+cd-format path='':
+    (cd {{path}} && mix format)
+
+format:
+    mix format
+    just cd-format examples/echo_bot
