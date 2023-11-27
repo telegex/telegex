@@ -110,7 +110,7 @@ defmodule Telegex.Polling.GenHandler do
                 List.last(updates).update_id + 1
 
               {:error, reason} ->
-                Logger.warning("Polling updates fails: #{inspect(reason)}")
+                Logger.warning("Polling for updates failed: #{inspect(reason)}")
 
                 # Return old offset value.
                 state.offset
