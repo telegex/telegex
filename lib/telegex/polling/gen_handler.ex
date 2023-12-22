@@ -110,16 +110,15 @@ defmodule Telegex.Polling.GenHandler do
                 List.last(updates).update_id + 1
 
               {:error, reason} ->
-                Logger.warning("Polling for updates failed: #{inspect(reason)}")
+                # 获取更新失败了
+                Logger.warning("Getting updates failed: #{inspect(reason)}")
 
                 # Return old offset value.
                 state.offset
             end
 
-          # Sleep the pull process based on the configured interval.
-          :timer.sleep(state.interval)
-
-          schedule_pull_updates()
+          # Schedule the next delay based on the interval
+          schedule_pull_updates(state.interval)
 
           {:noreply, %{state | offset: offset}}
         end
@@ -131,8 +130,8 @@ defmodule Telegex.Polling.GenHandler do
           {:noreply, state}
         end
 
-        defp schedule_pull_updates do
-          send(self(), :pull)
+        defp schedule_pull_updates(delay_millis \\ 35) do
+          Process.send_after(self(), :pull, delay_millis)
         end
       end
 
