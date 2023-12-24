@@ -16,7 +16,7 @@ defmodule Telegex.Polling.GenHandler do
       def start_link(_) do
         children = [
           unquote(__CALLER__.module).UpdatesConsumer,
-          unquote(__CALLER__.module).UpdatesPoller
+          unquote(__CALLER__.module).UpdatesProvider
         ]
 
         opts = [strategy: :one_for_one, name: __MODULE__.Supervisor]
@@ -58,7 +58,7 @@ defmodule Telegex.Polling.GenHandler do
 
       defoverridable on_boot: 0, on_init: 1, on_update: 1, on_failure: 2
 
-      defmodule UpdatesPoller do
+      defmodule UpdatesProvider do
         @moduledoc false
 
         use GenServer
