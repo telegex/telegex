@@ -1,14 +1,14 @@
 defmodule Telegex.MixProject do
   use Mix.Project
 
-  @version "1.4.0-dev"
+  @version "1.4.0"
   @description "A Telegram bot framework, with its client-side based on data and code generation, boasts unparalleled adaptation speed and correctness for new versions."
 
   def project do
     [
       app: :telegex,
       version: @version,
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       dialyzer: dialyzer(),
       aliases: aliases(),
