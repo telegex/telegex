@@ -71,10 +71,12 @@ if Code.ensure_loaded?(Plug) do
       secret_token == conn.private[:secret_token]
     end
 
-    defp remote_ip(conn) do
-      ip_tuple = apply(RemoteIp, :from, [conn.req_headers])
-
+    defp remote_ip(%{remote_ip: ip_tuple} = _conn) when ip_tuple != nil do
       :inet.ntoa(ip_tuple)
+    end
+
+    defp remote_ip(_conn) do
+      "[not_found_client_ip]"
     end
 
     match _ do
