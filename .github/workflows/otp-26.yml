@@ -31,7 +31,7 @@ jobs:
           config :telegex, token: "${{ secrets.BOT_TOKEN }}"
           EOT
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1.16
+        uses: erlef/setup-beam@v1.17
         with:
           elixir-version: "1.16.0" # Define the elixir version [required]
           otp-version: "26.1.2" # Define the OTP version [required]
