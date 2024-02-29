@@ -60,15 +60,15 @@ defmodule Telegex.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:httpoison, "~> 2.2", optional: true, only: [:dev, :test]},
-      {:finch, "~> 0.16.0", optional: true, only: [:dev, :test]},
+      {:finch, "~> 0.18.0", optional: true, only: [:dev, :test]},
       {:multipart, "~> 0.4.0", optional: true, only: [:dev, :test]},
       {:plug, "~> 1.15", optional: true, only: [:dev, :test]},
-      {:plug_cowboy, "~> 2.6", optional: true, only: [:dev, :test]},
+      {:plug_cowboy, "~> 2.7", optional: true, only: [:dev, :test]},
       {:remote_ip, "~> 1.1", optional: true, only: [:dev, :test]},
-      {:bandit, "~> 1.1", optional: true, only: [:dev, :test]},
-      {:floki, "~> 0.35.2", only: [:dev, :test]},
+      {:bandit, "~> 1.2", optional: true, only: [:dev, :test]},
+      {:floki, "~> 0.35.4", only: [:dev, :test]},
       {:typed_struct, "~> 0.3.0"},
       {:jason, "~> 1.4"}
     ]
