@@ -263,7 +263,7 @@ defmodule Telegex.Type do
 At most one of the optional parameters can be present in any given update.", [
     %{
       description:
-        "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.",
+        "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This identifier becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.",
       name: :update_id,
       optional: false,
       type: :integer
@@ -275,7 +275,8 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.Message
     },
     %{
-      description: "Optional. New version of a message that is known to the bot and was edited",
+      description:
+        "Optional. New version of a message that is known to the bot and was edited. This update may at times be triggered by changes to message fields that are either unavailable or not actively used by your bot.",
       name: :edited_message,
       optional: true,
       type: Telegex.Type.Message
@@ -288,7 +289,7 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. New version of a channel post that is known to the bot and was edited",
+        "Optional. New version of a channel post that is known to the bot and was edited. This update may at times be triggered by changes to message fields that are either unavailable or not actively used by your bot.",
       name: :edited_channel_post,
       optional: true,
       type: Telegex.Type.Message
@@ -302,7 +303,7 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify \"message_reaction_count\" in the list of allowed_updates to receive these updates.",
+        "Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify \"message_reaction_count\" in the list of allowed_updates to receive these updates. The updates are grouped and can be sent with delay up to a few minutes.",
       name: :message_reaction_count,
       optional: true,
       type: Telegex.Type.MessageReactionCountUpdated
@@ -341,7 +342,7 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot",
+        "Optional. New poll state. Bots receive only updates about manually stopped polls and polls, which are sent by the bot",
       name: :poll,
       optional: true,
       type: Telegex.Type.Poll
@@ -689,8 +690,15 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in getChat.",
+        "Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in getChat.",
       name: :slow_mode_delay,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description:
+        "Optional. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in getChat.",
+      name: :unrestrict_boost_count,
       optional: true,
       type: :integer
     },
@@ -745,6 +753,13 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
+        "Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group. Returned only in getChat.",
+      name: :custom_emoji_sticker_set_name,
+      optional: true,
+      type: :string
+    },
+    %{
+      description:
         "Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat.",
       name: :linked_chat_id,
       optional: true,
@@ -786,6 +801,13 @@ At most one of the optional parameters can be present in any given update.", [
       name: :sender_chat,
       optional: true,
       type: Telegex.Type.Chat
+    },
+    %{
+      description:
+        "Optional. If the sender of the message boosted the chat, the number of boosts added by the user",
+      name: :sender_boost_count,
+      optional: true,
+      type: :integer
     },
     %{
       description:
@@ -839,6 +861,12 @@ At most one of the optional parameters can be present in any given update.", [
       name: :quote,
       optional: true,
       type: Telegex.Type.TextQuote
+    },
+    %{
+      description: "Optional. For replies to a story, the original story",
+      name: :reply_to_story,
+      optional: true,
+      type: Telegex.Type.Story
     },
     %{
       description: "Optional. Bot through which the message was sent",
@@ -1134,6 +1162,12 @@ At most one of the optional parameters can be present in any given update.", [
       name: :proximity_alert_triggered,
       optional: true,
       type: Telegex.Type.ProximityAlertTriggered
+    },
+    %{
+      description: "Optional. Service message: user boosted the chat",
+      name: :boost_added,
+      optional: true,
+      type: Telegex.Type.ChatBoostAdded
     },
     %{
       description: "Optional. Service message: forum topic created",
@@ -1863,11 +1897,20 @@ At most one of the optional parameters can be present in any given update.", [
     ]
   )
 
-  deftype(
-    Story,
-    "This object represents a message about a forwarded story in the chat. Currently holds no information.",
-    []
-  )
+  deftype(Story, "This object represents a story.", [
+    %{
+      description: "Chat that posted the story",
+      name: :chat,
+      optional: false,
+      type: Telegex.Type.Chat
+    },
+    %{
+      description: "Unique identifier for the story in the chat",
+      name: :id,
+      optional: false,
+      type: :integer
+    }
+  ])
 
   deftype(Video, "This object represents a video file.", [
     %{
@@ -2165,14 +2208,14 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(Location, "This object represents a point on the map.", [
     %{
-      description: "Longitude as defined by sender",
-      name: :longitude,
+      description: "Latitude as defined by sender",
+      name: :latitude,
       optional: false,
       type: :float
     },
     %{
-      description: "Latitude as defined by sender",
-      name: :latitude,
+      description: "Longitude as defined by sender",
+      name: :longitude,
       optional: false,
       type: :float
     },
@@ -2290,6 +2333,19 @@ At most one of the optional parameters can be present in any given update.", [
       %{
         description: "New auto-delete time for messages in the chat; in seconds",
         name: :message_auto_delete_time,
+        optional: false,
+        type: :integer
+      }
+    ]
+  )
+
+  deftype(
+    ChatBoostAdded,
+    "This object represents a service message about a user boosting a chat.",
+    [
+      %{
+        description: "Number of boosts added by the user",
+        name: :boost_count,
         optional: false,
         type: :integer
       }
@@ -2546,7 +2602,7 @@ At most one of the optional parameters can be present in any given update.", [
         type: Telegex.Type.Chat
       },
       %{
-        description: "Identifier of the messsage with the giveaway in the chat",
+        description: "Identifier of the message with the giveaway in the chat",
         name: :giveaway_message_id,
         optional: false,
         type: :integer
@@ -2654,14 +2710,14 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. True, if the media in the link preview is suppposed to be shrunk; ignored if the URL isn't explicitly specified or media size change isn't supported for the preview",
+        "Optional. True, if the media in the link preview is supposed to be shrunk; ignored if the URL isn't explicitly specified or media size change isn't supported for the preview",
       name: :prefer_small_media,
       optional: true,
       type: :boolean
     },
     %{
       description:
-        "Optional. True, if the media in the link preview is suppposed to be enlarged; ignored if the URL isn't explicitly specified or media size change isn't supported for the preview",
+        "Optional. True, if the media in the link preview is supposed to be enlarged; ignored if the URL isn't explicitly specified or media size change isn't supported for the preview",
       name: :prefer_large_media,
       optional: true,
       type: :boolean
@@ -2784,7 +2840,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.\n\nExample: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.",
+          "Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.\n\nExample: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.",
         name: :selective,
         optional: true,
         type: :boolean
@@ -2794,7 +2850,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     KeyboardButton,
-    "This object represents one button of the reply keyboard. For simple text buttons, String can be used instead of this object to specify the button text. The optional fields web_app, request_user, request_chat, request_contact, request_location, and request_poll are mutually exclusive.",
+    "This object represents one button of the reply keyboard. For simple text buttons, String can be used instead of this object to specify the button text. The optional fields web_app, request_users, request_chat, request_contact, request_location, and request_poll are mutually exclusive.",
     [
       %{
         description:
@@ -2972,7 +3028,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.\n\nExample: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.",
+          "Optional. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.\n\nExample: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.",
         name: :selective,
         optional: true,
         type: :boolean
@@ -3007,7 +3063,7 @@ At most one of the optional parameters can be present in any given update.", [
       %{description: "Label text on the button", name: :text, optional: false, type: :string},
       %{
         description:
-          "Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.",
+          "Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.",
         name: :url,
         optional: true,
         type: :string
@@ -3212,7 +3268,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.",
+          "Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply to a message in the same chat and forum topic, sender of the original message.",
         name: :selective,
         optional: true,
         type: :boolean
@@ -3316,7 +3372,7 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "True, if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+        "True, if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.",
       name: :can_manage_chat,
       optional: false,
       type: :boolean
@@ -3361,6 +3417,24 @@ At most one of the optional parameters can be present in any given update.", [
       type: :boolean
     },
     %{
+      description: "True, if the administrator can post stories to the chat",
+      name: :can_post_stories,
+      optional: false,
+      type: :boolean
+    },
+    %{
+      description: "True, if the administrator can edit stories posted by other users",
+      name: :can_edit_stories,
+      optional: false,
+      type: :boolean
+    },
+    %{
+      description: "True, if the administrator can delete stories posted by other users",
+      name: :can_delete_stories,
+      optional: false,
+      type: :boolean
+    },
+    %{
       description:
         "Optional. True, if the administrator can post messages in the channel, or access channel statistics; channels only",
       name: :can_post_messages,
@@ -3378,27 +3452,6 @@ At most one of the optional parameters can be present in any given update.", [
       description:
         "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
       name: :can_pin_messages,
-      optional: true,
-      type: :boolean
-    },
-    %{
-      description:
-        "Optional. True, if the administrator can post stories in the channel; channels only",
-      name: :can_post_stories,
-      optional: true,
-      type: :boolean
-    },
-    %{
-      description:
-        "Optional. True, if the administrator can edit stories posted by other users; channels only",
-      name: :can_edit_stories,
-      optional: true,
-      type: :boolean
-    },
-    %{
-      description:
-        "Optional. True, if the administrator can delete stories posted by other users; channels only",
-      name: :can_delete_stories,
       optional: true,
       type: :boolean
     },
@@ -3518,7 +3571,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "True, if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+          "True, if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.",
         name: :can_manage_chat,
         optional: false,
         type: :boolean
@@ -3563,6 +3616,24 @@ At most one of the optional parameters can be present in any given update.", [
         type: :boolean
       },
       %{
+        description: "True, if the administrator can post stories to the chat",
+        name: :can_post_stories,
+        optional: false,
+        type: :boolean
+      },
+      %{
+        description: "True, if the administrator can edit stories posted by other users",
+        name: :can_edit_stories,
+        optional: false,
+        type: :boolean
+      },
+      %{
+        description: "True, if the administrator can delete stories posted by other users",
+        name: :can_delete_stories,
+        optional: false,
+        type: :boolean
+      },
+      %{
         description:
           "Optional. True, if the administrator can post messages in the channel, or access channel statistics; channels only",
         name: :can_post_messages,
@@ -3580,27 +3651,6 @@ At most one of the optional parameters can be present in any given update.", [
         description:
           "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
         name: :can_pin_messages,
-        optional: true,
-        type: :boolean
-      },
-      %{
-        description:
-          "Optional. True, if the administrator can post stories in the channel; channels only",
-        name: :can_post_stories,
-        optional: true,
-        type: :boolean
-      },
-      %{
-        description:
-          "Optional. True, if the administrator can edit stories posted by other users; channels only",
-        name: :can_edit_stories,
-        optional: true,
-        type: :boolean
-      },
-      %{
-        description:
-          "Optional. True, if the administrator can delete stories posted by other users; channels only",
-        name: :can_delete_stories,
         optional: true,
         type: :boolean
       },
@@ -3974,7 +4024,12 @@ At most one of the optional parameters can be present in any given update.", [
       optional: false,
       type: :string
     },
-    %{description: "Custom emoji identifier", name: :custom_emoji, optional: false, type: :string}
+    %{
+      description: "Custom emoji identifier",
+      name: :custom_emoji_id,
+      optional: false,
+      type: :string
+    }
   ])
 
   deftype(
@@ -4384,7 +4439,7 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.Chat
     },
     %{
-      description: "Infomation about the chat boost",
+      description: "Information about the chat boost",
       name: :boost,
       optional: false,
       type: Telegex.Type.ChatBoost

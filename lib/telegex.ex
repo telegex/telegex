@@ -1698,7 +1698,7 @@ defmodule Telegex do
 
   defmethod(
     "setMessageReaction",
-    "Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. In albums, bots must react to the first message. Returns True on success.",
+    "Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.",
     [
       %{
         description:
@@ -1708,7 +1708,8 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
-        description: "Identifier of the target message",
+        description:
+          "Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group instead.",
         name: :message_id,
         required: true,
         type: :integer
@@ -1900,7 +1901,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
+          "Pass True if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.",
         name: :can_manage_chat,
         required: false,
         type: :boolean
@@ -1945,6 +1946,24 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description: "Pass True if the administrator can post stories to the chat",
+        name: :can_post_stories,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the administrator can edit stories posted by other users",
+        name: :can_edit_stories,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Pass True if the administrator can delete stories posted by other users",
+        name: :can_delete_stories,
+        required: false,
+        type: :boolean
+      },
+      %{
         description:
           "Pass True if the administrator can post messages in the channel, or access channel statistics; channels only",
         name: :can_post_messages,
@@ -1961,27 +1980,6 @@ defmodule Telegex do
       %{
         description: "Pass True if the administrator can pin messages, supergroups only",
         name: :can_pin_messages,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description:
-          "Pass True if the administrator can post stories in the channel; channels only",
-        name: :can_post_stories,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description:
-          "Pass True if the administrator can edit stories posted by other users; channels only",
-        name: :can_edit_stories,
-        required: false,
-        type: :boolean
-      },
-      %{
-        description:
-          "Pass True if the administrator can delete stories posted by other users; channels only",
-        name: :can_delete_stories,
         required: false,
         type: :boolean
       },
