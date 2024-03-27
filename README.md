@@ -202,7 +202,7 @@ You also need to configure adapters for hooks, which provide web services.
 Based on [`Bandit`](https://hexdocs.pm/telegex/Telegex.Hook.Adapter.Bandit.html) - [`bandit`](https://hex.pm/packages/bandit)
 
 ```elixir
-# add `bandit` to your dpes.
+# add `bandit` to your deps.
 config :telegex, hook_adapter: Bandit
 ```
 
