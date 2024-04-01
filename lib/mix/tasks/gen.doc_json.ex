@@ -39,8 +39,8 @@ if Mix.env() in [:dev, :test] do
 
       doc_sections = parse_sections(doc_nodes, "h3")
 
-      types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
       updates_section = Enum.find(doc_sections, &(&1.title == "Getting updates"))
+      types_section = Enum.find(doc_sections, &(&1.title == "Available types"))
       inline_section = Enum.find(doc_sections, &(&1.title == "Inline mode"))
       payments_section = Enum.find(doc_sections, &(&1.title == "Payments"))
       methods_section = Enum.find(doc_sections, &(&1.title == "Available methods"))
@@ -49,22 +49,22 @@ if Mix.env() in [:dev, :test] do
       passport_section = Enum.find(doc_sections, &(&1.title == "Telegram Passport"))
       games_section = Enum.find(doc_sections, &(&1.title == "Games"))
 
-      types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       updates_sub_sections = parse_sub_sections(updates_section, doc_nodes)
+      types_sub_sections = parse_sub_sections(types_section, doc_nodes)
       inline_sub_sections = parse_sub_sections(inline_section, doc_nodes)
       payments_sub_sections = parse_sub_sections(payments_section, doc_nodes)
       stickers_sub_sections = parse_sub_sections(stickers_section, doc_nodes)
       passport_sub_sections = parse_sub_sections(passport_section, doc_nodes)
       games_sub_sections = parse_sub_sections(games_section, doc_nodes)
 
-      updates_types =
-        updates_sub_sections
+      types =
+        types_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
-      types =
-        types_sub_sections
+      updates_types =
+        updates_sub_sections
         # 排除非类型的子章节
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
@@ -365,7 +365,14 @@ if Mix.env() in [:dev, :test] do
     defp parse_type(section, doc_nodes) do
       nodes = Enum.slice(doc_nodes, section.node_beginning..section.node_end)
 
-      description = nodes |> Floki.find("p") |> hd() |> Floki.text()
+      description_nodes = Floki.find(nodes, "p")
+
+      description =
+        if !Enum.empty?(description_nodes) do
+          description_nodes |> hd() |> Floki.text()
+        else
+          # 有些 type 没有描述内容，允许为空
+        end
 
       fields = parse_type_fields(nodes)
 
@@ -504,10 +511,6 @@ if Mix.env() in [:dev, :test] do
 
     def parse_method_returns(description, i \\ 0) do
       re = Enum.at(@result_type_re_list, i)
-
-      # if description == "Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned." do
-      #   Regex.scan(re, description) |> IO.inspect()
-      # end
 
       if re == nil do
         # 缺少结果类型

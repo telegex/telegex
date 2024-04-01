@@ -296,6 +296,31 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
+        "Optional. The bot was connected to or disconnected from a business account, or a user edited an existing connection with the bot",
+      name: :business_connection,
+      optional: true,
+      type: Telegex.Type.BusinessConnection
+    },
+    %{
+      description: "Optional. New non-service message from a connected business account",
+      name: :business_message,
+      optional: true,
+      type: Telegex.Type.Message
+    },
+    %{
+      description: "Optional. New version of a message from a connected business account",
+      name: :edited_business_message,
+      optional: true,
+      type: Telegex.Type.Message
+    },
+    %{
+      description: "Optional. Messages were deleted from a connected business account",
+      name: :deleted_business_messages,
+      optional: true,
+      type: Telegex.Type.BusinessMessagesDeleted
+    },
+    %{
+      description:
         "Optional. A reaction to a message was changed by a user. The bot must be an administrator in the chat and must explicitly specify \"message_reaction\" in the list of allowed_updates to receive these updates. The update isn't received for reactions set by bots.",
       name: :message_reaction,
       optional: true,
@@ -516,6 +541,13 @@ At most one of the optional parameters can be present in any given update.", [
       name: :supports_inline_queries,
       optional: true,
       type: :boolean
+    },
+    %{
+      description:
+        "Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.",
+      name: :can_connect_to_business,
+      optional: true,
+      type: :boolean
     }
   ])
 
@@ -575,6 +607,41 @@ At most one of the optional parameters can be present in any given update.", [
       name: :active_usernames,
       optional: true,
       type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :string}
+    },
+    %{
+      description:
+        "Optional. For private chats, the date of birth of the user. Returned only in getChat.",
+      name: :birthdate,
+      optional: true,
+      type: Telegex.Type.Birthdate
+    },
+    %{
+      description:
+        "Optional. For private chats with business accounts, the intro of the business. Returned only in getChat.",
+      name: :business_intro,
+      optional: true,
+      type: Telegex.Type.BusinessIntro
+    },
+    %{
+      description:
+        "Optional. For private chats with business accounts, the location of the business. Returned only in getChat.",
+      name: :business_location,
+      optional: true,
+      type: Telegex.Type.BusinessLocation
+    },
+    %{
+      description:
+        "Optional. For private chats with business accounts, the opening hours of the business. Returned only in getChat.",
+      name: :business_opening_hours,
+      optional: true,
+      type: Telegex.Type.BusinessOpeningHours
+    },
+    %{
+      description:
+        "Optional. For private chats, the personal channel of the user. Returned only in getChat.",
+      name: :personal_chat,
+      optional: true,
+      type: Telegex.Type.Chat
     },
     %{
       description:
@@ -811,10 +878,24 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
+        "Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.",
+      name: :sender_business_bot,
+      optional: true,
+      type: Telegex.Type.User
+    },
+    %{
+      description:
         "Date the message was sent in Unix time. It is always a positive number, representing a valid date.",
       name: :date,
       optional: false,
       type: :integer
+    },
+    %{
+      description:
+        "Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.",
+      name: :business_connection_id,
+      optional: true,
+      type: :string
     },
     %{
       description: "Chat the message belongs to",
@@ -883,6 +964,13 @@ At most one of the optional parameters can be present in any given update.", [
     %{
       description: "Optional. True, if the message can't be forwarded",
       name: :has_protected_content,
+      optional: true,
+      type: :boolean
+    },
+    %{
+      description:
+        "Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message",
+      name: :is_from_offline,
       optional: true,
       type: :boolean
     },
@@ -1550,14 +1638,14 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the channel (in the format @channelusername)",
+        "Optional. If the message to be replied to is from a different chat, unique identifier for the chat or username of the channel (in the format @channelusername). Not supported for messages sent on behalf of a business account.",
       name: :chat_id,
       optional: true,
       type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
     },
     %{
       description:
-        "Optional. Pass True if the message should be sent even if the specified message to be replied to is not found; can be used only for replies in the same chat and forum topic.",
+        "Optional. Pass True if the message should be sent even if the specified message to be replied to is not found. Always False for replies in another chat or forum topic. Always True for messages sent on behalf of a business account.",
       name: :allow_sending_without_reply,
       optional: true,
       type: :boolean
@@ -2417,6 +2505,45 @@ At most one of the optional parameters can be present in any given update.", [
   )
 
   deftype(
+    SharedUser,
+    "This object contains information about a user that was shared with the bot using a KeyboardButtonRequestUser button.",
+    [
+      %{
+        description:
+          "Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means.",
+        name: :user_id,
+        optional: false,
+        type: :integer
+      },
+      %{
+        description: "Optional. First name of the user, if the name was requested by the bot",
+        name: :first_name,
+        optional: true,
+        type: :string
+      },
+      %{
+        description: "Optional. Last name of the user, if the name was requested by the bot",
+        name: :last_name,
+        optional: true,
+        type: :string
+      },
+      %{
+        description: "Optional. Username of the user, if the username was requested by the bot",
+        name: :username,
+        optional: true,
+        type: :string
+      },
+      %{
+        description:
+          "Optional. Available sizes of the chat photo, if the photo was requested by the bot",
+        name: :photo,
+        optional: true,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PhotoSize}
+      }
+    ]
+  )
+
+  deftype(
     UsersShared,
     "This object contains information about the users whose identifiers were shared with the bot using a KeyboardButtonRequestUsers button.",
     [
@@ -2427,18 +2554,17 @@ At most one of the optional parameters can be present in any given update.", [
         type: :integer
       },
       %{
-        description:
-          "Identifiers of the shared users. These numbers may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting them. But they have at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the users and could be unable to use these identifiers, unless the users are already known to the bot by some other means.",
-        name: :user_ids,
+        description: "Information about users shared with the bot.",
+        name: :users,
         optional: false,
-        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.SharedUser}
       }
     ]
   )
 
   deftype(
     ChatShared,
-    "This object contains information about the chat whose identifier was shared with the bot using a KeyboardButtonRequestChat button.",
+    "This object contains information about a chat that was shared with the bot using a KeyboardButtonRequestChat button.",
     [
       %{
         description: "Identifier of the request",
@@ -2452,6 +2578,26 @@ At most one of the optional parameters can be present in any given update.", [
         name: :chat_id,
         optional: false,
         type: :integer
+      },
+      %{
+        description: "Optional. Title of the chat, if the title was requested by the bot.",
+        name: :title,
+        optional: true,
+        type: :string
+      },
+      %{
+        description:
+          "Optional. Username of the chat, if the username was requested by the bot and available.",
+        name: :username,
+        optional: true,
+        type: :string
+      },
+      %{
+        description:
+          "Optional. Available sizes of the chat photo, if the photo was requested by the bot",
+        name: :photo,
+        optional: true,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PhotoSize}
       }
     ]
   )
@@ -2906,7 +3052,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     KeyboardButtonRequestUsers,
-    "This object defines the criteria used to request suitable users. The identifiers of the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users »",
+    "This object defines the criteria used to request suitable users. Information about the selected users will be shared with the bot when the corresponding button is pressed. More about requesting users »",
     [
       %{
         description:
@@ -2934,13 +3080,31 @@ At most one of the optional parameters can be present in any given update.", [
         name: :max_quantity,
         optional: true,
         type: :integer
+      },
+      %{
+        description: "Optional. Pass True to request the users' first and last name",
+        name: :request_name,
+        optional: true,
+        type: :boolean
+      },
+      %{
+        description: "Optional. Pass True to request the users' username",
+        name: :request_username,
+        optional: true,
+        type: :boolean
+      },
+      %{
+        description: "Optional. Pass True to request the users' photo",
+        name: :request_photo,
+        optional: true,
+        type: :boolean
       }
     ]
   )
 
   deftype(
     KeyboardButtonRequestChat,
-    "This object defines the criteria used to request a suitable chat. The identifier of the selected chat will be shared with the bot when the corresponding button is pressed. More about requesting chats »",
+    "This object defines the criteria used to request a suitable chat. Information about the selected chat will be shared with the bot when the corresponding button is pressed. The bot will be granted requested rights in the сhat if appropriate More about requesting chats »",
     [
       %{
         description:
@@ -2995,6 +3159,24 @@ At most one of the optional parameters can be present in any given update.", [
         description:
           "Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.",
         name: :bot_is_member,
+        optional: true,
+        type: :boolean
+      },
+      %{
+        description: "Optional. Pass True to request the chat's title",
+        name: :request_title,
+        optional: true,
+        type: :boolean
+      },
+      %{
+        description: "Optional. Pass True to request the chat's username",
+        name: :request_username,
+        optional: true,
+        type: :boolean
+      },
+      %{
+        description: "Optional. Pass True to request the chat's photo",
+        name: :request_photo,
         optional: true,
         type: :boolean
       }
@@ -3436,28 +3618,28 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. True, if the administrator can post messages in the channel, or access channel statistics; channels only",
+        "Optional. True, if the administrator can post messages in the channel, or access channel statistics; for channels only",
       name: :can_post_messages,
       optional: true,
       type: :boolean
     },
     %{
       description:
-        "Optional. True, if the administrator can edit messages of other users and can pin messages; channels only",
+        "Optional. True, if the administrator can edit messages of other users and can pin messages; for channels only",
       name: :can_edit_messages,
       optional: true,
       type: :boolean
     },
     %{
       description:
-        "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
+        "Optional. True, if the user is allowed to pin messages; for groups and supergroups only",
       name: :can_pin_messages,
       optional: true,
       type: :boolean
     },
     %{
       description:
-        "Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only",
+        "Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only",
       name: :can_manage_topics,
       optional: true,
       type: :boolean
@@ -3635,28 +3817,28 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. True, if the administrator can post messages in the channel, or access channel statistics; channels only",
+          "Optional. True, if the administrator can post messages in the channel, or access channel statistics; for channels only",
         name: :can_post_messages,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. True, if the administrator can edit messages of other users and can pin messages; channels only",
+          "Optional. True, if the administrator can edit messages of other users and can pin messages; for channels only",
         name: :can_edit_messages,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. True, if the user is allowed to pin messages; groups and supergroups only",
+          "Optional. True, if the user is allowed to pin messages; for groups and supergroups only",
         name: :can_pin_messages,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only",
+          "Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only",
         name: :can_manage_topics,
         optional: true,
         type: :boolean
@@ -3985,6 +4167,88 @@ At most one of the optional parameters can be present in any given update.", [
       }
     ]
   )
+
+  deftype(Birthdate, "", [
+    %{description: "Day of the user's birth; 1-31", name: :day, optional: false, type: :integer},
+    %{
+      description: "Month of the user's birth; 1-12",
+      name: :month,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "Optional. Year of the user's birth",
+      name: :year,
+      optional: true,
+      type: :integer
+    }
+  ])
+
+  deftype(BusinessIntro, "", [
+    %{
+      description: "Optional. Title text of the business intro",
+      name: :title,
+      optional: true,
+      type: :string
+    },
+    %{
+      description: "Optional. Message text of the business intro",
+      name: :message,
+      optional: true,
+      type: :string
+    },
+    %{
+      description: "Optional. Sticker of the business intro",
+      name: :sticker,
+      optional: true,
+      type: Telegex.Type.Sticker
+    }
+  ])
+
+  deftype(BusinessLocation, "", [
+    %{description: "Address of the business", name: :address, optional: false, type: :string},
+    %{
+      description: "Optional. Location of the business",
+      name: :location,
+      optional: true,
+      type: Telegex.Type.Location
+    }
+  ])
+
+  deftype(BusinessOpeningHoursInterval, "", [
+    %{
+      description:
+        "The minute's sequence number in a week, starting on Monday, marking the start of the time interval during which the business is open; 0 - 7  24  60",
+      name: :opening_minute,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description:
+        "The minute's sequence number in a week, starting on Monday, marking the end of the time interval during which the business is open; 0 - 8  24  60",
+      name: :closing_minute,
+      optional: false,
+      type: :integer
+    }
+  ])
+
+  deftype(BusinessOpeningHours, "", [
+    %{
+      description: "Unique name of the time zone for which the opening hours are defined",
+      name: :time_zone_name,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "List of time intervals describing business opening hours",
+      name: :opening_hours,
+      optional: false,
+      type: %{
+        __struct__: Telegex.TypeDefiner.ArrayType,
+        elem_type: Telegex.Type.BusinessOpeningHoursInterval
+      }
+    }
+  ])
 
   deftype(ChatLocation, "Represents a location to which a chat is connected.", [
     %{
@@ -4482,6 +4746,74 @@ At most one of the optional parameters can be present in any given update.", [
     }
   ])
 
+  deftype(BusinessConnection, "Describes the connection of the bot with a business account.", [
+    %{
+      description: "Unique identifier of the business connection",
+      name: :id,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Business account user that created the business connection",
+      name: :user,
+      optional: false,
+      type: Telegex.Type.User
+    },
+    %{
+      description:
+        "Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.",
+      name: :user_chat_id,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "Date the connection was established in Unix time",
+      name: :date,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description:
+        "True, if the bot can act on behalf of the business account in chats that were active in the last 24 hours",
+      name: :can_reply,
+      optional: false,
+      type: :boolean
+    },
+    %{
+      description: "True, if the connection is active",
+      name: :is_enabled,
+      optional: false,
+      type: :boolean
+    }
+  ])
+
+  deftype(
+    BusinessMessagesDeleted,
+    "This object is received when messages are deleted from a connected business account.",
+    [
+      %{
+        description: "Unique identifier of the business connection",
+        name: :business_connection_id,
+        optional: false,
+        type: :string
+      },
+      %{
+        description:
+          "Information about a chat in the business account. The bot may not have access to the chat or the corresponding user.",
+        name: :chat,
+        optional: false,
+        type: Telegex.Type.Chat
+      },
+      %{
+        description:
+          "A JSON-serialized list of identifiers of deleted messages in the chat of the business account",
+        name: :message_ids,
+        optional: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
+      }
+    ]
+  )
+
   deftype(ResponseParameters, "Describes why a request was unsuccessful.", [
     %{
       description:
@@ -4885,18 +5217,6 @@ At most one of the optional parameters can be present in any given update.", [
       type: :string
     },
     %{
-      description: "True, if the sticker set contains animated stickers",
-      name: :is_animated,
-      optional: false,
-      type: :boolean
-    },
-    %{
-      description: "True, if the sticker set contains video stickers",
-      name: :is_video,
-      optional: false,
-      type: :boolean
-    },
-    %{
       description: "List of all set stickers",
       name: :stickers,
       optional: false,
@@ -4951,6 +5271,13 @@ At most one of the optional parameters can be present in any given update.", [
       name: :sticker,
       optional: false,
       type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [Telegex.Type.InputFile, :string]}
+    },
+    %{
+      description:
+        "Format of the added sticker, must be one of “static” for a .WEBP or .PNG image, “animated” for a .TGS animation, “video” for a WEBM video",
+      name: :format,
+      optional: false,
+      type: :string
     },
     %{
       description: "List of 1-20 emoji associated with the sticker",
@@ -7034,55 +7361,55 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Base64-encoded encrypted Telegram Passport element data provided by the user; available only for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :data,
         optional: true,
         type: :string
       },
       %{
         description:
-          "Optional. User's verified phone number, available only for “phone_number” type",
+          "Optional. User's verified phone number; available only for “phone_number” type",
         name: :phone_number,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. User's verified email address, available only for “email” type",
+        description: "Optional. User's verified email address; available only for “email” type",
         name: :email,
         optional: true,
         type: :string
       },
       %{
         description:
-          "Optional. Array of encrypted files with documents provided by the user, available for “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Array of encrypted files with documents provided by the user; available only for “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :files,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PassportFile}
       },
       %{
         description:
-          "Optional. Encrypted file with the front side of the document, provided by the user. Available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Encrypted file with the front side of the document, provided by the user; available only for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :front_side,
         optional: true,
         type: Telegex.Type.PassportFile
       },
       %{
         description:
-          "Optional. Encrypted file with the reverse side of the document, provided by the user. Available for “driver_license” and “identity_card”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Encrypted file with the reverse side of the document, provided by the user; available only for “driver_license” and “identity_card”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :reverse_side,
         optional: true,
         type: Telegex.Type.PassportFile
       },
       %{
         description:
-          "Optional. Encrypted file with the selfie of the user holding a document, provided by the user; available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Encrypted file with the selfie of the user holding a document, provided by the user; available if requested for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :selfie,
         optional: true,
         type: Telegex.Type.PassportFile
       },
       %{
         description:
-          "Optional. Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.",
+          "Optional. Array of encrypted files with translated versions of documents provided by the user; available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.",
         name: :translation,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PassportFile}

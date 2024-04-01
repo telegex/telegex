@@ -143,6 +143,13 @@ defmodule Telegex do
     [
       %{
         description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
         name: :chat_id,
         required: true,
@@ -202,7 +209,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -294,7 +301,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Identifiers of 1-100 messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.",
+          "A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.",
         name: :message_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
@@ -433,7 +440,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Identifiers of 1-100 messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.",
+          "A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.",
         name: :message_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
@@ -465,6 +472,13 @@ defmodule Telegex do
     "sendPhoto",
     "Use this method to send photos. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -537,7 +551,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -558,6 +572,13 @@ defmodule Telegex do
     "sendAudio",
     "Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -641,7 +662,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -662,6 +683,13 @@ defmodule Telegex do
     "sendDocument",
     "Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -745,7 +773,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -766,6 +794,13 @@ defmodule Telegex do
     "sendVideo",
     "Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -862,7 +897,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -883,6 +918,13 @@ defmodule Telegex do
     "sendAnimation",
     "Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -973,7 +1015,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -994,6 +1036,13 @@ defmodule Telegex do
     "sendVoice",
     "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1065,7 +1114,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1086,6 +1135,13 @@ defmodule Telegex do
     "sendVideoNote",
     "As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1153,7 +1209,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1174,6 +1230,13 @@ defmodule Telegex do
     "sendMediaGroup",
     "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1232,6 +1295,13 @@ defmodule Telegex do
     "sendLocation",
     "Use this method to send point on the map. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1296,7 +1366,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1317,6 +1387,13 @@ defmodule Telegex do
     "sendVenue",
     "Use this method to send information about a venue. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1381,7 +1458,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1402,6 +1479,13 @@ defmodule Telegex do
     "sendContact",
     "Use this method to send phone contacts. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1451,7 +1535,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1472,6 +1556,13 @@ defmodule Telegex do
     "sendPoll",
     "Use this method to send a native poll. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1588,7 +1679,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1609,6 +1700,13 @@ defmodule Telegex do
     "sendDice",
     "Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -1651,7 +1749,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1674,13 +1772,20 @@ defmodule Telegex do
     [
       %{
         description:
+          "Unique identifier of the business connection on behalf of which the action will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
         name: :chat_id,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       },
       %{
-        description: "Unique identifier for the target message thread; supergroups only",
+        description: "Unique identifier for the target message thread; for supergroups only",
         name: :message_thread_id,
         required: false,
         type: :integer
@@ -1716,7 +1821,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "New list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators.",
+          "A JSON-serialized list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators.",
         name: :reaction,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.ReactionType}
@@ -1965,27 +2070,27 @@ defmodule Telegex do
       },
       %{
         description:
-          "Pass True if the administrator can post messages in the channel, or access channel statistics; channels only",
+          "Pass True if the administrator can post messages in the channel, or access channel statistics; for channels only",
         name: :can_post_messages,
         required: false,
         type: :boolean
       },
       %{
         description:
-          "Pass True if the administrator can edit messages of other users and can pin messages; channels only",
+          "Pass True if the administrator can edit messages of other users and can pin messages; for channels only",
         name: :can_edit_messages,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the administrator can pin messages, supergroups only",
+        description: "Pass True if the administrator can pin messages; for supergroups only",
         name: :can_pin_messages,
         required: false,
         type: :boolean
       },
       %{
         description:
-          "Pass True if the user is allowed to create, rename, close, and reopen forum topics, supergroups only",
+          "Pass True if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only",
         name: :can_manage_topics,
         required: false,
         type: :boolean
@@ -2834,6 +2939,20 @@ defmodule Telegex do
   )
 
   defmethod(
+    "getBusinessConnection",
+    "Use this method to get information about the connection of the bot with a business account. Returns a BusinessConnection object on success.",
+    [
+      %{
+        description: "Unique identifier of the business connection",
+        name: :business_connection_id,
+        required: true,
+        type: :string
+      }
+    ],
+    Telegex.Type.BusinessConnection
+  )
+
+  defmethod(
     "setMyCommands",
     "Use this method to change the list of the bot's commands. See this manual for more details about bot commands. Returns True on success.",
     [
@@ -3441,7 +3560,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Identifiers of 1-100 messages to delete. See deleteMessage for limitations on which messages can be deleted",
+          "A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted",
         name: :message_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :integer}
@@ -3454,6 +3573,13 @@ Returns True on success.",
     "sendSticker",
     "Use this method to send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3470,7 +3596,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP or .TGS sticker using multipart/form-data. More information on Sending Files ». Video stickers can only be sent by a file_id. Animated stickers can't be sent via an HTTP URL.",
+          "Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP, .TGS, or .WEBM sticker using multipart/form-data. More information on Sending Files ». Video and animated stickers can't be sent via an HTTP URL.",
         name: :sticker,
         required: true,
         type: %{
@@ -3505,7 +3631,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account.",
         name: :reply_markup,
         required: false,
         type: %{
@@ -3535,7 +3661,7 @@ Returns True on success.",
     [
       %{
         description:
-          "List of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.",
+          "A JSON-serialized list of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.",
         name: :custom_emoji_ids,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :string}
@@ -3546,7 +3672,7 @@ Returns True on success.",
 
   defmethod(
     "uploadStickerFile",
-    "Use this method to upload a file with a sticker for later use in the createNewStickerSet and addStickerToSet methods (the file can be used multiple times). Returns the uploaded File on success.",
+    "Use this method to upload a file with a sticker for later use in the createNewStickerSet, addStickerToSet, or replaceStickerInSet methods (the file can be used multiple times). Returns the uploaded File on success.",
     [
       %{
         description: "User identifier of sticker file owner",
@@ -3603,13 +3729,6 @@ Returns True on success.",
       },
       %{
         description:
-          "Format of stickers in the set, must be one of “static”, “animated”, “video”",
-        name: :sticker_format,
-        required: true,
-        type: :string
-      },
-      %{
-        description:
           "Type of stickers in the set, pass “regular”, “mask”, or “custom_emoji”. By default, a regular sticker set is created.",
         name: :sticker_type,
         required: false,
@@ -3628,7 +3747,7 @@ Returns True on success.",
 
   defmethod(
     "addStickerToSet",
-    "Use this method to add a new sticker to a set created by the bot. The format of the added sticker must match the format of the other stickers in the set. Emoji sticker sets can have up to 200 stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.",
+    "Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up to 200 stickers. Other sticker sets can have up to 120 stickers. Returns True on success.",
     [
       %{
         description: "User identifier of sticker set owner",
@@ -3677,6 +3796,34 @@ Returns True on success.",
         name: :sticker,
         required: true,
         type: :string
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
+    "replaceStickerInSet",
+    "Use this method to replace an existing sticker in a sticker set with a new one. The method is equivalent to calling deleteStickerFromSet, then addStickerToSet, then setStickerPositionInSet. Returns True on success.",
+    [
+      %{
+        description: "User identifier of the sticker set owner",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{description: "Sticker set name", name: :name, required: true, type: :string},
+      %{
+        description: "File identifier of the replaced sticker",
+        name: :old_sticker,
+        required: true,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized object with information about the added sticker. If exactly the same sticker had already been added to the set, then the set remains unchanged.",
+        name: :sticker,
+        required: true,
+        type: Telegex.Type.InputSticker
       }
     ],
     :boolean
@@ -3779,6 +3926,13 @@ Returns True on success.",
           __struct__: Telegex.TypeDefiner.UnionType,
           types: [Telegex.Type.InputFile, :string]
         }
+      },
+      %{
+        description:
+          "Format of the thumbnail, must be one of “static” for a .WEBP or .PNG image, “animated” for a .TGS animation, or “video” for a WEBM video",
+        name: :format,
+        required: true,
+        type: :string
       }
     ],
     :boolean
@@ -4250,6 +4404,13 @@ No more than 50 results per query are allowed.",
     "Use this method to send a game. On success, the sent Message is returned.",
     [
       %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Unique identifier for the target chat",
         name: :chat_id,
         required: true,
@@ -4290,7 +4451,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.",
+          "A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game. Not supported for messages sent on behalf of a business account.",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
