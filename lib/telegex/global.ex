@@ -7,7 +7,7 @@ defmodule Telegex.Global do
 
   ## Option descriptions
 
-    * `api_base_url` - The base URL of the Telegram Bot API. Defaults to `https://api.telegram.org/bot`.
+    * `api_base_url` - The base URL of the Telegram Bot API. Defaults to `https://api.telegram.org`.
     * `caller_adapter` - The adapter module for making HTTP requests. Defaults to `Finch`.
     * `hook_adapter` - The adapter module for handling webhook requests. Defaults to `Bandit`.
     * `token` - The token of the bot.
@@ -15,7 +15,7 @@ defmodule Telegex.Global do
 
   @spec api_base_url :: String.t()
   def api_base_url do
-    get_option(:api_base_url, "https://api.telegram.org/bot")
+    get_option(:api_base_url, "https://api.telegram.org")
   end
 
   @spec caller_adapter :: module | {module, keyword}

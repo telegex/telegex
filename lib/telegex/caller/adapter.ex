@@ -22,7 +22,7 @@ defmodule Telegex.Caller.Adapter do
 
   @spec build_url(String.t()) :: String.t()
   def build_url(method) do
-    "#{Global.api_base_url()}#{Telegex.Instance.token()}/#{method}"
+    "#{Global.api_base_url()}/bot#{Telegex.Instance.token()}/#{method}"
   end
 
   @spec options :: keyword
