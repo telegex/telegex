@@ -1,8 +1,6 @@
-version: "3"
-
 services:
   telegram-bot-api:
-    image: gramoss/telegram-bot-api:ade0841
+    image: gramoss/telegram-bot-api:7.2
     network_mode: host
     environment:
       TELEGRAM_API_ID: $TELEGRAM_API_ID
