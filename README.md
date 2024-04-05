@@ -15,7 +15,7 @@ _All API functions, comments, types (structures and specifications) of Telegex a
 
 Telegex is not only a client for Bot API, but also a framework for building bots. It provides convenient support for receiving updates and implements an advanced processing model based on "chains".
 
->The section regarding chains currently has no documentation available. Join the group for help: [@elixir_telegex](https://t.me/elixir_telegex).
+> The section regarding chains currently has no documentation available. Join the group for help: [@elixir_telegex](https://t.me/elixir_telegex).
 
 ## Installation
 
@@ -24,9 +24,17 @@ Add Telegex to your mix.exs dependencies:
 ```elixir
 def deps do
   [
-    {:telegex, "~> 1.5.0"},
+    {:telegex, "~> 1.6.0"},
   ]
 end
+```
+
+## ⚠️ Upgrade reminder
+
+Since some modules require compilation with `plug` during compilation, the `_build` need to be cleaned up after upgrading the Telegex version:
+
+```bash
+rm -rf _build/dev/lib/plug _build/dev/lib/telegex
 ```
 
 ## Configuration
@@ -55,7 +63,7 @@ You can also choose `HTTPoison` as the client. If using HTTPoison, set the corre
 config :telegex, caller_adapter: {HTTPoison, [recv_timeout: 5 * 1000]}
 ```
 
->Note: There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
+> Note: There are no standardized values for the `options` parameter here, as they directly relate to the HTTP client being used. The example above passes the raw options for the client library.
 
 **Note: You need to manually add adapter-related libraries to the `deps`:**
 
@@ -150,7 +158,7 @@ iex> Telegex.send_message -1001486769003, "Hello!"
      first_name: "Telegex Dev",
      is_bot: true,
      id: 6258629308
-  }, 
+  },
   # omitted part...
  }}
 ```
@@ -242,7 +250,7 @@ defmodule YourProject.HookHandler do
 
   @impl true
   def on_update(update) do
-  
+
     # consume the update
     :ok
   end
