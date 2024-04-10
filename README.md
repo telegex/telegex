@@ -31,7 +31,7 @@ end
 
 ## ⚠️ Upgrade reminder
 
-Since some modules require compilation with `plug` during compilation, the `_build` need to be cleaned up after upgrading the Telegex version:
+Some modules detect `plug` during compilation. After upgrading the version, you need to manually clean up the related dependency builds.
 
 ```bash
 rm -rf _build/dev/lib/plug _build/dev/lib/telegex
