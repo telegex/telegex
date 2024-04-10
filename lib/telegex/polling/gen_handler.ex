@@ -13,14 +13,20 @@ defmodule Telegex.Polling.GenHandler do
 
       require Logger
 
-      def start_link(_) do
-        children = [
-          unquote(__CALLER__.module).UpdatesConsumer,
-          unquote(__CALLER__.module).UpdatesProvider
-        ]
+      def start_link(opts \\ []) do
+        if Keyword.get(opts, :serve, true) do
+          children = [
+            unquote(__CALLER__.module).UpdatesConsumer,
+            unquote(__CALLER__.module).UpdatesProvider
+          ]
 
-        opts = [strategy: :one_for_one, name: __MODULE__.Supervisor]
-        Supervisor.start_link(children, opts)
+          opts = [strategy: :one_for_one, name: __MODULE__.Supervisor]
+          Supervisor.start_link(children, opts)
+        else
+          Logger.warning("Polling handler is not serving")
+
+          :ignore
+        end
       end
 
       @impl Supervisor

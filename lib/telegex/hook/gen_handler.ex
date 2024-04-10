@@ -69,15 +69,21 @@ defmodule Telegex.Hook.GenHandler do
 
       require Logger
 
-      def start_link(_) do
-        config = on_boot()
+      def start_link(opts \\ []) do
+        if Keyword.get(opts, :serve, true) do
+          config = on_boot()
 
-        children = [
-          Adapter.impl().child_spec(__MODULE__, config)
-        ]
+          children = [
+            Adapter.impl().child_spec(__MODULE__, config)
+          ]
 
-        opts = [strategy: :one_for_one, name: unquote(__CALLER__.module).Supervisor]
-        Supervisor.start_link(children, opts)
+          opts = [strategy: :one_for_one, name: unquote(__CALLER__.module).Supervisor]
+          Supervisor.start_link(children, opts)
+        else
+          Logger.warning("Webhook handler is not serving")
+
+          :ignore
+        end
       end
 
       @impl Supervisor
