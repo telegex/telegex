@@ -31,10 +31,10 @@ jobs:
           config :telegex, token: "${{ secrets.BOT_TOKEN }}"
           EOT
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1.17
+        uses: erlef/setup-beam@v1
         with:
           elixir-version: "1.15.7" # Define the elixir version [required]
-          otp-version: "25.3.2.10" # Define the OTP version [required]
+          otp-version: "25.3.2.12" # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
