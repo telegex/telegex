@@ -209,7 +209,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -396,7 +396,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -551,7 +551,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -662,7 +662,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -773,7 +773,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -897,7 +897,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1015,7 +1015,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1034,7 +1034,7 @@ defmodule Telegex do
 
   defmethod(
     "sendVoice",
-    "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
+    "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or in .MP3 format, or in .M4A format (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
     [
       %{
         description:
@@ -1114,7 +1114,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1209,7 +1209,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1326,7 +1326,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Period in seconds for which the location will be updated (see Live Locations, should be between 60 and 86400.",
+          "Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely.",
         name: :live_period,
         required: false,
         type: :integer
@@ -1366,7 +1366,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1458,7 +1458,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1535,7 +1535,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1585,10 +1585,26 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized list of answer options, 2-10 strings 1-100 characters each",
+          "Mode for parsing entities in the question. See formatting options for more details. Currently, only custom emoji entities are allowed",
+        name: :question_parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of question_parse_mode",
+        name: :question_entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "A JSON-serialized list of 2-10 answer options",
         name: :options,
         required: true,
-        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: :string}
+        type: %{
+          __struct__: Telegex.TypeDefiner.ArrayType,
+          elem_type: Telegex.Type.InputPollOption
+        }
       },
       %{
         description: "True, if the poll needs to be anonymous, defaults to True",
@@ -1632,7 +1648,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized list of special entities that appear in the poll explanation, which can be specified instead of parse_mode",
+          "A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode",
         name: :explanation_entities,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
@@ -1679,7 +1695,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -1749,7 +1765,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -2057,7 +2073,8 @@ defmodule Telegex do
         type: :boolean
       },
       %{
-        description: "Pass True if the administrator can edit stories posted by other users",
+        description:
+          "Pass True if the administrator can edit stories posted by other users, post stories to the chat page, pin chat stories, and access the chat's story archive",
         name: :can_edit_stories,
         required: false,
         type: :boolean
@@ -2523,7 +2540,7 @@ defmodule Telegex do
 
   defmethod(
     "getChat",
-    "Use this method to get up to date information about the chat. Returns a Chat object on success.",
+    "Use this method to get up-to-date information about the chat. Returns a ChatFullInfo object on success.",
     [
       %{
         description:
@@ -2533,7 +2550,7 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
       }
     ],
-    Telegex.Type.Chat
+    Telegex.Type.ChatFullInfo
   )
 
   defmethod(
@@ -3391,6 +3408,13 @@ defmodule Telegex do
       %{description: "Latitude of new location", name: :latitude, required: true, type: :float},
       %{description: "Longitude of new location", name: :longitude, required: true, type: :float},
       %{
+        description:
+          "New period in seconds during which the location can be updated, starting from the message send date. If 0x7FFFFFFF is specified, then the location can be updated forever. Otherwise, the new value must not exceed the current live_period by more than a day, and the live location expiration date must remain within the next 90 days. If not specified, then live_period remains unchanged",
+        name: :live_period,
+        required: false,
+        type: :integer
+      },
+      %{
         description: "The radius of uncertainty for the location, measured in meters; 0-1500",
         name: :horizontal_accuracy,
         required: false,
@@ -3631,7 +3655,7 @@ Returns True on success.",
       },
       %{
         description:
-          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user. Not supported for messages sent on behalf of a business account.",
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
         name: :reply_markup,
         required: false,
         type: %{
@@ -4451,7 +4475,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game. Not supported for messages sent on behalf of a business account.",
+          "A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.",
         name: :reply_markup,
         required: false,
         type: Telegex.Type.InlineKeyboardMarkup
