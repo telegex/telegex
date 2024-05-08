@@ -7,6 +7,7 @@ setup:
 
 check:
     just format
+    mix credo --mute-exit-status
     mix dialyzer
     just mix-for echo_bot dialyzer
 
