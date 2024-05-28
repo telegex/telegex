@@ -202,6 +202,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -377,6 +384,13 @@ defmodule Telegex do
       },
       %{
         description:
+          "Pass True, if the caption must be shown above the message media. Ignored if a new caption isn't specified.",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
           "Sends the message silently. Users will receive a notification with no sound.",
         name: :disable_notification,
         required: false,
@@ -525,6 +539,12 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
         description: "Pass True if the photo needs to be covered with a spoiler animation",
         name: :has_spoiler,
         required: false,
@@ -542,6 +562,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -655,6 +682,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -766,6 +800,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -865,6 +906,12 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
         description: "Pass True if the video needs to be covered with a spoiler animation",
         name: :has_spoiler,
         required: false,
@@ -888,6 +935,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -989,6 +1043,12 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
         description: "Pass True if the animation needs to be covered with a spoiler animation",
         name: :has_spoiler,
         required: false,
@@ -1006,6 +1066,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -1107,6 +1174,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -1202,6 +1276,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -1282,6 +1363,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -1357,6 +1445,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -1451,6 +1546,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -1526,6 +1628,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -1688,6 +1797,13 @@ defmodule Telegex do
         type: :boolean
       },
       %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
+      },
+      %{
         description: "Description of the message to reply to",
         name: :reply_parameters,
         required: false,
@@ -1756,6 +1872,13 @@ defmodule Telegex do
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -3330,6 +3453,13 @@ defmodule Telegex do
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description:
+          "Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
         description: "A JSON-serialized object for an inline keyboard.",
         name: :reply_markup,
         required: false,
@@ -3646,6 +3776,13 @@ Returns True on success.",
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -4095,27 +4232,29 @@ No more than 50 results per query are allowed.",
         type: :string
       },
       %{
-        description: "Payment provider token, obtained via @BotFather",
+        description:
+          "Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.",
         name: :provider_token,
-        required: true,
+        required: false,
         type: :string
       },
       %{
-        description: "Three-letter ISO 4217 currency code, see more on currencies",
+        description:
+          "Three-letter ISO 4217 currency code, see more on currencies. Pass “XTR” for payments in Telegram Stars.",
         name: :currency,
         required: true,
         type: :string
       },
       %{
         description:
-          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)",
+          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.). Must contain exactly one item for payments in Telegram Stars.",
         name: :prices,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.LabeledPrice}
       },
       %{
         description:
-          "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
+          "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.",
         name: :max_tip_amount,
         required: false,
         type: :integer
@@ -4152,43 +4291,50 @@ No more than 50 results per query are allowed.",
       %{description: "Photo width", name: :photo_width, required: false, type: :integer},
       %{description: "Photo height", name: :photo_height, required: false, type: :integer},
       %{
-        description: "Pass True if you require the user's full name to complete the order",
+        description:
+          "Pass True if you require the user's full name to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_name,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's phone number to complete the order",
+        description:
+          "Pass True if you require the user's phone number to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_phone_number,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's email address to complete the order",
+        description:
+          "Pass True if you require the user's email address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_email,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's shipping address to complete the order",
+        description:
+          "Pass True if you require the user's shipping address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_shipping_address,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the user's phone number should be sent to provider",
+        description:
+          "Pass True if the user's phone number should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_phone_number_to_provider,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the user's email address should be sent to provider",
+        description:
+          "Pass True if the user's email address should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_email_to_provider,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the final price depends on the shipping method",
+        description:
+          "Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.",
         name: :is_flexible,
         required: false,
         type: :boolean
@@ -4205,6 +4351,13 @@ No more than 50 results per query are allowed.",
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",
@@ -4247,27 +4400,29 @@ No more than 50 results per query are allowed.",
         type: :string
       },
       %{
-        description: "Payment provider token, obtained via BotFather",
+        description:
+          "Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.",
         name: :provider_token,
-        required: true,
+        required: false,
         type: :string
       },
       %{
-        description: "Three-letter ISO 4217 currency code, see more on currencies",
+        description:
+          "Three-letter ISO 4217 currency code, see more on currencies. Pass “XTR” for payments in Telegram Stars.",
         name: :currency,
         required: true,
         type: :string
       },
       %{
         description:
-          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)",
+          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.). Must contain exactly one item for payments in Telegram Stars.",
         name: :prices,
         required: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.LabeledPrice}
       },
       %{
         description:
-          "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
+          "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.",
         name: :max_tip_amount,
         required: false,
         type: :integer
@@ -4297,43 +4452,50 @@ No more than 50 results per query are allowed.",
       %{description: "Photo width", name: :photo_width, required: false, type: :integer},
       %{description: "Photo height", name: :photo_height, required: false, type: :integer},
       %{
-        description: "Pass True if you require the user's full name to complete the order",
+        description:
+          "Pass True if you require the user's full name to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_name,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's phone number to complete the order",
+        description:
+          "Pass True if you require the user's phone number to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_phone_number,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's email address to complete the order",
+        description:
+          "Pass True if you require the user's email address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_email,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if you require the user's shipping address to complete the order",
+        description:
+          "Pass True if you require the user's shipping address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_shipping_address,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the user's phone number should be sent to the provider",
+        description:
+          "Pass True if the user's phone number should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_phone_number_to_provider,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the user's email address should be sent to the provider",
+        description:
+          "Pass True if the user's email address should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_email_to_provider,
         required: false,
         type: :boolean
       },
       %{
-        description: "Pass True if the final price depends on the shipping method",
+        description:
+          "Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.",
         name: :is_flexible,
         required: false,
         type: :boolean
@@ -4406,6 +4568,26 @@ No more than 50 results per query are allowed.",
   )
 
   defmethod(
+    "refundStarPayment",
+    "Refunds a successful payment in Telegram Stars. Returns True on success.",
+    [
+      %{
+        description: "Identifier of the user whose payment will be refunded",
+        name: :user_id,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "Telegram payment identifier",
+        name: :telegram_payment_charge_id,
+        required: true,
+        type: :string
+      }
+    ],
+    :boolean
+  )
+
+  defmethod(
     "setPassportDataErrors",
     "Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.",
     [
@@ -4466,6 +4648,13 @@ No more than 50 results per query are allowed.",
         name: :protect_content,
         required: false,
         type: :boolean
+      },
+      %{
+        description:
+          "Unique identifier of the message effect to be added to the message; for private chats only",
+        name: :message_effect_id,
+        required: false,
+        type: :string
       },
       %{
         description: "Description of the message to reply to",

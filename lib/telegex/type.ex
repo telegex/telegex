@@ -1090,6 +1090,12 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.LinkPreviewOptions
     },
     %{
+      description: "Optional. Unique identifier of the message effect added to the message",
+      name: :effect_id,
+      optional: true,
+      type: :string
+    },
+    %{
       description:
         "Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set",
       name: :animation,
@@ -1156,6 +1162,12 @@ At most one of the optional parameters can be present in any given update.", [
       name: :caption_entities,
       optional: true,
       type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+    },
+    %{
+      description: "Optional. True, if the caption must be shown above the message media",
+      name: :show_caption_above_media,
+      optional: true,
+      type: :boolean
     },
     %{
       description: "Optional. True, if the message media is covered by a spoiler animation",
@@ -1484,7 +1496,7 @@ At most one of the optional parameters can be present in any given update.", [
     [
       %{
         description:
-          "Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)",
+          "Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)",
         name: :type,
         optional: false,
         type: :string
@@ -3318,7 +3330,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     KeyboardButton,
-    "This object represents one button of the reply keyboard. For simple text buttons, String can be used instead of this object to specify the button text. The optional fields web_app, request_users, request_chat, request_contact, request_location, and request_poll are mutually exclusive.",
+    "This object represents one button of the reply keyboard. At most one of the optional fields must be used to specify type of the button. For simple text buttons, String can be used instead of this object to specify the button text.",
     [
       %{
         description:
@@ -3562,7 +3574,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     InlineKeyboardButton,
-    "This object represents one button of an inline keyboard. You must use exactly one of the optional fields.",
+    "This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.",
     [
       %{description: "Label text on the button", name: :text, optional: false, type: :string},
       %{
@@ -3623,7 +3635,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Specify True, to send a Pay button.\n\nNOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.",
+          "Optional. Specify True, to send a Pay button. Substrings “” and “XTR” in the buttons's text will be replaced with a Telegram Star icon.\n\nNOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.",
         name: :pay,
         optional: true,
         type: :boolean
@@ -5210,6 +5222,12 @@ At most one of the optional parameters can be present in any given update.", [
       type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
     },
     %{
+      description: "Optional. Pass True, if the caption must be shown above the message media",
+      name: :show_caption_above_media,
+      optional: true,
+      type: :boolean
+    },
+    %{
       description:
         "Optional. Pass True if the photo needs to be covered with a spoiler animation",
       name: :has_spoiler,
@@ -5259,6 +5277,12 @@ At most one of the optional parameters can be present in any given update.", [
       name: :caption_entities,
       optional: true,
       type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+    },
+    %{
+      description: "Optional. Pass True, if the caption must be shown above the message media",
+      name: :show_caption_above_media,
+      optional: true,
+      type: :boolean
     },
     %{description: "Optional. Video width", name: :width, optional: true, type: :integer},
     %{description: "Optional. Video height", name: :height, optional: true, type: :integer},
@@ -5330,6 +5354,12 @@ At most one of the optional parameters can be present in any given update.", [
         name: :caption_entities,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
       },
       %{description: "Optional. Animation width", name: :width, optional: true, type: :integer},
       %{description: "Optional. Animation height", name: :height, optional: true, type: :integer},
@@ -5839,6 +5869,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
+      },
+      %{
         description: "Optional. Inline keyboard attached to the message",
         name: :reply_markup,
         optional: true,
@@ -5935,6 +5971,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
+      },
+      %{
         description: "Optional. Inline keyboard attached to the message",
         name: :reply_markup,
         optional: true,
@@ -6026,6 +6068,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
+      },
+      %{
         description: "Optional. Inline keyboard attached to the message",
         name: :reply_markup,
         optional: true,
@@ -6095,6 +6143,12 @@ At most one of the optional parameters can be present in any given update.", [
         name: :caption_entities,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
       },
       %{description: "Optional. Video width", name: :video_width, optional: true, type: :integer},
       %{
@@ -6680,6 +6734,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
+      },
+      %{
         description: "Optional. Inline keyboard attached to the message",
         name: :reply_markup,
         optional: true,
@@ -6744,6 +6804,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
       },
       %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
+      },
+      %{
         description: "Optional. Inline keyboard attached to the message",
         name: :reply_markup,
         optional: true,
@@ -6806,6 +6872,12 @@ At most one of the optional parameters can be present in any given update.", [
         name: :caption_entities,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
       },
       %{
         description: "Optional. Inline keyboard attached to the message",
@@ -6973,6 +7045,12 @@ At most one of the optional parameters can be present in any given update.", [
         name: :caption_entities,
         optional: true,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Optional. Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        optional: true,
+        type: :boolean
       },
       %{
         description: "Optional. Inline keyboard attached to the message",
@@ -7281,27 +7359,29 @@ At most one of the optional parameters can be present in any given update.", [
         type: :string
       },
       %{
-        description: "Payment provider token, obtained via @BotFather",
+        description:
+          "Optional. Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.",
         name: :provider_token,
-        optional: false,
+        optional: true,
         type: :string
       },
       %{
-        description: "Three-letter ISO 4217 currency code, see more on currencies",
+        description:
+          "Three-letter ISO 4217 currency code, see more on currencies. Pass “XTR” for payments in Telegram Stars.",
         name: :currency,
         optional: false,
         type: :string
       },
       %{
         description:
-          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)",
+          "Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.). Must contain exactly one item for payments in Telegram Stars.",
         name: :prices,
         optional: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.LabeledPrice}
       },
       %{
         description:
-          "Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
+          "Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.",
         name: :max_tip_amount,
         optional: true,
         type: :integer
@@ -7342,46 +7422,49 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Pass True if you require the user's full name to complete the order",
+          "Optional. Pass True if you require the user's full name to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_name,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. Pass True if you require the user's phone number to complete the order",
+          "Optional. Pass True if you require the user's phone number to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_phone_number,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. Pass True if you require the user's email address to complete the order",
+          "Optional. Pass True if you require the user's email address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_email,
         optional: true,
         type: :boolean
       },
       %{
         description:
-          "Optional. Pass True if you require the user's shipping address to complete the order",
+          "Optional. Pass True if you require the user's shipping address to complete the order. Ignored for payments in Telegram Stars.",
         name: :need_shipping_address,
         optional: true,
         type: :boolean
       },
       %{
-        description: "Optional. Pass True if the user's phone number should be sent to provider",
+        description:
+          "Optional. Pass True if the user's phone number should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_phone_number_to_provider,
         optional: true,
         type: :boolean
       },
       %{
-        description: "Optional. Pass True if the user's email address should be sent to provider",
+        description:
+          "Optional. Pass True if the user's email address should be sent to the provider. Ignored for payments in Telegram Stars.",
         name: :send_email_to_provider,
         optional: true,
         type: :boolean
       },
       %{
-        description: "Optional. Pass True if the final price depends on the shipping method",
+        description:
+          "Optional. Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.",
         name: :is_flexible,
         optional: true,
         type: :boolean
@@ -7462,7 +7545,7 @@ At most one of the optional parameters can be present in any given update.", [
       type: :string
     },
     %{
-      description: "Three-letter ISO 4217 currency code",
+      description: "Three-letter ISO 4217 currency code, or “XTR” for payments in Telegram Stars",
       name: :currency,
       optional: false,
       type: :string
@@ -7533,7 +7616,8 @@ At most one of the optional parameters can be present in any given update.", [
     "This object contains basic information about a successful payment.",
     [
       %{
-        description: "Three-letter ISO 4217 currency code",
+        description:
+          "Three-letter ISO 4217 currency code, or “XTR” for payments in Telegram Stars",
         name: :currency,
         optional: false,
         type: :string
@@ -7612,7 +7696,8 @@ At most one of the optional parameters can be present in any given update.", [
         type: Telegex.Type.User
       },
       %{
-        description: "Three-letter ISO 4217 currency code",
+        description:
+          "Three-letter ISO 4217 currency code, or “XTR” for payments in Telegram Stars",
         name: :currency,
         optional: false,
         type: :string
