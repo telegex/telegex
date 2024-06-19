@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: elixir-1.15-otp-25-ci
+name: elixir-1.17-otp-27-ci
 
 on:
   push:
@@ -33,8 +33,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.15.8" # Define the elixir version [required]
-          otp-version: "25.3.2.12" # Define the OTP version [required]
+          elixir-version: "1.17.1" # Define the elixir version [required]
+          otp-version: "27.0" # Define the OTP version [required]
       - name: Restore dependencies cache
         uses: actions/cache@v3
         with:
