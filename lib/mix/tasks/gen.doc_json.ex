@@ -87,6 +87,12 @@ if Mix.env() in [:dev, :test] do
         |> Enum.filter(&(&1.comment == :type))
         |> Enum.map(fn s -> parse_type(s, doc_nodes) end)
 
+      payments_union_types =
+        payments_sub_sections
+        # 排除非联合类型的子章节
+        |> Enum.filter(&(&1.comment == :union_type))
+        |> Enum.map(fn s -> parse_union_type(s, doc_nodes) end)
+
       passport_types =
         passport_sub_sections
         # 排除非类型的子章节
@@ -176,7 +182,8 @@ if Mix.env() in [:dev, :test] do
           passport_types ++
           game_types
 
-      all_union_types = union_types ++ inline_union_types ++ passport_union_types
+      all_union_types =
+        union_types ++ inline_union_types ++ payments_union_types ++ passport_union_types
 
       all_methods =
         updates_methods ++

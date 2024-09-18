@@ -332,7 +332,7 @@ defmodule Telegex do
 
   defmethod(
     "copyMessage",
-    "Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.",
+    "Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.",
     [
       %{
         description:
@@ -429,7 +429,7 @@ defmodule Telegex do
 
   defmethod(
     "copyMessages",
-    "Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.",
+    "Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.",
     [
       %{
         description:
@@ -1308,6 +1308,108 @@ defmodule Telegex do
   )
 
   defmethod(
+    "sendPaidMedia",
+    "Use this method to send paid media. On success, the sent Message is returned.",
+    [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message will be sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target channel (in the format @channelusername). If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description:
+          "The number of Telegram Stars that must be paid to buy access to the media; 1-2500",
+        name: :star_count,
+        required: true,
+        type: :integer
+      },
+      %{
+        description: "A JSON-serialized array describing the media to be sent; up to 10 items",
+        name: :media,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.InputPaidMedia}
+      },
+      %{
+        description:
+          "Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes.",
+        name: :payload,
+        required: false,
+        type: :string
+      },
+      %{
+        description: "Media caption, 0-1024 characters after entities parsing",
+        name: :caption,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "Mode for parsing entities in the media caption. See formatting options for more details.",
+        name: :parse_mode,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode",
+        name: :caption_entities,
+        required: false,
+        type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.MessageEntity}
+      },
+      %{
+        description: "Pass True, if the caption must be shown above the message media",
+        name: :show_caption_above_media,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description:
+          "Sends the message silently. Users will receive a notification with no sound.",
+        name: :disable_notification,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Protects the contents of the sent message from forwarding and saving",
+        name: :protect_content,
+        required: false,
+        type: :boolean
+      },
+      %{
+        description: "Description of the message to reply to",
+        name: :reply_parameters,
+        required: false,
+        type: Telegex.Type.ReplyParameters
+      },
+      %{
+        description:
+          "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user",
+        name: :reply_markup,
+        required: false,
+        type: %{
+          __struct__: Telegex.TypeDefiner.UnionType,
+          types: [
+            Telegex.Type.InlineKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardMarkup,
+            Telegex.Type.ReplyKeyboardRemove,
+            Telegex.Type.ForceReply
+          ]
+        }
+      }
+    ],
+    Telegex.Type.Message
+  )
+
+  defmethod(
     "sendMediaGroup",
     "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.",
     [
@@ -1942,7 +2044,7 @@ defmodule Telegex do
 
   defmethod(
     "setMessageReaction",
-    "Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.",
+    "Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Bots can't use paid reactions. Returns True on success.",
     [
       %{
         description:
@@ -1960,7 +2062,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "A JSON-serialized list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators.",
+          "A JSON-serialized list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators. Paid reactions can't be used by bots.",
         name: :reaction,
         required: false,
         type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.ReactionType}
@@ -2441,6 +2543,68 @@ defmodule Telegex do
   )
 
   defmethod(
+    "createChatSubscriptionInviteLink",
+    "Use this method to create a subscription invite link for a channel chat. The bot must have the can_invite_users administrator rights. The link can be edited using the method editChatSubscriptionInviteLink or revoked using the method revokeChatInviteLink. Returns the new invite link as a ChatInviteLink object.",
+    [
+      %{
+        description:
+          "Unique identifier for the target channel chat or username of the target channel (in the format @channelusername)",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "Invite link name; 0-32 characters",
+        name: :name,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
+          "The number of seconds the subscription will be active for before the next payment. Currently, it must always be 2592000 (30 days).",
+        name: :subscription_period,
+        required: true,
+        type: :integer
+      },
+      %{
+        description:
+          "The amount of Telegram Stars a user must pay initially and after each subsequent subscription period to be a member of the chat; 1-2500",
+        name: :subscription_price,
+        required: true,
+        type: :integer
+      }
+    ],
+    Telegex.Type.ChatInviteLink
+  )
+
+  defmethod(
+    "editChatSubscriptionInviteLink",
+    "Use this method to edit a subscription invite link created by the bot. The bot must have the can_invite_users administrator rights. Returns the edited invite link as a ChatInviteLink object.",
+    [
+      %{
+        description:
+          "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
+        name: :chat_id,
+        required: true,
+        type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [:integer, :string]}
+      },
+      %{
+        description: "The invite link to edit",
+        name: :invite_link,
+        required: true,
+        type: :string
+      },
+      %{
+        description: "Invite link name; 0-32 characters",
+        name: :name,
+        required: false,
+        type: :string
+      }
+    ],
+    Telegex.Type.ChatInviteLink
+  )
+
+  defmethod(
     "revokeChatInviteLink",
     "Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as ChatInviteLink object.",
     [
@@ -2587,6 +2751,13 @@ defmodule Telegex do
     [
       %{
         description:
+          "Unique identifier of the business connection on behalf of which the message will be pinned",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
         name: :chat_id,
         required: true,
@@ -2615,6 +2786,13 @@ defmodule Telegex do
     [
       %{
         description:
+          "Unique identifier of the business connection on behalf of which the message will be unpinned",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
         name: :chat_id,
         required: true,
@@ -2622,7 +2800,7 @@ defmodule Telegex do
       },
       %{
         description:
-          "Identifier of a message to unpin. If not specified, the most recent pinned message (by sending date) will be unpinned.",
+          "Identifier of the message to unpin. Required if business_connection_id is specified. If not specified, the most recent pinned message (by sending date) will be unpinned.",
         name: :message_id,
         required: false,
         type: :integer
@@ -2802,7 +2980,7 @@ defmodule Telegex do
 
   defmethod(
     "editForumTopic",
-    "Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.",
+    "Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.",
     [
       %{
         description:
@@ -2921,7 +3099,7 @@ defmodule Telegex do
 
   defmethod(
     "editGeneralForumTopic",
-    "Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.",
+    "Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.",
     [
       %{
         description:
@@ -3348,8 +3526,15 @@ defmodule Telegex do
 
   defmethod(
     "editMessageText",
-    "Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
+    "Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3409,8 +3594,15 @@ defmodule Telegex do
 
   defmethod(
     "editMessageCaption",
-    "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
+    "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3471,8 +3663,15 @@ defmodule Telegex do
 
   defmethod(
     "editMessageMedia",
-    "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
+    "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3514,6 +3713,13 @@ defmodule Telegex do
     "editMessageLiveLocation",
     "Use this method to edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3580,6 +3786,13 @@ defmodule Telegex do
     [
       %{
         description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
+      %{
+        description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
         name: :chat_id,
         required: false,
@@ -3611,8 +3824,15 @@ defmodule Telegex do
 
   defmethod(
     "editMessageReplyMarkup",
-    "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
+    "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -3648,6 +3868,13 @@ defmodule Telegex do
     "stopPoll",
     "Use this method to stop a poll which was sent by the bot. On success, the stopped Poll is returned.",
     [
+      %{
+        description:
+          "Unique identifier of the business connection on behalf of which the message to be edited was sent",
+        name: :business_connection_id,
+        required: false,
+        type: :string
+      },
       %{
         description:
           "Unique identifier for the target chat or username of the target channel (in the format @channelusername)",
@@ -4080,7 +4307,7 @@ Returns True on success.",
       },
       %{
         description:
-          "A .WEBP or .PNG image with the thumbnail, must be up to 128 kilobytes in size and have a width and height of exactly 100px, or a .TGS animation with a thumbnail up to 32 kilobytes in size (see https://core.telegram.org/stickers#animated-sticker-requirements for animated sticker technical requirements), or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files ». Animated and video sticker set thumbnails can't be uploaded via HTTP URL. If omitted, then the thumbnail is dropped and the first sticker is used as the thumbnail.",
+          "A .WEBP or .PNG image with the thumbnail, must be up to 128 kilobytes in size and have a width and height of exactly 100px, or a .TGS animation with a thumbnail up to 32 kilobytes in size (see https://core.telegram.org/stickers#animation-requirements for animated sticker technical requirements), or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#video-requirements for video sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files ». Animated and video sticker set thumbnails can't be uploaded via HTTP URL. If omitted, then the thumbnail is dropped and the first sticker is used as the thumbnail.",
         name: :thumbnail,
         required: false,
         type: %{
@@ -4226,7 +4453,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.",
+          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.",
         name: :payload,
         required: true,
         type: :string
@@ -4394,7 +4621,7 @@ No more than 50 results per query are allowed.",
       },
       %{
         description:
-          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.",
+          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.",
         name: :payload,
         required: true,
         type: :string
@@ -4565,6 +4792,27 @@ No more than 50 results per query are allowed.",
       }
     ],
     :boolean
+  )
+
+  defmethod(
+    "getStarTransactions",
+    "Returns the bot's Telegram Star transactions in chronological order. On success, returns a StarTransactions object.",
+    [
+      %{
+        description: "Number of transactions to skip in the response",
+        name: :offset,
+        required: false,
+        type: :integer
+      },
+      %{
+        description:
+          "The maximum number of transactions to be retrieved. Values between 1-100 are accepted. Defaults to 100.",
+        name: :limit,
+        required: false,
+        type: :integer
+      }
+    ],
+    Telegex.Type.StarTransactions
   )
 
   defmethod(

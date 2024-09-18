@@ -33,6 +33,20 @@ defmodule Telegex.Type do
   )
 
   defunion(
+    PaidMedia,
+    "This object describes paid media. Currently, it can be one of",
+    [Telegex.Type.PaidMediaPreview, Telegex.Type.PaidMediaPhoto, Telegex.Type.PaidMediaVideo],
+    discriminant: %{
+      field: :type,
+      mapping: %{
+        "photo" => [Telegex.Type.PaidMediaPhoto],
+        "preview" => [Telegex.Type.PaidMediaPreview],
+        "video" => [Telegex.Type.PaidMediaVideo]
+      }
+    }
+  )
+
+  defunion(
     BackgroundFill,
     "This object describes the way a background is filled based on the selected colors. Currently, it can be one of",
     [
@@ -97,12 +111,17 @@ defmodule Telegex.Type do
   defunion(
     ReactionType,
     "This object describes the type of a reaction. Currently, it can be one of",
-    [Telegex.Type.ReactionTypeEmoji, Telegex.Type.ReactionTypeCustomEmoji],
+    [
+      Telegex.Type.ReactionTypeEmoji,
+      Telegex.Type.ReactionTypeCustomEmoji,
+      Telegex.Type.ReactionTypePaid
+    ],
     discriminant: %{
       field: :type,
       mapping: %{
         "custom_emoji" => [Telegex.Type.ReactionTypeCustomEmoji],
-        "emoji" => [Telegex.Type.ReactionTypeEmoji]
+        "emoji" => [Telegex.Type.ReactionTypeEmoji],
+        "paid" => [Telegex.Type.ReactionTypePaid]
       }
     }
   )
@@ -192,6 +211,19 @@ defmodule Telegex.Type do
   )
 
   defunion(
+    InputPaidMedia,
+    "This object describes the paid media to be sent. Currently, it can be one of",
+    [Telegex.Type.InputPaidMediaPhoto, Telegex.Type.InputPaidMediaVideo],
+    discriminant: %{
+      field: :type,
+      mapping: %{
+        "photo" => [Telegex.Type.InputPaidMediaPhoto],
+        "video" => [Telegex.Type.InputPaidMediaVideo]
+      }
+    }
+  )
+
+  defunion(
     InlineQueryResult,
     "This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:",
     [
@@ -265,6 +297,44 @@ defmodule Telegex.Type do
       Telegex.Type.InputInvoiceMessageContent
     ],
     []
+  )
+
+  defunion(
+    RevenueWithdrawalState,
+    "This object describes the state of a revenue withdrawal operation. Currently, it can be one of",
+    [
+      Telegex.Type.RevenueWithdrawalStatePending,
+      Telegex.Type.RevenueWithdrawalStateSucceeded,
+      Telegex.Type.RevenueWithdrawalStateFailed
+    ],
+    discriminant: %{
+      field: :type,
+      mapping: %{
+        "failed" => [Telegex.Type.RevenueWithdrawalStateFailed],
+        "pending" => [Telegex.Type.RevenueWithdrawalStatePending],
+        "succeeded" => [Telegex.Type.RevenueWithdrawalStateSucceeded]
+      }
+    }
+  )
+
+  defunion(
+    TransactionPartner,
+    "This object describes the source of a transaction, or its recipient for outgoing transactions. Currently, it can be one of",
+    [
+      Telegex.Type.TransactionPartnerUser,
+      Telegex.Type.TransactionPartnerFragment,
+      Telegex.Type.TransactionPartnerTelegramAds,
+      Telegex.Type.TransactionPartnerOther
+    ],
+    discriminant: %{
+      field: :type,
+      mapping: %{
+        "fragment" => [Telegex.Type.TransactionPartnerFragment],
+        "other" => [Telegex.Type.TransactionPartnerOther],
+        "telegram_ads" => [Telegex.Type.TransactionPartnerTelegramAds],
+        "user" => [Telegex.Type.TransactionPartnerUser]
+      }
+    }
   )
 
   defunion(
@@ -402,6 +472,13 @@ At most one of the optional parameters can be present in any given update.", [
       name: :pre_checkout_query,
       optional: true,
       type: Telegex.Type.PreCheckoutQuery
+    },
+    %{
+      description:
+        "Optional. A user purchased paid media with a non-empty payload sent by the bot in a non-channel chat",
+      name: :purchased_paid_media,
+      optional: true,
+      type: Telegex.Type.PaidMediaPurchased
     },
     %{
       description:
@@ -584,6 +661,12 @@ At most one of the optional parameters can be present in any given update.", [
       description:
         "Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.",
       name: :can_connect_to_business,
+      optional: true,
+      type: :boolean
+    },
+    %{
+      description: "Optional. True, if the bot has a main Web App. Returned only in getMe.",
+      name: :has_main_web_app,
       optional: true,
       type: :boolean
     }
@@ -842,6 +925,13 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
+        "Optional. True, if paid media messages can be sent or forwarded to the channel chat. The field is available only for channel chats.",
+      name: :can_send_paid_media,
+      optional: true,
+      type: :boolean
+    },
+    %{
+      description:
         "Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds",
       name: :slow_mode_delay,
       optional: true,
@@ -938,14 +1028,14 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.",
+        "Optional. Sender of the message; may be empty for messages sent to channels. For backward compatibility, if the message was sent on behalf of a chat, the field contains a fake sender user in non-channel chats",
       name: :from,
       optional: true,
       type: Telegex.Type.User
     },
     %{
       description:
-        "Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.",
+        "Optional. Sender of the message when sent on behalf of a chat. For example, the supergroup itself for messages sent by its anonymous administrators or a linked channel for messages automatically forwarded to the channel's discussion group. For backward compatibility, if the message was sent on behalf of a chat, the field from contains a fake sender user in non-channel chats.",
       name: :sender_chat,
       optional: true,
       type: Telegex.Type.Chat
@@ -1115,6 +1205,12 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.Document
     },
     %{
+      description: "Optional. Message contains paid media; information about the paid media",
+      name: :paid_media,
+      optional: true,
+      type: Telegex.Type.PaidMediaInfo
+    },
+    %{
       description: "Optional. Message is a photo, available sizes of the photo",
       name: :photo,
       optional: true,
@@ -1151,7 +1247,8 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.Voice
     },
     %{
-      description: "Optional. Caption for the animation, audio, document, photo, video or voice",
+      description:
+        "Optional. Caption for the animation, audio, document, paid media, photo, video or voice",
       name: :caption,
       optional: true,
       type: :string
@@ -1304,6 +1401,13 @@ At most one of the optional parameters can be present in any given update.", [
       name: :successful_payment,
       optional: true,
       type: Telegex.Type.SuccessfulPayment
+    },
+    %{
+      description:
+        "Optional. Message is a service message about a refunded payment, information about the payment. More about payments »",
+      name: :refunded_payment,
+      optional: true,
+      type: Telegex.Type.RefundedPayment
     },
     %{
       description: "Optional. Service message: users were shared with the bot",
@@ -1627,6 +1731,12 @@ At most one of the optional parameters can be present in any given update.", [
         type: Telegex.Type.Document
       },
       %{
+        description: "Optional. Message contains paid media; information about the paid media",
+        name: :paid_media,
+        optional: true,
+        type: Telegex.Type.PaidMediaInfo
+      },
+      %{
         description: "Optional. Message is a photo, available sizes of the photo",
         name: :photo,
         optional: true,
@@ -1931,37 +2041,37 @@ At most one of the optional parameters can be present in any given update.", [
         type: :string
       },
       %{
-        description: "Video width as defined by sender",
+        description: "Video width as defined by the sender",
         name: :width,
         optional: false,
         type: :integer
       },
       %{
-        description: "Video height as defined by sender",
+        description: "Video height as defined by the sender",
         name: :height,
         optional: false,
         type: :integer
       },
       %{
-        description: "Duration of the video in seconds as defined by sender",
+        description: "Duration of the video in seconds as defined by the sender",
         name: :duration,
         optional: false,
         type: :integer
       },
       %{
-        description: "Optional. Animation thumbnail as defined by sender",
+        description: "Optional. Animation thumbnail as defined by the sender",
         name: :thumbnail,
         optional: true,
         type: Telegex.Type.PhotoSize
       },
       %{
-        description: "Optional. Original animation filename as defined by sender",
+        description: "Optional. Original animation filename as defined by the sender",
         name: :file_name,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. MIME type of the file as defined by sender",
+        description: "Optional. MIME type of the file as defined by the sender",
         name: :mime_type,
         optional: true,
         type: :string
@@ -1994,31 +2104,31 @@ At most one of the optional parameters can be present in any given update.", [
         type: :string
       },
       %{
-        description: "Duration of the audio in seconds as defined by sender",
+        description: "Duration of the audio in seconds as defined by the sender",
         name: :duration,
         optional: false,
         type: :integer
       },
       %{
-        description: "Optional. Performer of the audio as defined by sender or by audio tags",
+        description: "Optional. Performer of the audio as defined by the sender or by audio tags",
         name: :performer,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. Title of the audio as defined by sender or by audio tags",
+        description: "Optional. Title of the audio as defined by the sender or by audio tags",
         name: :title,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. Original filename as defined by sender",
+        description: "Optional. Original filename as defined by the sender",
         name: :file_name,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. MIME type of the file as defined by sender",
+        description: "Optional. MIME type of the file as defined by the sender",
         name: :mime_type,
         optional: true,
         type: :string
@@ -2057,19 +2167,19 @@ At most one of the optional parameters can be present in any given update.", [
         type: :string
       },
       %{
-        description: "Optional. Document thumbnail as defined by sender",
+        description: "Optional. Document thumbnail as defined by the sender",
         name: :thumbnail,
         optional: true,
         type: Telegex.Type.PhotoSize
       },
       %{
-        description: "Optional. Original filename as defined by sender",
+        description: "Optional. Original filename as defined by the sender",
         name: :file_name,
         optional: true,
         type: :string
       },
       %{
-        description: "Optional. MIME type of the file as defined by sender",
+        description: "Optional. MIME type of the file as defined by the sender",
         name: :mime_type,
         optional: true,
         type: :string
@@ -2114,19 +2224,19 @@ At most one of the optional parameters can be present in any given update.", [
       type: :string
     },
     %{
-      description: "Video width as defined by sender",
+      description: "Video width as defined by the sender",
       name: :width,
       optional: false,
       type: :integer
     },
     %{
-      description: "Video height as defined by sender",
+      description: "Video height as defined by the sender",
       name: :height,
       optional: false,
       type: :integer
     },
     %{
-      description: "Duration of the video in seconds as defined by sender",
+      description: "Duration of the video in seconds as defined by the sender",
       name: :duration,
       optional: false,
       type: :integer
@@ -2138,13 +2248,13 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.PhotoSize
     },
     %{
-      description: "Optional. Original filename as defined by sender",
+      description: "Optional. Original filename as defined by the sender",
       name: :file_name,
       optional: true,
       type: :string
     },
     %{
-      description: "Optional. MIME type of the file as defined by sender",
+      description: "Optional. MIME type of the file as defined by the sender",
       name: :mime_type,
       optional: true,
       type: :string
@@ -2177,13 +2287,13 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Video width and height (diameter of the video message) as defined by sender",
+          "Video width and height (diameter of the video message) as defined by the sender",
         name: :length,
         optional: false,
         type: :integer
       },
       %{
-        description: "Duration of the video in seconds as defined by sender",
+        description: "Duration of the video in seconds as defined by the sender",
         name: :duration,
         optional: false,
         type: :integer
@@ -2218,13 +2328,13 @@ At most one of the optional parameters can be present in any given update.", [
       type: :string
     },
     %{
-      description: "Duration of the audio in seconds as defined by sender",
+      description: "Duration of the audio in seconds as defined by the sender",
       name: :duration,
       optional: false,
       type: :integer
     },
     %{
-      description: "Optional. MIME type of the file as defined by sender",
+      description: "Optional. MIME type of the file as defined by the sender",
       name: :mime_type,
       optional: true,
       type: :string
@@ -2236,6 +2346,73 @@ At most one of the optional parameters can be present in any given update.", [
       optional: true,
       type: :integer
     }
+  ])
+
+  deftype(PaidMediaInfo, "Describes the paid media added to a message.", [
+    %{
+      description: "The number of Telegram Stars that must be paid to buy access to the media",
+      name: :star_count,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "Information about the paid media",
+      name: :paid_media,
+      optional: false,
+      type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PaidMedia}
+    }
+  ])
+
+  deftype(PaidMediaPreview, "The paid media isn't available before the payment.", [
+    %{
+      description: "Type of the paid media, always “preview”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Optional. Media width as defined by the sender",
+      name: :width,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description: "Optional. Media height as defined by the sender",
+      name: :height,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description: "Optional. Duration of the media in seconds as defined by the sender",
+      name: :duration,
+      optional: true,
+      type: :integer
+    }
+  ])
+
+  deftype(PaidMediaPhoto, "The paid media is a photo.", [
+    %{
+      description: "Type of the paid media, always “photo”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "The photo",
+      name: :photo,
+      optional: false,
+      type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PhotoSize}
+    }
+  ])
+
+  deftype(PaidMediaVideo, "The paid media is a video.", [
+    %{
+      description: "Type of the paid media, always “video”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{description: "The video", name: :video, optional: false, type: Telegex.Type.Video}
   ])
 
   deftype(Contact, "This object represents a phone contact.", [
@@ -2297,7 +2474,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     InputPollOption,
-    "This object contains information about one answer option in a poll to send.",
+    "This object contains information about one answer option in a poll to be sent.",
     [
       %{
         description: "Option text, 1-100 characters",
@@ -2436,13 +2613,13 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(Location, "This object represents a point on the map.", [
     %{
-      description: "Latitude as defined by sender",
+      description: "Latitude as defined by the sender",
       name: :latitude,
       optional: false,
       type: :float
     },
     %{
-      description: "Longitude as defined by sender",
+      description: "Longitude as defined by the sender",
       name: :longitude,
       optional: false,
       type: :float
@@ -3012,8 +3189,16 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     GiveawayCreated,
-    "This object represents a service message about the creation of a scheduled giveaway. Currently holds no information.",
-    []
+    "This object represents a service message about the creation of a scheduled giveaway.",
+    [
+      %{
+        description:
+          "Optional. The number of Telegram Stars to be split between giveaway winners; for Telegram Star giveaways only",
+        name: :prize_star_count,
+        optional: true,
+        type: :integer
+      }
+    ]
   )
 
   deftype(Giveaway, "This object represents a message about a scheduled giveaway.", [
@@ -3064,7 +3249,14 @@ At most one of the optional parameters can be present in any given update.", [
     },
     %{
       description:
-        "Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for",
+        "Optional. The number of Telegram Stars to be split between giveaway winners; for Telegram Star giveaways only",
+      name: :prize_star_count,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description:
+        "Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for; for Telegram Premium giveaways only",
       name: :premium_subscription_month_count,
       optional: true,
       type: :integer
@@ -3114,7 +3306,14 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for",
+          "Optional. The number of Telegram Stars that were split between giveaway winners; for Telegram Star giveaways only",
+        name: :prize_star_count,
+        optional: true,
+        type: :integer
+      },
+      %{
+        description:
+          "Optional. The number of months the Telegram Premium subscription won from the giveaway will be active for; for Telegram Premium giveaways only",
         name: :premium_subscription_month_count,
         optional: true,
         type: :integer
@@ -3170,6 +3369,13 @@ At most one of the optional parameters can be present in any given update.", [
         name: :giveaway_message,
         optional: true,
         type: Telegex.Type.Message
+      },
+      %{
+        description:
+          "Optional. True, if the giveaway is a Telegram Star giveaway. Otherwise, currently, the giveaway is a Telegram Premium giveaway.",
+        name: :is_star_giveaway,
+        optional: true,
+        type: :boolean
       }
     ]
   )
@@ -3586,7 +3792,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes. Not supported for messages sent on behalf of a Telegram Business account.",
+          "Optional. Data to be sent in a callback query to the bot when the button is pressed, 1-64 bytes",
         name: :callback_data,
         optional: true,
         type: :string
@@ -3874,6 +4080,20 @@ At most one of the optional parameters can be present in any given update.", [
     %{
       description: "Optional. Number of pending join requests created using this link",
       name: :pending_join_request_count,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description:
+        "Optional. The number of seconds the subscription will be active for before the next payment",
+      name: :subscription_period,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description:
+        "Optional. The amount of Telegram Stars a user must pay initially and after each subsequent subscription period to be a member of the chat using the link",
+      name: :subscription_price,
       optional: true,
       type: :integer
     }
@@ -4210,6 +4430,12 @@ At most one of the optional parameters can be present in any given update.", [
         name: :user,
         optional: false,
         type: Telegex.Type.User
+      },
+      %{
+        description: "Optional. Date when the user's subscription will expire; Unix time",
+        name: :until_date,
+        optional: true,
+        type: :integer
       }
     ]
   )
@@ -4651,6 +4877,15 @@ At most one of the optional parameters can be present in any given update.", [
     }
   ])
 
+  deftype(ReactionTypePaid, "The reaction is paid.", [
+    %{
+      description: "Type of the reaction, always “paid”",
+      name: :type,
+      optional: false,
+      type: :string
+    }
+  ])
+
   deftype(
     ReactionCount,
     "Represents a reaction added to a message along with the number of times it was added.",
@@ -4935,7 +5170,7 @@ At most one of the optional parameters can be present in any given update.", [
     %{description: "Text on the button", name: :text, optional: false, type: :string},
     %{
       description:
-        "Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery.",
+        "Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Alternatively, a t.me link to a Web App of the bot can be specified in the object instead of the Web App's URL, in which case the Web App will be opened as if the user pressed the link.",
       name: :web_app,
       optional: false,
       type: Telegex.Type.WebAppInfo
@@ -4991,7 +5226,7 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(
     ChatBoostSourceGiveaway,
-    "The boost was obtained by the creation of a Telegram Premium giveaway. This boosts the chat 4 times for the duration of the corresponding Telegram Premium subscription.",
+    "The boost was obtained by the creation of a Telegram Premium or a Telegram Star giveaway. This boosts the chat 4 times for the duration of the corresponding Telegram Premium subscription for Telegram Premium giveaways and prize_star_count / 500 times for one year for Telegram Star giveaways.",
     [
       %{
         description: "Source of the boost, always “giveaway”",
@@ -5007,10 +5242,18 @@ At most one of the optional parameters can be present in any given update.", [
         type: :integer
       },
       %{
-        description: "Optional. User that won the prize in the giveaway if any",
+        description:
+          "Optional. User that won the prize in the giveaway if any; for Telegram Premium giveaways only",
         name: :user,
         optional: true,
         type: Telegex.Type.User
+      },
+      %{
+        description:
+          "Optional. The number of Telegram Stars to be split between giveaway winners; for Telegram Star giveaways only",
+        name: :prize_star_count,
+        optional: true,
+        type: :integer
       },
       %{
         description:
@@ -5492,6 +5735,59 @@ At most one of the optional parameters can be present in any given update.", [
     "This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.",
     []
   )
+
+  deftype(InputPaidMediaPhoto, "The paid media to send is a photo.", [
+    %{
+      description: "Type of the media, must be photo",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description:
+        "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »",
+      name: :media,
+      optional: false,
+      type: :string
+    }
+  ])
+
+  deftype(InputPaidMediaVideo, "The paid media to send is a video.", [
+    %{
+      description: "Type of the media, must be video",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description:
+        "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »",
+      name: :media,
+      optional: false,
+      type: :string
+    },
+    %{
+      description:
+        "Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »",
+      name: :thumbnail,
+      optional: true,
+      type: %{__struct__: Telegex.TypeDefiner.UnionType, types: [Telegex.Type.InputFile, :string]}
+    },
+    %{description: "Optional. Video width", name: :width, optional: true, type: :integer},
+    %{description: "Optional. Video height", name: :height, optional: true, type: :integer},
+    %{
+      description: "Optional. Video duration in seconds",
+      name: :duration,
+      optional: true,
+      type: :integer
+    },
+    %{
+      description: "Optional. Pass True if the uploaded video is suitable for streaming",
+      name: :supports_streaming,
+      optional: true,
+      type: :boolean
+    }
+  ])
 
   deftype(Sticker, "This object represents a sticker.", [
     %{
@@ -7353,7 +7649,7 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
-          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.",
+          "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.",
         name: :payload,
         optional: false,
         type: :string
@@ -7630,7 +7926,7 @@ At most one of the optional parameters can be present in any given update.", [
         type: :integer
       },
       %{
-        description: "Bot specified invoice payload",
+        description: "Bot-specified invoice payload",
         name: :invoice_payload,
         optional: false,
         type: :string
@@ -7662,6 +7958,41 @@ At most one of the optional parameters can be present in any given update.", [
     ]
   )
 
+  deftype(RefundedPayment, "This object contains basic information about a refunded payment.", [
+    %{
+      description:
+        "Three-letter ISO 4217 currency code, or “XTR” for payments in Telegram Stars. Currently, always “XTR”",
+      name: :currency,
+      optional: false,
+      type: :string
+    },
+    %{
+      description:
+        "Total refunded price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45, total_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).",
+      name: :total_amount,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "Bot-specified invoice payload",
+      name: :invoice_payload,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Telegram payment identifier",
+      name: :telegram_payment_charge_id,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Optional. Provider payment identifier",
+      name: :provider_payment_charge_id,
+      optional: true,
+      type: :string
+    }
+  ])
+
   deftype(ShippingQuery, "This object contains information about an incoming shipping query.", [
     %{description: "Unique query identifier", name: :id, optional: false, type: :string},
     %{
@@ -7671,7 +8002,7 @@ At most one of the optional parameters can be present in any given update.", [
       type: Telegex.Type.User
     },
     %{
-      description: "Bot specified invoice payload",
+      description: "Bot-specified invoice payload",
       name: :invoice_payload,
       optional: false,
       type: :string
@@ -7710,7 +8041,7 @@ At most one of the optional parameters can be present in any given update.", [
         type: :integer
       },
       %{
-        description: "Bot specified invoice payload",
+        description: "Bot-specified invoice payload",
         name: :invoice_payload,
         optional: false,
         type: :string
@@ -7729,6 +8060,183 @@ At most one of the optional parameters can be present in any given update.", [
       }
     ]
   )
+
+  deftype(PaidMediaPurchased, "This object contains information about a paid media purchase.", [
+    %{
+      description: "User who purchased the media",
+      name: :from,
+      optional: false,
+      type: Telegex.Type.User
+    },
+    %{
+      description: "Bot-specified paid media payload",
+      name: :paid_media_payload,
+      optional: false,
+      type: :string
+    }
+  ])
+
+  deftype(RevenueWithdrawalStatePending, "The withdrawal is in progress.", [
+    %{
+      description: "Type of the state, always “pending”",
+      name: :type,
+      optional: false,
+      type: :string
+    }
+  ])
+
+  deftype(RevenueWithdrawalStateSucceeded, "The withdrawal succeeded.", [
+    %{
+      description: "Type of the state, always “succeeded”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Date the withdrawal was completed in Unix time",
+      name: :date,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "An HTTPS URL that can be used to see transaction details",
+      name: :url,
+      optional: false,
+      type: :string
+    }
+  ])
+
+  deftype(
+    RevenueWithdrawalStateFailed,
+    "The withdrawal failed and the transaction was refunded.",
+    [
+      %{
+        description: "Type of the state, always “failed”",
+        name: :type,
+        optional: false,
+        type: :string
+      }
+    ]
+  )
+
+  deftype(TransactionPartnerUser, "Describes a transaction with a user.", [
+    %{
+      description: "Type of the transaction partner, always “user”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Information about the user",
+      name: :user,
+      optional: false,
+      type: Telegex.Type.User
+    },
+    %{
+      description: "Optional. Bot-specified invoice payload",
+      name: :invoice_payload,
+      optional: true,
+      type: :string
+    },
+    %{
+      description: "Optional. Information about the paid media bought by the user",
+      name: :paid_media,
+      optional: true,
+      type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.PaidMedia}
+    },
+    %{
+      description: "Optional. Bot-specified paid media payload",
+      name: :paid_media_payload,
+      optional: true,
+      type: :string
+    }
+  ])
+
+  deftype(TransactionPartnerFragment, "Describes a withdrawal transaction with Fragment.", [
+    %{
+      description: "Type of the transaction partner, always “fragment”",
+      name: :type,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Optional. State of the transaction if the transaction is outgoing",
+      name: :withdrawal_state,
+      optional: true,
+      type: Telegex.Type.RevenueWithdrawalState
+    }
+  ])
+
+  deftype(
+    TransactionPartnerTelegramAds,
+    "Describes a withdrawal transaction to the Telegram Ads platform.",
+    [
+      %{
+        description: "Type of the transaction partner, always “telegram_ads”",
+        name: :type,
+        optional: false,
+        type: :string
+      }
+    ]
+  )
+
+  deftype(
+    TransactionPartnerOther,
+    "Describes a transaction with an unknown source or recipient.",
+    [
+      %{
+        description: "Type of the transaction partner, always “other”",
+        name: :type,
+        optional: false,
+        type: :string
+      }
+    ]
+  )
+
+  deftype(StarTransaction, "Describes a Telegram Star transaction.", [
+    %{
+      description:
+        "Unique identifier of the transaction. Coincides with the identifer of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.",
+      name: :id,
+      optional: false,
+      type: :string
+    },
+    %{
+      description: "Number of Telegram Stars transferred by the transaction",
+      name: :amount,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description: "Date the transaction was created in Unix time",
+      name: :date,
+      optional: false,
+      type: :integer
+    },
+    %{
+      description:
+        "Optional. Source of an incoming transaction (e.g., a user purchasing goods or services, Fragment refunding a failed withdrawal). Only for incoming transactions",
+      name: :source,
+      optional: true,
+      type: Telegex.Type.TransactionPartner
+    },
+    %{
+      description:
+        "Optional. Receiver of an outgoing transaction (e.g., a user for a purchase refund, Fragment for a withdrawal). Only for outgoing transactions",
+      name: :receiver,
+      optional: true,
+      type: Telegex.Type.TransactionPartner
+    }
+  ])
+
+  deftype(StarTransactions, "Contains a list of Telegram Star transactions.", [
+    %{
+      description: "The list of transactions",
+      name: :transactions,
+      optional: false,
+      type: %{__struct__: Telegex.TypeDefiner.ArrayType, elem_type: Telegex.Type.StarTransaction}
+    }
+  ])
 
   deftype(PassportData, "Describes Telegram Passport data shared with the bot by the user.", [
     %{
