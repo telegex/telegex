@@ -27,12 +27,12 @@ defmodule EchoBot.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:telegex, path: "../../"},
-      {:finch, "~> 0.18.0"},
+      {:finch, "~> 0.19.0"},
       {:multipart, "~> 0.4.0"},
-      {:plug, "~> 1.15"},
+      {:plug, "~> 1.16"},
       {:plug_cowboy, "~> 2.7"},
       {:bandit, "~> 1.5"},
-      {:remote_ip, "~> 1.1"}
+      {:remote_ip, "~> 1.2"}
     ]
   end
 end
