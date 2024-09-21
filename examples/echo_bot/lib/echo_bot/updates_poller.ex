@@ -5,7 +5,7 @@ defmodule EchoBot.UpdatesPoller do
 
   @impl true
   def on_boot do
-    {:ok, user} = Telegex.Instance.fetch_me()
+    {:ok, user} = Telegex.Instance.cache_me()
     # delete any potential webhook
     {:ok, _} = Telegex.delete_webhook()
 

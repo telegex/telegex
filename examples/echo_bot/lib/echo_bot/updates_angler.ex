@@ -5,7 +5,7 @@ defmodule EchoBot.UpdatesAngler do
 
   @impl true
   def on_boot do
-    {:ok, user} = Telegex.Instance.fetch_me()
+    {:ok, user} = Telegex.Instance.cache_me()
     # read some parameters from your env config
     env_config = Application.get_env(:echo_bot, __MODULE__)
     secret_token = "dev-secret-token"

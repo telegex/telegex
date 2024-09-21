@@ -30,9 +30,18 @@ defmodule Telegex.Instance do
   @doc """
   Call the `Telegex.get_me/0` function to get and cache the bot's own user information.
   """
+  @spec cache_me :: {:ok, Telegex.Type.User.t()} | {:error, Telegex.Type.error()}
+  def cache_me do
+    GenServer.call(__MODULE__, :cache_me, :infinity)
+  end
+
+  @doc """
+  Call the `Telegex.get_me/0` function to get and cache the bot's own user information.
+  """
+  @deprecated "Use `cache_me/0` instead."
   @spec fetch_me :: {:ok, Telegex.Type.User.t()} | {:error, Telegex.Type.error()}
   def fetch_me do
-    GenServer.call(__MODULE__, :fetch_me, :infinity)
+    cache_me()
   end
 
   @doc """
@@ -44,7 +53,7 @@ defmodule Telegex.Instance do
   end
 
   @impl true
-  def handle_call(:fetch_me, _from, state) do
+  def handle_call(:cache_me, _from, state) do
     case Telegex.get_me() do
       {:ok, bot} = r ->
         {:reply, r, %{state | bot: bot}}
