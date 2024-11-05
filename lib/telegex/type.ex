@@ -324,6 +324,7 @@ defmodule Telegex.Type do
       Telegex.Type.TransactionPartnerUser,
       Telegex.Type.TransactionPartnerFragment,
       Telegex.Type.TransactionPartnerTelegramAds,
+      Telegex.Type.TransactionPartnerTelegramApi,
       Telegex.Type.TransactionPartnerOther
     ],
     discriminant: %{
@@ -332,6 +333,7 @@ defmodule Telegex.Type do
         "fragment" => [Telegex.Type.TransactionPartnerFragment],
         "other" => [Telegex.Type.TransactionPartnerOther],
         "telegram_ads" => [Telegex.Type.TransactionPartnerTelegramAds],
+        "telegram_api" => [Telegex.Type.TransactionPartnerTelegramApi],
         "user" => [Telegex.Type.TransactionPartnerUser]
       }
     }
@@ -1014,7 +1016,8 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(Message, "This object represents a message.", [
     %{
-      description: "Unique message identifier inside this chat",
+      description:
+        "Unique message identifier inside this chat. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent",
       name: :message_id,
       optional: false,
       type: :integer
@@ -1561,7 +1564,8 @@ At most one of the optional parameters can be present in any given update.", [
 
   deftype(MessageId, "This object represents a unique message identifier.", [
     %{
-      description: "Unique message identifier",
+      description:
+        "Unique message identifier. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent",
       name: :message_id,
       optional: false,
       type: :integer
@@ -1600,7 +1604,7 @@ At most one of the optional parameters can be present in any given update.", [
     [
       %{
         description:
-          "Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)",
+          "Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag or #hashtag@chatusername), “cashtag” ($USD or $USD@chatusername), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)",
         name: :type,
         optional: false,
         type: :string
@@ -3834,6 +3838,13 @@ At most one of the optional parameters can be present in any given update.", [
       },
       %{
         description:
+          "Optional. Description of the button that copies the specified text to the clipboard.",
+        name: :copy_text,
+        optional: true,
+        type: Telegex.Type.CopyTextButton
+      },
+      %{
+        description:
           "Optional. Description of the game that will be launched when the user presses the button.\n\nNOTE: This type of button must always be the first button in the first row.",
         name: :callback_game,
         optional: true,
@@ -3917,6 +3928,19 @@ At most one of the optional parameters can be present in any given update.", [
         name: :allow_channel_chats,
         optional: true,
         type: :boolean
+      }
+    ]
+  )
+
+  deftype(
+    CopyTextButton,
+    "This object represents an inline keyboard button that copies specified text to the clipboard.",
+    [
+      %{
+        description: "The text to be copied to the clipboard; 1-256 characters",
+        name: :text,
+        optional: false,
+        type: :string
       }
     ]
   )
@@ -8181,6 +8205,26 @@ At most one of the optional parameters can be present in any given update.", [
   )
 
   deftype(
+    TransactionPartnerTelegramApi,
+    "Describes a transaction with payment for paid broadcasting.",
+    [
+      %{
+        description: "Type of the transaction partner, always “telegram_api”",
+        name: :type,
+        optional: false,
+        type: :string
+      },
+      %{
+        description:
+          "The number of successful requests that exceeded regular limits and were therefore billed",
+        name: :request_count,
+        optional: false,
+        type: :integer
+      }
+    ]
+  )
+
+  deftype(
     TransactionPartnerOther,
     "Describes a transaction with an unknown source or recipient.",
     [
@@ -8196,7 +8240,7 @@ At most one of the optional parameters can be present in any given update.", [
   deftype(StarTransaction, "Describes a Telegram Star transaction.", [
     %{
       description:
-        "Unique identifier of the transaction. Coincides with the identifer of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.",
+        "Unique identifier of the transaction. Coincides with the identifier of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.",
       name: :id,
       optional: false,
       type: :string
