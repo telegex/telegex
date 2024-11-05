@@ -17,9 +17,9 @@ permissions:
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Create secret files
         run: |
           cat <<EOT >> config/dev.secret.exs
@@ -34,9 +34,9 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           elixir-version: "1.16.3" # Define the elixir version [required]
-          otp-version: "26.2.5.3" # Define the OTP version [required]
+          otp-version: "26.2.5.5" # Define the OTP version [required]
       - name: Restore dependencies cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
