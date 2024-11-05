@@ -16,6 +16,12 @@ run-echo-bot:
         && rm -rf _build/dev/lib/plug \
         && iex -S mix)
 
+clean:
+    mix clean
+    rm -rf _build
+    just mix-for echo_bot clean
+    (cd examples/echo_bot && rm -rf _build)
+
 mix-for $example_app='' +args='':
     (cd examples/$example_app && mix {{args}})
 
