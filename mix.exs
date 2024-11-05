@@ -68,7 +68,7 @@ defmodule Telegex.MixProject do
       {:plug_cowboy, "~> 2.7", optional: true, only: [:dev, :test]},
       {:remote_ip, "~> 1.2", optional: true, only: [:dev, :test]},
       {:bandit, "~> 1.5", optional: true, only: [:dev, :test]},
-      {:floki, "~> 0.36.2", only: [:dev, :test]},
+      {:floki, "~> 0.36.3", only: [:dev, :test]},
       {:typed_struct, "~> 0.3.0"},
       {:jason, "~> 1.4"}
     ]
